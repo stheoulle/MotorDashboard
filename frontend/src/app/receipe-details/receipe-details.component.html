@@ -1,0 +1,20 @@
+<div class = "details-div">
+    <div class = "detail-scroll">
+        <select name="type" id="type" [(ngModel)]="type" placeholder="type">
+            <option value="G28" >Home</option>
+            <option value="Movement" >Movement</option>
+            <option value="M25" >Pause</option>
+            <option value="M24" >Play</option>
+        </select>
+        <select name="direction" id="direction" [(ngModel)]="direction" placeholder="direction" *ngIf="type=='Movement'">
+            <option value="X" >X</option>
+            <option value="Y" >Y</option>
+            <option value="Z" >Z</option>
+        </select>
+        <input id="command-coordinates" [(ngModel)]="coordinates" placeholder="coordinates" *ngIf="type=='Movement'">
+    </div>
+    <div class = "detail-buttons">
+        <button class="btn btn-dark" (click)="deleteCommand()">Delete</button>
+        <button class="btn btn-dark" (click)="saveCommand()">Add</button>
+    </div>
+</div>

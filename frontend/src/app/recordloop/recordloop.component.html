@@ -1,0 +1,22 @@
+
+<div class = "record" >
+    <div class = "recordfalse" *ngIf="!this.ws.record ">
+        <a button type = "button" class="btn btn-dark" (click)="startRecording()">
+            Record
+        </a>
+        <div class="send">
+            <a button type = "button" class="btn btn-dark" (click)="sendRecording()">
+                Send Record
+            </a>
+            <label for="loop">Repeat</label>
+            <input id="loop" [(ngModel)]="loop" placeholder="loop">
+        </div>
+        
+    </div>
+    <div class = "recordtrue" *ngIf="this.ws.record ">
+        <a button type = "button" class="btn btn-dark" (click)="stopRecording()">
+            Stop Record
+        </a>
+        
+    </div>
+</div> 

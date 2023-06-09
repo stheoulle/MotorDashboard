@@ -1,0 +1,64 @@
+<div *ngIf="config" class = "config-details">
+    <div class="form-group">
+        <div class = "part1">
+          <label for="config-name">Name : {{config.name}}</label>
+          <input id="config-name" [(ngModel)]="config.name" placeholder="name">
+          <div>
+            <label for="config-acceleration">Acceleration : {{config.acceleration}}</label>
+            <input id="config-acceleration" [(ngModel)]="config.acceleration" placeholder="acceleration">
+          </div>
+          <div>
+            <label for="config-offset">Offset : {{config.offset}}</label>
+            <input id="config-offset" [(ngModel)]="config.offset" placeholder="offset">
+          </div>
+        </div>
+        <div class = "part2">
+          <div>
+            <form action="#">
+              <label for="mode">Mode : {{config.mode}} </label> 
+              <br>
+              <select name="mode" id="mode" [(ngModel)]="config.mode" placeholder="mode">
+                <option value="" > </option>
+                <option value="relatif" >relatif</option>
+                <option value="absolu" >absolu</option>
+              </select>
+            </form>
+            </div>
+            <div>
+              <form action="#">
+                <label for="speed">Speed : {{config.speed}} </label> 
+                <br>
+                <select name="speed" id="speed" [(ngModel)]="config.speed" placeholder="speed">
+                  <option value="" > </option>
+                  <option value="fastspeed" >fastspeed</option>
+                  <option value="feedrate" >feedrate</option>
+                </select>
+              </form>
+            </div>
+            <div>
+              <label for="config-step/mm">Steps/mm : {{config.step}}</label>
+              <input id="config-step/mm" [(ngModel)]="config.step" placeholder="step/mm">
+            </div>
+        </div>
+    </div>
+  <!-- <a routerLink="/configuration"> 
+      <button type="button" class="btn btn-light" (click)="goBack()">
+          Back
+          <span class="glyphicon glyphicon-backward"></span>
+      </button>
+    </a>   --> 
+    <div class = "buttons-gestion">
+      <button type="button" class="btn btn-light" (click)="save()">
+        Send
+        <span class="glyphicon glyphicon-save"></span>
+      </button>
+      <button type="button" class="btn btn-light" title="delete config" (click)="delete(config.id)">
+        Delete
+        <span class="glyphicon glyphicon-trash"></span>
+      </button>
+
+    </div>
+    <app-confirm-dialog></app-confirm-dialog>  
+</div>
+
+

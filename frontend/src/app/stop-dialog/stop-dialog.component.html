@@ -1,0 +1,21 @@
+<div *ngIf="message" class="modal" tabindex="-1" role="dialog" style="display:block!important">    
+    <div class="modal-dialog custom-alert" role="document">    
+        <div class="modal-content">    
+    
+            <div *ngIf="message?.type == 'stop'" class="modal-body">    
+                <div class="row">    
+                    <div class="popup">    
+                        <p class="text-left confirm-message">{{message.text}}</p>    
+                    </div> 
+                    <div class = "fermeture">
+                        <div id="popup1" class="overlay">
+                            <div class="popup" >
+                                <a class="close" href="#popup1">×</a>
+                            </div>
+                        </div>
+                    </div>   
+                </div>      
+            </div>    
+        </div>    
+    </div>    
+</div> 

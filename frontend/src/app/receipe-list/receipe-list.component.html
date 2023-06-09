@@ -1,0 +1,52 @@
+<div class = "receipelist">
+      <h2>
+            Receipe of commands
+      </h2>
+      <ul class="receipe-list"> <!--Display the saved receipes-->
+            <li *ngFor="let receipe of receipelist" class = "listitems">
+              <button [class.selected]="receipe=== selectedReceipe" type="button" class = "btn btn-dark" (click)="onSelect(receipe)" *ngIf="receipe">
+                <span class="name">{{receipe.name}}</span>
+              </button>
+            <div class = "delete">
+                 <a button type="button" class="btn btn-dark" (click)="deleteReceipe(receipe.id)" >   <!--Send the receipe to the device-->
+                  <i class="glyphicon glyphicon-trash"></i>
+                  </a>
+            </div>
+            </li>
+            
+          </ul>
+
+      <div class = " Name" *ngIf="app.receipelistitem[0]">  <!--Name of the receipe-->
+            <p> Name       </p>
+            <input [(ngModel)]="receipeName" placeholder="give a name to the receipe" >
+      </div>
+      <li *ngFor="let item of app.receipelistitem" >    <!-- *ngFor ="let <value> of <collection> "-->      <!--button to delete one item of the receipe-->
+            {{item}}
+            <button type="button" class="btn btn-dark" title="delete receipe" (click)="delete(item)">
+                  <span class="glyphicon glyphicon-trash"></span>
+            </button>
+      </li>
+      <br>
+      <div class = "launch-button">
+            <div class = "add">
+                  <a button type="button" class="btn btn-dark" (click)="addReceipe(receipeName, app.receipelistitem)">  <!--Save the receipe-->
+                        Save new receipe
+                    <i class= "glyphicon glyphicon-save" ></i>
+                  </a>
+                  <a button type="button" class="btn btn-dark" (click)="newReceipe()">    <!--Clear the receipe-->
+                        Clear receipe
+                  <i class= "bi bi-eraser"></i>
+                  </a>
+            </div>
+            <div class = "send">
+                  <a button type="button" class="btn btn-dark" (click)="launch()" >   <!--Send the receipe to the device-->
+                        Send to device
+                        <i class="glyphicon glyphicon-ok"></i>
+                  </a>
+                  <label for="loop">Repeat</label>
+                  <input id="loop" [(ngModel)]="loop" placeholder="loop">
+            
+            </div>
+      
+      </div>
+</div>

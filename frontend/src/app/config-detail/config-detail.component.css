@@ -1,0 +1,32 @@
+button:active{
+    background-color: #13ca2b;
+    color: #fafafa;
+}
+.form-group{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left : 100%;
+}
+
+.part1{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.part2{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+/*h2 {
+    margin-left: 120%;
+}*/
+.buttons-gestion{
+    margin-left: 100%;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+}

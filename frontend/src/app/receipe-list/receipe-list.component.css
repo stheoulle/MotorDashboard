@@ -1,0 +1,73 @@
+.receipelist{
+    /*border: solid;*/
+    padding-right: 30px;
+    align-items: center;
+    margin-right: 150%;
+    width: 200%;
+}
+
+li {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-left: 5%;
+
+}
+
+.launch-button {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    
+}
+
+.launch-button a{
+    width: 150px;
+    margin-bottom: 3px;
+    margin-left: 3px;
+}
+
+
+.send{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    margin-left: 5%;
+   }
+.send label{
+    margin-right: 3%;
+}
+
+
+.send input{
+    width: 20%;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    margin-right: 3%;
+}
+
+.Name{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.Name p{
+    margin-right: 5px;
+    margin-top: 5px;
+    align-items: center;
+}
+
+.listitems{
+    margin-top: 5px;
+}
+
+.add{
+    margin-bottom: 2%;
+}

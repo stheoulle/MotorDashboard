@@ -1,0 +1,128 @@
+<div class = "panel">
+    <div class = "deplacement-panel" *ngIf="this.ws.onCommand==false" > <!---->
+        <div class = "step"> <!--Selection of the step-->
+            Step
+            <li *ngFor="let coords of coord">
+                <a button type = "button" class="btn btn-dark " (click)="onSelect(200)">
+                    200
+                </a> 
+                <a button type = "button" class="btn btn-dark " (click)="onSelect(500)">
+                    500
+                </a>
+                <a button type = "button" class="btn btn-dark " (click)="onSelect(1000)">
+                    1000
+                </a>
+                <input [(ngModel)]="selectedStep" placeholder="..." class = "step-input">
+                -----
+            </li>
+        </div>
+        <div class ="moveXYZ">   <!--Selection of the direction-->
+            <div class = "MoveY">
+                - Y
+            </div>
+            <div class = "MoveL">
+                X
+                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('X','')">
+                    <i class="glyphicon glyphicon-arrow-up"></i>
+                </a> 
+                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('Y','-')">
+                    <i class="glyphicon glyphicon-arrow-left"></i>
+                </a>
+                <!--Si pas cliqué le mettre au rouge, si cliqué en cours en orange et done en vert (faire des tests sur une variable)-->
+                
+                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('X','-')">
+                    <i class="glyphicon glyphicon-arrow-down"></i>
+                </a>  
+                -X
+            </div>
+            <div class = "Home">
+                <a button type = "button" class="btn btn-dark" (click)="onSelectHome()">
+                    <i class="glyphicon glyphicon-home"></i>
+                </a>        
+            </div>
+            
+            <div class = "MoveR">
+                Z
+                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('Z','')">
+                    <i class="glyphicon glyphicon-arrow-up"></i>
+                </a> 
+                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('Y','')">
+                    <i class="glyphicon glyphicon-arrow-right"></i>
+                </a>
+                <!--Si pas cliqué le mettre au rouge, si cliqué en cours en orange et done en vert (faire des tests sur une variable)-->
+                
+                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('Z','-')">
+                    <i class="glyphicon glyphicon-arrow-down"></i>
+                </a>  
+                - Z
+            </div>
+            <div class = "MoveY">
+                Y
+            </div>
+        </div>
+        <div class=" bar">
+            
+        </div>
+        <div class = "coordonnees"> <!--Selection of the coordinates-->
+            <!-- Coordinates are in steps-->
+            <div class = "speed">
+                Speed option
+                <select name="speed option" id="speed option" [(ngModel)]="listSpeedMode" placeholder="speedmode">
+                    <option value="feedrate" >feedrate</option>
+                    <option value="fastspeed" >fastspeed</option>
+                </select>
+            </div>
+            <div class = " X">
+                <p> X       </p>
+                <input [(ngModel)]="coordinateX" placeholder="coordinateX" >
+            </div>
+            <div class = " Y">
+                <p> Y       </p>
+                <input [(ngModel)]="coordinateY" placeholder="coordinateY" >
+            </div>
+            <div class = " Z">
+                <p> Z       </p>
+                <input [(ngModel)]="coordinateZ" placeholder="coordinateZ" >
+            </div> 
+            <button class="btn btn-dark" (click)="onSelectCoordinates(coordinateX,coordinateY,coordinateZ)">
+                <i class="glyphicon glyphicon-ok"></i>
+            </button>
+        </div>
+    </div>
+    <div class = "coordinates-panel" *ngIf="this.ws.onCommand==false">
+        <div class = "homestatus">
+            <p> Home status : </p>
+            <p> {{this.movingAllowed.home}} </p>
+        </div>
+        <div class = "affiche" *ngIf="this.movingAllowed.home">   <!--Display of the coordinates-->
+            <a button type = "button" class="btn btn-dark" (click)="onGetCoords()">
+                <i class="glyphicon glyphicon-retweet"></i>
+            </a>
+            <li *ngFor="let coords of coord">
+                
+                <label for="coord-X">X : {{coords.x}}</label>
+                <label for="coord-Y">Y : {{coords.y}}</label>
+                <label for="coord-Z">Z : {{coords.z}}</label>
+                {{coords.z}}
+            </li>
+        </div>
+
+        <div class = "affiche" *ngIf="!this.movingAllowed.home">  <!--Display of the coordinates when the home is not done-->
+            <a button type = "button" class="btn btn-dark" (click)="onGetCoords()">
+                <i class="glyphicon glyphicon-retweet"></i>
+            </a>
+            <li *ngFor="let coords of coord">
+                
+                <label for="coord-X">X : unknown</label>
+                <label for="coord-Y">Y : unknown</label>
+                <label for="coord-Z">Z : unknown</label>
+            </li>
+        </div>
+    </div>
+
+</div>
+
+    
+
+
+<!--<app-websockets-service (newItemEvent)="ChangeStatusOnCommand($event)"></app-websockets-service >-->

@@ -1,0 +1,33 @@
+<div class = "cp">
+  <div class = "configuration-panel" >
+    <h2>Settings</h2>
+
+
+    <ul class="configurations-list">
+      <li *ngFor="let config of configurations" >
+
+        <button [class.selected]="config === selectedConfig" type="button" class = "btn btn-outline-dark" (click)="onSelect(config)" *ngIf="config">
+          <!--<span class="badge">{{config.id}}</span>-->
+          <span class="name">{{config.name}}</span>
+          <!--<button type="button" class="delete" title="delete hero" (click)="delete(config)">x</button>-->
+        </button>
+        
+      </li>
+      <div class = "add">
+        <a button type="button" class="btn btn-outline-dark" (click)="addConfig()">
+          <i class= "glyphicon glyphicon-plus" ></i>
+          </a>
+      </div>
+    </ul>
+
+    </div>
+    <div class="config-detail">
+        <app-config-detail class [config]="selectedConfig"></app-config-detail>
+        <!--<app-default-config></app-default-config>-->
+    </div>    
+  <div class = "default-config">
+      <!--<app-default-config class [currentconfig] = "configDisplayed"></app-default-config>-->
+  </div>
+
+</div>
+
