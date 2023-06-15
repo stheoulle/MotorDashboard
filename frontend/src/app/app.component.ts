@@ -115,6 +115,7 @@ export class AppComponent implements OnDestroy {
         this.config = this.getReceipe();
         /*this.sendConfig(this.config.acceleration, this.config.speed, this.config.mode, this.config.name/*, this.config.movingmode, this.config.step, this.config.offset);*/
         this.getConfig();
+        this.knownConfig = true;
         console.log("default config sent");
         this.webSocketService.sendMessage("G28");
         this.home = true;
