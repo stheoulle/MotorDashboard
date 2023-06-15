@@ -109,8 +109,13 @@ export class WebSocketService {
     else {
       const message: string = this.messageslist[0];
       this.messageslist = this.messageslist.slice(1); // delete the first element of the array
-      this.socket$.send(JSON.stringify({message:message}));
-      console.log("message sent chpo: ", message);
+      if (message.includes("endloop")) {
+        this.endloop();
+      }
+      else {
+        this.socket$.send(JSON.stringify({message:message}));
+        console.log("message sent to server: ", message);
+      }
     }
   }
     
@@ -139,6 +144,10 @@ export class WebSocketService {
     this.messageslist = [];
     this.messageslist.push("M112");
     console.log("stop done onCommand = ", this.onCommand);
+  }
+
+  endloop(){
+    this.currentLoop+=1;
   }
 
   close() {
