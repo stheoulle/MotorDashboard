@@ -1,4 +1,8 @@
 <div class = "details-div">
+    <select name="speed" id="speed" [(ngModel)]="app.speedmode" placeholder="speed">
+        <option value="fastspeed" >Fastspeed</option>
+        <option value="feedrate" >Feedrate</option>
+    </select>
     <div class = "detail-scroll">
         <select name="type" id="type" [(ngModel)]="type" placeholder="type">
             <option value="G28" >Home</option>

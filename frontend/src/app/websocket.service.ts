@@ -3,6 +3,7 @@ import { EventEmitter, Injectable, Input, Output } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { environment } from '../environments/environment';
 import { Coordonnees } from './coordonneesCartesien';
+import { Config } from './config';
 
 interface MessageData {
   message: string;
@@ -19,50 +20,108 @@ export class WebSocketService {
   /*@Output() deplacement? : Coordonnees;*/
   coordUpdated : EventEmitter<Coordonnees> = new EventEmitter<Coordonnees>();
   recordedCommandUpdated : EventEmitter<string> = new EventEmitter<string>();
+  configUpdated : EventEmitter<Config> = new EventEmitter<Config>();
   onCommand : boolean = false;
-  private socket$!: WebSocketSubject<any>;
+  public socket$!: WebSocket;
   public receivedData: MessageData[] = [];
   public  onCmd: boolean = true; 
   public coordX : number = 0;
   public coordY : number = 0;
   public X : number = 1000;
   record : boolean = false;
+  gettingconfig : boolean = false;
+  steppermm : string = '4';
+  acceleration : string = '100';
+  offset : string = '0';
+  count : number = 0;
+  messageslist : string[] = [];
 
 
   constructor( /*private depl: DeplacementComponent, private app : AppComponent*/) {}
 
   public connect(): void {
-    /*connect the websocket*/
-    if (!this.socket$ || this.socket$.closed) {
-      this.socket$ = webSocket(environment.webSocketUrl);
-      this.socket$.subscribe((data: MessageData) => {
-        this.receivedData.push(data);
-        console.log(data);
-        /*Check if it's a configuration command to free the loading screen or not*/
-        if(!(data.message.includes("M201" )) && !(data.message.includes("G91")) && !(data.message.includes("G91")) || data.message.includes("M24") || data.message.includes("M25") ){
-          this.onCommand = false;
-
-        }
-        if(data.message.includes("M114")){
-          /*get the coordinates of the machine*/
-          this.coordX = Number(data.read.substring(data.read.indexOf("X")+3, data.read.indexOf("Y")-1));
-          this.coordY = Number(data.read.substring(data.read.indexOf("Y")+3, data.read.length));
-          this.coordUpdated.emit({x: this.coordX, y: this.coordY, z: 0});
-        }
-        if (this.record)
-        {
-          this.recordedCommandUpdated.emit(data.message);
-        }
-      });
+    /* Vérifier si un socket WebSocket est déjà ouvert */
+    if (!this.socket$ || this.socket$.readyState !== WebSocket.OPEN) {
+      /* Créer un nouveau socket WebSocket */
+      this.socket$ = new WebSocket(environment.webSocketUrl);
+      this.socket$.onopen = () => {
+        console.log('connected');
+        /* Initialiser la liste des messages en attente */
+        this.messageslist = [];
+      };
+      this.socket$.onmessage = this.receive.bind(this);
+      this.socket$.onclose = () => {
+        console.log('disconnected');
+        /* Réinitialiser le socket WebSocket */
+      };
     }
   }
+  
+
+
+
+  receive(ev: MessageEvent): void {
+    var data : MessageData;
+    console.log(ev.data)
+    data = JSON.parse(ev.data);
+    console.log("data received : ", data);
+    this.receivedData.push(data);
+    console.log(data);
+    /* Check if it's a configuration command to free the loading screen or not */
+    if (data.message.includes("M114")) {
+      /* get the coordinates of the machine */
+      this.coordX = Number(data.read.substring(data.read.indexOf("X") + 3, data.read.indexOf("Y") - 1));
+      this.coordY = Number(data.read.substring(data.read.indexOf("Y") + 3, data.read.length));
+      this.coordUpdated.emit({ x: this.coordX, y: this.coordY, z: 0 });
+    }
+    if (this.record) {
+      this.recordedCommandUpdated.emit(data.message);
+    }
+    if (this.gettingconfig) {
+      if (data.message.includes("M92")) {
+        this.steppermm = data.read.substring(data.read.indexOf("X") + 2, data.read.indexOf("Y") - 1);
+      }
+      if (data.message.includes("M201")) {
+        this.acceleration = data.read.substring(data.read.indexOf("X") + 2, data.read.indexOf("Y") - 1);
+      }
+      if (data.message.includes("M851")) {
+        this.offset = data.read.substring(data.read.indexOf("X") + 2, data.read.indexOf("Y") - 1);
+      }
+      this.configUpdated.emit({ step: this.steppermm, acceleration: this.acceleration, offset: this.offset, name: "current configuration", speed: "fastspeed", mode: "relatif", id: 0 });
+      this.count += 1;
+    }
+    if (this.count === 3) {
+      this.gettingconfig = false;
+      this.onCommand = false;
+      this.count = 0;
+    }
+    /* Check if all messages have been processed */
+    if (this.messageslist.length === 0) {
+      this.onCommand = false;
+    } 
+    else {
+      const message: string = this.messageslist[0];
+      this.messageslist = this.messageslist.slice(1); // delete the first element of the array
+      this.socket$.send(JSON.stringify({message:message}));
+      console.log("message sent chpo: ", message);
+    }
+  }
+    
 
   sendMessage(message: string) {
     /*sending the message to the backend*/
-    this.onCommand = true;
-    this.socket$.next({ message });
-    
+    if (this.socket$ && this.socket$.readyState === WebSocket.OPEN && this.onCommand === false) {
+      /* Envoyer le premier message de la liste */
+      console.log("First message sent : ", message);
+      this.socket$.send(JSON.stringify({message:message}));
+      this.onCommand = true;
+    }
+    else {
+      console.log("message added to the list: ", message);
+      this.messageslist.push(message);
+    }
   }
+  
 
   sendMessageStop(message: string) {
     /*send urgent stop and delete the queue*/
@@ -70,11 +129,15 @@ export class WebSocketService {
     /*console.log("urgent stop");
     this.socket$.complete();
     this.connect();*/
-    this.socket$.next("M112");
+    this.messageslist = [];
+    this.messageslist.push("M112");
     console.log("stop done onCommand = ", this.onCommand);
   }
 
   close() {
-    this.socket$.complete();
+    if (this.socket$) {
+      this.socket$.close();
+    }
   }
+  
 }

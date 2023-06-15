@@ -2,6 +2,7 @@ import { Component, OnInit, Input} from '@angular/core';
 
 import { Config, ConfigInput} from '../config';
 import { ConfigService } from '../config.service';
+import { WebSocketService } from '../websocket.service';
 
 
 
@@ -16,7 +17,7 @@ export class ConfigurationComponent implements OnInit {
   configurations : Config[] = [];
   nom : string = "new config";
 
-  constructor(private configService: ConfigService) { }
+  constructor(private configService: ConfigService, public ws : WebSocketService) { }
 
   ngOnInit(): void {
     this.getConfig();

@@ -6,6 +6,7 @@ import { Component, Input } from '@angular/core';
 
 import { AppComponent } from '../app.component';
 import { DefaultConfComponent } from '../default-conf/default-conf.component';
+import { WebSocketService } from '../websocket.service';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class ConfigDetailComponent {
     private route: ActivatedRoute,
     private configService: ConfigService,
     private app : AppComponent,
+    public ws : WebSocketService
     /*private defaultconfig_C : DefaultConfComponent*/
     /*public pause : DeplacementComponent*/) { } /**The ActivatedRoute holds information about the route to this instance of the HeroDetailComponent.The HeroService gets hero data from the remote server and this component will use it to get the hero-to-display. The location is an Angular service for interacting with the browser*/
 

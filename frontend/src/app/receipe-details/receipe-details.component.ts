@@ -23,7 +23,13 @@ export class ReceipeDetailsComponent {
     /*save the command to the receipe list*/
     console.log(this.type, this.direction, this.coordinates);
     if (this.type != undefined && this.direction != undefined && this.coordinates != undefined && this.type != "G28" && this.type != "M24" && this.type != "M25"){
-      this.app.receipelistitem?.push(this.type + " " + this.direction + "" + this.coordinates);
+      if(this.app.speedmode == "fastspeed"){
+        this.app.receipelistitem?.push("G0 " + this.direction + this.coordinates);
+      }
+      else{
+        this.app.receipelistitem?.push("G1 " + this.direction + "" + this.coordinates);
+      }
+     
       /*this.app.receipelistitem?.push(this.type + " " + this.direction + " " + this.coordinates);*/
     }
     else if (this.type == "G28" || this.type == "M24" || this.type == "M25"){

@@ -1,4 +1,4 @@
-<div *ngIf="config" class = "config-details">
+<div *ngIf="config && !this.ws.onCommand" class = "config-details">
     <div class="form-group">
         <div class = "part1">
           <label for="config-name">Name : {{config.name}}</label>

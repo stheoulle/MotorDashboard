@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 import serial
 import psutil  # Import the psutil module
-
+import json
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 
 logging.basicConfig(level=logging.INFO)
@@ -42,8 +42,11 @@ async def websocket_endpoint(websocket: WebSocket):
         try:
 
             # Receive the JSON data sent by a client.
-            data = await websocket.receive_json()
-            message_processed = data_processing(data)
+            data = await websocket.receive_text()
+            print("Received message: " + data) # Log the received message.
+            message_processed = data_processing(json.loads(data))
+
+            logger.info("Received message: %s", message_processed) # Log the received message.
             
             # Send JSON data to the client.
             if ser.isOpen():

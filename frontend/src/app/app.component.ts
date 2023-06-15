@@ -4,6 +4,7 @@ import { Config, ConfigInput } from './config';
 import configurations from './configs.json';
 import { AppRoutingModule } from './app-routing.module';
 import { Router } from '@angular/router';
+import { ConfigService } from './config.service';
 
 
 "./services/websocket.service.ts:"
@@ -42,14 +43,28 @@ export class AppComponent implements OnDestroy {
   public recordlist : string[] = [];
   href : string = "";
   lock : boolean = false;
+  gettingconfig : boolean = false;
 
   /*config displayed in the default config component*/
   inputConfig : ConfigInput = this.configurationdata[0];
 
-  constructor( public webSocketService: WebSocketService, public routing : AppRoutingModule, public router: Router ){ 
+  constructor( public webSocketService: WebSocketService, public routing : AppRoutingModule, public router: Router, private configService : ConfigService ){ 
     /*opening the websocket connection*/
     this.webSocketService.connect();
   } 
+
+  ngOnInit() {
+    this.webSocketService.configUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+      this.inputConfig = value;
+      this.configService.configurationdata[0].acceleration = value.acceleration;
+      this.configService.configurationdata[0].speed = value.speed;
+      this.configService.configurationdata[0].mode = value.mode;
+      this.configService.configurationdata[0].name = value.name;
+      this.configService.configurationdata[0].step = value.step;
+      this.configService.configurationdata[0].offset = value.offset;
+      /*copy all except id*/
+    });}
+
 
   /*ngOnChanges() {   /*What is this function for ?
     this.href = this.router.url;
@@ -57,14 +72,16 @@ export class AppComponent implements OnDestroy {
   }*/
   sendMessage(message: string) {
     /*sending the message to the backend*/
+
     if(message == "M112")
     {
       this.webSocketService.sendMessageStop(message);
     }
     else{
       if (this.knownConfig == false && message != "M112"){
-        this.config = this.getReceipe();
-        this.sendConfig(this.config.acceleration, this.config.speed, this.config.mode, this.config.name/*, this.config.movingmode*/, this.config.step, this.config.offset);
+        /*this.sendConfig(this.config.acceleration, this.config.speed, this.config.mode, this.config.name, this.config.step, this.config.offset);*/
+        this.getConfig();
+        this.knownConfig = true;
         console.log("default config sent");
         if (message== "G28"){
           this.StateChange(); 
@@ -86,11 +103,13 @@ export class AppComponent implements OnDestroy {
   }
 
   sendMessageList(message: string) {
+
     /*sending the message to the backend*/
     if (this.knownConfig == false && message != "M112"){
       /*if the config is not known, we send the default config*/
         this.config = this.getReceipe();
         this.sendConfig(this.config.acceleration, this.config.speed, this.config.mode, this.config.name/*, this.config.movingmode*/, this.config.step, this.config.offset);
+        /*this.getConfig();*/
         console.log("default config sent");
     }
     if (message != "M112" && this.home == false && !message.includes("G28")){
@@ -107,10 +126,7 @@ export class AppComponent implements OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    /*closing the websocket connection*/
-    this.webSocketService.close();
-  }
+  
 
 
   Play(): void {
@@ -150,6 +166,7 @@ export class AppComponent implements OnDestroy {
 
 
   sendConfig(acceleration : string, speed : string, mode : string, name : string/*, movingmode : string*/, step : string, offset : string): void {
+
     this.knownConfig = true;
     if (speed== "fastspeed"){
       this.speedmode = "G0";
@@ -157,19 +174,22 @@ export class AppComponent implements OnDestroy {
     else {
       this.speedmode = "G1";
     }
-    this.sendMessage("M201 "+acceleration);
+    /*Definition of the acceleration on unit/second^2 for one motor */
+    this.sendMessage("M201 X"+acceleration);
     if (mode == "relatif"){
       this.sendMessage("G91");
     }
     else {
       this.sendMessage("G90");
     }
-    this.webSocketService.sendMessage("M92 "+step);
+    /*Definition of the speed on unit/second for one motor */
+    /*this.webSocketService.sendMessage("M92 X"+step);  */   ///////////////////////////////  A REVOIR
     if(!this.lock){
       /*Change the lock status*/
-      this.webSocketService.sendMessage("#505 1");
+      this.webSocketService.sendMessage("#505 =1");
     }
-    this.webSocketService.sendMessage("M851 "+offset);
+    /*Definition of the offset on unit for one motor */
+    this.webSocketService.sendMessage("M851 X"+offset);
     this.lock = true;
     console.log("locked",this.lock);
     /*this.sendMessage("M92"+step);*/
@@ -178,18 +198,23 @@ export class AppComponent implements OnDestroy {
     this.inputConfig = {speed: speed, mode : mode, acceleration : acceleration, name : name/*, movingmode : movingmode*/, step : step, offset : offset};
     /*change the speedmode*/
     this.speedmode = speed;
-    
+
+  }
+
+  getConfig(): void {
+    /*ask the server for the current config on the motor, using the norm ?...*/
+    this.webSocketService.gettingconfig =true;
+    this.webSocketService.sendMessage("?M201");
+    this.webSocketService.sendMessage("?M92");
+    this.webSocketService.sendMessage("?M851");
+    /*this.inputConfig.acceleration = await this.webSocketService.receivedData[0].read;
+    console.log(this.inputConfig.acceleration);*/
   }
 
   getReceipe(): Config {
     /*get the config displayed in the default config component*/
     return this.configurationdata[0];
   }
-
-  ChangeStatusOnCommand(newItem: boolean) {
-    this.pause= newItem;    /*change the status of the pause !! Change to OnCommand*/
-  }
-
 
 /*
   Stop() : void {
@@ -217,5 +242,10 @@ export class AppComponent implements OnDestroy {
     this.lock = true;
     this.sendMessage("#505 1");
     console.log("locked",this.lock);
+  }
+
+  ngOnDestroy() {
+    /*closing the websocket connection*/
+    this.webSocketService.close();
   }
 }
