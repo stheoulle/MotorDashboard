@@ -14,5 +14,5 @@ Web Application to control the movements of a 3 axis automate.
 ### running
 
 ```shell
-> uvicorn main:app --reload --host 0.0.0.0 --port 8002
+> uvicorn main:app --reload --host 0.0.0.0 --port #port number"
 ```
