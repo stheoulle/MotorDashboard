@@ -92,7 +92,6 @@ export class WebSocketService {
       this.count += 1;
       
     }
-    this.currentLoop+=1;
     if (this.count === 3) {
       this.gettingconfig = false;
       this.count = 0;
