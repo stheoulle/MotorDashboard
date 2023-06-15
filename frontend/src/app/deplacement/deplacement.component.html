@@ -72,29 +72,53 @@
                     <option value="fastspeed" >fastspeed</option>
                 </select>
             </div>
-            <div class = " X">
-                <p> X       </p>
-                <input [(ngModel)]="coordinateX" placeholder="coordinateX" >
+            <div class="before home" *ngIf="!this.app.home">
+                <div class = " X">
+                    <p> X       </p>
+                    <input [(ngModel)]="unknown" placeholder="coordinateX" readonly>
+                </div>
+                <div class = " Y">
+                    <p> Y       </p>
+                    <input [(ngModel)]="unknown" placeholder="coordinateY" readonly>
+                </div>
+                <div class = " Z">
+                    <p> Z       </p>
+                    <input [(ngModel)]="unknown" placeholder="coordinateZ" readonly>
+                </div> 
             </div>
-            <div class = " Y">
-                <p> Y       </p>
-                <input [(ngModel)]="coordinateY" placeholder="coordinateY" >
+            <div class="after-home" *ngIf="this.app.home">
+                <div class="X">
+                    <p>X</p>
+                    <input [(ngModel)]="coordinateX" placeholder="coordinateX">
+                </div>
+                <div class="Y">
+                    <p>Y</p>
+                    <input [(ngModel)]="coordinateY" placeholder="coordinateY">
+                </div>
+                <div class="Z">
+                    <p>Z</p>
+                    <input [(ngModel)]="coordinateZ" placeholder="coordinateZ">
+                </div>
+                <div class = "button-coord">
+                    <button class="btn btn-dark" (click)="onSelectCoordinates(coordinateX, coordinateY, coordinateZ)">
+                        <i class="glyphicon glyphicon-ok"></i>
+                    </button>
+                    <button class="btn btn-dark" (click)="onGetCoords()">
+                        <i class="glyphicon glyphicon-retweet"></i>
+                    </button>  
+                </div>
+                
             </div>
-            <div class = " Z">
-                <p> Z       </p>
-                <input [(ngModel)]="coordinateZ" placeholder="coordinateZ" >
-            </div> 
-            <button class="btn btn-dark" (click)="onSelectCoordinates(coordinateX,coordinateY,coordinateZ)">
-                <i class="glyphicon glyphicon-ok"></i>
-            </button>
+            
+            
         </div>
     </div>
-    <div class = "coordinates-panel" *ngIf="this.ws.onCommand==false">
+    <!--<div class = "coordinates-panel" *ngIf="this.ws.onCommand==false">
         <div class = "homestatus">
             <p> Home status : </p>
-            <p> {{this.movingAllowed.home}} </p>
+            <p> {{this.app.home}} </p>
         </div>
-        <div class = "affiche" *ngIf="this.movingAllowed.home">   <!--Display of the coordinates-->
+        <div class = "affiche" *ngIf="this.app.home">   <!--Display of the coordinates
             <a button type = "button" class="btn btn-dark" (click)="onGetCoords()">
                 <i class="glyphicon glyphicon-retweet"></i>
             </a>
@@ -103,11 +127,10 @@
                 <label for="coord-X">X : {{coords.x}}</label>
                 <label for="coord-Y">Y : {{coords.y}}</label>
                 <label for="coord-Z">Z : {{coords.z}}</label>
-                {{coords.z}}
             </li>
         </div>
 
-        <div class = "affiche" *ngIf="!this.movingAllowed.home">  <!--Display of the coordinates when the home is not done-->
+        <div class = "affiche" *ngIf="!this.app.home">  <!--Display of the coordinates when the home is not done
             <a button type = "button" class="btn btn-dark" (click)="onGetCoords()">
                 <i class="glyphicon glyphicon-retweet"></i>
             </a>
@@ -118,7 +141,7 @@
                 <label for="coord-Z">Z : unknown</label>
             </li>
         </div>
-    </div>
+    </div>-->
 
 </div>
 

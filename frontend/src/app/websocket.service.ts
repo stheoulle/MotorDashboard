@@ -4,6 +4,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { environment } from '../environments/environment';
 import { Coordonnees } from './coordonneesCartesien';
 import { Config } from './config';
+import { DeplacementComponent } from './deplacement/deplacement.component';
 
 interface MessageData {
   message: string;
@@ -35,7 +36,9 @@ export class WebSocketService {
   offset : string = '0';
   count : number = 0;
   messageslist : string[] = [];
-
+  onreceipe : boolean = false;
+  totalLoop : number = -1;
+  currentLoop : number = 1;
 
   constructor( /*private depl: DeplacementComponent, private app : AppComponent*/) {}
 
@@ -89,15 +92,19 @@ export class WebSocketService {
       }
       this.configUpdated.emit({ step: this.steppermm, acceleration: this.acceleration, offset: this.offset, name: "current configuration", speed: "fastspeed", mode: "relatif", id: 0 });
       this.count += 1;
+      
     }
+    this.currentLoop+=1;
     if (this.count === 3) {
       this.gettingconfig = false;
-      this.onCommand = false;
       this.count = 0;
     }
     /* Check if all messages have been processed */
     if (this.messageslist.length === 0) {
-      this.onCommand = false;
+      this.onCommand = false; /*reset the command to stop the loading screen*/
+      this.onreceipe = false; /*reset the receipe to show the recording button*/
+      this.totalLoop = -1;  /*reset the loop to hide the counter for the loops*/
+      
     } 
     else {
       const message: string = this.messageslist[0];

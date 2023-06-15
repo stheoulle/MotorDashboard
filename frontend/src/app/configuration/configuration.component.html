@@ -6,7 +6,7 @@
     <ul class="configurations-list">
       <li *ngFor="let config of configurations" >
 
-        <button [class.selected]="config === selectedConfig" type="button" class = "btn btn-outline-dark" (click)="onSelect(config)" *ngIf="config">
+        <button [class.selected]="config === selectedConfig" type="button" class = "btn btn-outline-dark" (click)="onSelect(config)" *ngIf="config &&config.name!='?'">
           <!--<span class="badge">{{config.id}}</span>-->
           <span class="name">{{config.name}}</span>
           <!--<button type="button" class="delete" title="delete hero" (click)="delete(config)">x</button>-->

@@ -44,6 +44,8 @@ export class AppComponent implements OnDestroy {
   href : string = "";
   lock : boolean = false;
   gettingconfig : boolean = false;
+  
+  
 
   /*config displayed in the default config component*/
   inputConfig : ConfigInput = this.configurationdata[0];
@@ -65,6 +67,8 @@ export class AppComponent implements OnDestroy {
       /*copy all except id*/
     });}
 
+    
+
 
   /*ngOnChanges() {   /*What is this function for ?
     this.href = this.router.url;
@@ -72,6 +76,7 @@ export class AppComponent implements OnDestroy {
   }*/
   sendMessage(message: string) {
     /*sending the message to the backend*/
+    console.log("onreceipe : ",this.webSocketService.onreceipe);
 
     if(message == "M112")
     {
@@ -108,19 +113,21 @@ export class AppComponent implements OnDestroy {
     if (this.knownConfig == false && message != "M112"){
       /*if the config is not known, we send the default config*/
         this.config = this.getReceipe();
-        this.sendConfig(this.config.acceleration, this.config.speed, this.config.mode, this.config.name/*, this.config.movingmode*/, this.config.step, this.config.offset);
-        /*this.getConfig();*/
+        /*this.sendConfig(this.config.acceleration, this.config.speed, this.config.mode, this.config.name/*, this.config.movingmode, this.config.step, this.config.offset);*/
+        this.getConfig();
         console.log("default config sent");
+        this.webSocketService.sendMessage("G28");
+        this.home = true;
     }
-    if (message != "M112" && this.home == false && !message.includes("G28")){
-      /*if the config is known, we send the home*/
+    if (message != "M112" && this.home == false && message != "G28"){
+      /*if the config is known and the home is not asked first we send the home*/
       this.webSocketService.sendMessage("G28");
       this.StateChange();
       this.home = true;
     }
 
     if (this.knownConfig == true && this.home == true && message != "G28" || message == "M112" ){
-      /*if the config is known and we are home, we send the message, or urgent stop bypass the other*/
+      /*if the config is known and we know the home, we send the message, or urgent stop bypass the other*/
       this.webSocketService.sendMessage(message);
       console.log(message);
     }

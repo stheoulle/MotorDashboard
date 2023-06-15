@@ -39,12 +39,13 @@
                   </a>
             </div>
             <div class = "send">
+                  <label for="loop">Repeat</label>
+                  <input id="loop" [(ngModel)]="loop" placeholder="loop">
                   <a button type="button" class="btn btn-dark" (click)="launch()" >   <!--Send the receipe to the device-->
                         Send to device
                         <i class="glyphicon glyphicon-ok"></i>
                   </a>
-                  <label for="loop">Repeat</label>
-                  <input id="loop" [(ngModel)]="loop" placeholder="loop">
+                  
             
             </div>
       

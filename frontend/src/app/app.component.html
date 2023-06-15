@@ -40,21 +40,24 @@
                   <span class="glyphicon glyphicon-pause"></span>  Pause
                 </a>  deplacemdeplacement 
             </div>    --> 
-            <a routerLink="/deplacement"
-              href ="#" class="btn btn-info" (click)="unlock()" *ngIf="this.lock" >   <!--Send the receipe to the device-->
+            <!--<a routerLink="/deplacement"
+              href ="#" class="btn btn-info" (click)="unlock()" *ngIf="this.lock" >   <!--Send the receipe to the device-
               <span class="glyphicon glyphicon-floppy-disk"></span> Unlock
             </a> 
             <a routerLink="/deplacement"
-              href ="#" class="btn btn-info" (click)="locker()" *ngIf="!this.lock" >   <!--Send the receipe to the device-->
+              href ="#" class="btn btn-info" (click)="locker()" *ngIf="!this.lock" >   <!--Send the receipe to the device-
               <span class="glyphicon glyphicon-floppy-disk"></span> Lock
-            </a> 
-            <div class = "record">
+            </a> -->
+            <div class = "record" >
               <app-recordloop ></app-recordloop>
-            </div>  
+            </div> 
+             <div class = "loops" *ngIf="this.webSocketService.onreceipe">
+              Loop : {{this.webSocketService.currentLoop}} / {{this.webSocketService.totalLoop}}
+             </div>
             
             <a routerLink="/stop" 
               href="#" class="btn_PP btn-danger btn-lg">    <!--(click)="Stop()"-->
-                <i class="glyphicon glyphicon-stop"></i> Stop 
+                <i class="glyphicon glyphicon-stop"></i> Stop
             </a>  
           
         </div>

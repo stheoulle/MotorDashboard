@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AppComponent } from '../app.component';
 import { ReceipeService } from '../receipe.service';
 import { Receipe } from '../receipe';
+import { WebSocketService } from '../websocket.service';
 
 @Component({
   selector: 'app-receipe-list',
@@ -16,7 +17,8 @@ export class ReceipeListComponent {
   receipeName : string = "";
   loop : number = 1;
 
-  constructor(public app : AppComponent, public receipeService : ReceipeService) { }  /*Change to private if only used in this component, public if used in another component*/
+
+  constructor(public app : AppComponent, public receipeService : ReceipeService, private ws : WebSocketService) { }  /*Change to private if only used in this component, public if used in another component*/
 
   ngOnInit(): void {
     this.getReceipes(); /*get the current coordinates of the machine*/
@@ -30,13 +32,17 @@ export class ReceipeListComponent {
   launch(): void {
     /*launch the receipe*/
     /*send lines one by one*/
+    this.ws.onreceipe = true;
     this.i = this.app.receipelistitem?.length;
+    this.ws.totalLoop = this.loop;
     for(let i = 0; i < this.loop; i++){
       for ( let j = 0; j < this.i; j++){
         console.log(this.app.receipelistitem[j], typeof(this.app.receipelistitem[j]));
         this.app.sendMessageList(this.app.receipelistitem[j]);
      }
     }
+    
+
   }
 
   onSelect(receipe: Receipe): void {

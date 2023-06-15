@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnChanges, SimpleChange } from '@angular/core';
+import { Component, Output, EventEmitter, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import { Coordonnees } from '../coordonneesCartesien';
 import { CoordService } from '../coord.service';
 import { COORDONNEES } from '../mock.coordonnees';
@@ -22,15 +22,21 @@ export class DeplacementComponent implements OnChanges {
   deplacement? : string;
   commande : string = "";
   speedmode: string = "G0";
+  signe? : string;
+  listSpeedMode : string = "feedrate";
+  unknown : string = "unknown";
+  update : boolean = false;
   coordinateX : number = 0;
   coordinateY : number = 0;
   coordinateZ : number = 0;
-  signe? : string;
-  listSpeedMode : string = "feedrate";
 
   constructor(private coordService: CoordService, 
-    public movingAllowed : AppComponent, public ws : WebSocketService) {
+    public app : AppComponent, public ws : WebSocketService) {
   }
+
+  /*ngOnChanges() {
+    this.systemCoord[0] = this.coord[0];  /*Update the coordinates of the system
+  }*/
 
   ngOnChanges(): void {
     this.GetX(this.ws.coordX);
@@ -57,9 +63,9 @@ export class DeplacementComponent implements OnChanges {
 
   onSelectHome(): void {
     /*select the home command, allow the movements and reset the coordinates*/
-    if (this.movingAllowed.pause == false){
+    if (this.app.pause == false){
       this.commande = "G28";   
-      this.movingAllowed.sendMessage("G28");
+      this.app.sendMessage("G28");
       this.coord[0].x = 0;
       this.coord[0].y = 0;
       this.coord[0].z = 0;
@@ -70,7 +76,7 @@ export class DeplacementComponent implements OnChanges {
 
   onSelectDeplacement(orientation : string, deplacement : string){
     /*Add something to see the launch of the command*/
-    if ((this.selectedStep) && (this.movingAllowed.home) && (this.movingAllowed.movingAllowed == true)) {
+    if ((this.selectedStep) && (this.app.home) && (this.app.movingAllowed == true)) {
       /*if we can do a movement*/
       this.deplacement = deplacement;
       this.orientation = orientation;
@@ -130,19 +136,22 @@ export class DeplacementComponent implements OnChanges {
       else{
         this.commande = this.speedmode + orientation + this.deplacement + this.selectedStep;  /*Create the command to send to the websocket*/
       }
-      this.movingAllowed.sendMessage(this.commande)  /*Send the command to the websocket*/
+      this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
       /*this.onCommand = true;*/
       console.log(this.coord[0].x);
+      this.coordinateX = this.coord[0].x;
+      this.coordinateY = this.coord[0].y;
+      this.coordinateZ = this.coord[0].z;
 
     }
     /*Create and display the exeptions*/
-    else if ((this.selectedStep) && !(this.movingAllowed.home) && (this.movingAllowed.pause == false)){
+    else if ((this.selectedStep) && !(this.app.home) && (this.app.pause == false)){
       this.commande = "Home not done";
     }
-    else if (!(this.selectedStep) && (this.movingAllowed.home) && (this.movingAllowed.pause == false)){
+    else if (!(this.selectedStep) && (this.app.home) && (this.app.pause == false)){
       this.commande = "Step not chosen";
     }
-    else if (this.movingAllowed.pause == true){
+    else if (this.app.pause == true){
       this.commande = "Process paused";
     }
     else {
@@ -153,7 +162,7 @@ export class DeplacementComponent implements OnChanges {
   onSelectDeplacementCoord(orientation : string){
     /*Add something to see the launch of the command*/
 
-    if ((this.selectedStep) && (this.movingAllowed.home) && (this.movingAllowed.movingAllowed == true)) {
+    if ((this.selectedStep) && (this.app.home) && (this.app.movingAllowed == true)) {
       /*if we can do a movement*/
       this.orientation = orientation;
       if (this.listSpeedMode == "feedrate")
@@ -175,7 +184,7 @@ export class DeplacementComponent implements OnChanges {
           }
         
         this.coord[0].x = Number(this.selectedStep);
-        this.movingAllowed.sendMessage(this.commande)  /*Send the command to the websocket*/
+        this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
       }
       else if (orientation == "Y"){
           /*Create the command to send to the websocket*/
@@ -188,7 +197,7 @@ export class DeplacementComponent implements OnChanges {
           }
         
         this.coord[0].y = Number(this.selectedStep);
-        this.movingAllowed.sendMessage(this.commande)  /*Send the command to the websocket*/
+        this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
       }
       
       else if (this.orientation == "Z"){
@@ -202,22 +211,23 @@ export class DeplacementComponent implements OnChanges {
           }
         
         this.coord[0].z = Number(this.selectedStep);
-        this.movingAllowed.sendMessage(this.commande)  /*Send the command to the websocket*/
+        this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
       }
       
       console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
       
       
       this.selectedStep = undefined;
+      
     }
     /*Create and display the exeptions*/
-    else if ((this.selectedStep) && !(this.movingAllowed.home) && (this.movingAllowed.pause == false)){
+    else if ((this.selectedStep) && !(this.app.home) && (this.app.pause == false)){
       this.commande = "Home not done";
     }
-    else if (!(this.selectedStep) && (this.movingAllowed.home) && (this.movingAllowed.pause == false)){
+    else if (!(this.selectedStep) && (this.app.home) && (this.app.pause == false)){
       this.commande = "Step not chosen";
     }
-    else if (this.movingAllowed.pause == true){
+    else if (this.app.pause == true){
       this.commande = "Process paused";
     }
     else {
@@ -229,10 +239,10 @@ export class DeplacementComponent implements OnChanges {
 
     onGetCoords(): void {
       /*get the current coordinates of the machine*/
-      if(!this.movingAllowed.home) {
-        this.movingAllowed.sendMessage("G28");
+      if(!this.app.home) {
+        this.app.sendMessage("G28");
       }
-      this.movingAllowed.sendMessage("M114");
+      this.app.sendMessage("M114");
       /*this.coord[0].x = this.ws.coordX;*/
 
     }
@@ -282,6 +292,7 @@ export class DeplacementComponent implements OnChanges {
         
         
       }
+      
     }
     
   }
