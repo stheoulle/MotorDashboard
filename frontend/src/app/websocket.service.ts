@@ -65,11 +65,9 @@ export class WebSocketService {
 
   receive(ev: MessageEvent): void {
     var data : MessageData;
-    console.log(ev.data)
     data = JSON.parse(ev.data);
     console.log("data received : ", data);
     this.receivedData.push(data);
-    console.log(data);
     /* Check if it's a configuration command to free the loading screen or not */
     if (data.message.includes("M114")) {
       /* get the coordinates of the machine */
