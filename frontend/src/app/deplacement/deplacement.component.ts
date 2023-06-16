@@ -80,14 +80,13 @@ export class DeplacementComponent implements OnChanges {
       /*if we can do a movement*/
       this.deplacement = deplacement;
       this.orientation = orientation;
-      if(Number(this.configService.configurationdata[0].offset) === 0){
+      if(this.app.currentConfig.offset === '0'){
         console.log("no offset");
-        console.log(this.configService.configurationdata[0].offset);
         this.DeplNoOffset(deplacement, orientation);
       }
       else{
-        console.log("offset", this.configService.configurationdata[0].offset);
-        /*this.DeplOffset(orientation);*/
+        console.log("offset = ", this.app.currentConfig.offset );
+        this.DeplOffset(orientation, Number(this.app.currentConfig.offset), deplacement);
       }
       console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
       this.speedmode = "G1";  /*Set the speedmode to G1 (feedrate) when moving using the buttons*/
@@ -99,11 +98,9 @@ export class DeplacementComponent implements OnChanges {
       }
       this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
       /*this.onCommand = true;*/
-      console.log(this.coord[0].x);
-      this.coordinateX = this.coord[0].x;
-      this.coordinateY = this.coord[0].y;
-      this.coordinateZ = this.coord[0].z;
-      console.log(this.coordinateX);
+      this.coordinateX = this.coord[0].x - Number(this.app.currentConfig.offset);
+      this.coordinateY = this.coord[0].y - Number(this.app.currentConfig.offset);
+      this.coordinateZ = this.coord[0].z - Number(this.app.currentConfig.offset);
 
     }
     /*Create and display the exeptions*/
@@ -134,15 +131,13 @@ export class DeplacementComponent implements OnChanges {
       else {
         this.speedmode = "G0";
       }
-      console.log(this.speedmode);
-      if(this.app.currentConfig?.offset === "0"){
+      if(this.app.currentConfig.offset === '0'){
         console.log("no offset");
-        console.log(this.app.currentConfig?.offset)
         this.DeplNoOffsetCoord(orientation);
       }
       else{
-        console.log("offset");
-        /*this.DeplOffset(orientation);*/
+        console.log("offset = ", this.app.currentConfig.offset);
+        /*this.DeplOffsetCoord(orientation, Number(this.configService.configurationdata[0].offset));*/
       }
       console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
       this.selectedStep = undefined;    
@@ -213,6 +208,24 @@ export class DeplacementComponent implements OnChanges {
       }
     }
   }
+
+  DeplOffset(orientation : string, offset : number, deplacement : string ){
+    /*Add something to see the launch of the command*/
+    if (orientation === "X" && this.selectedStep){
+      if (this.coord[0].x + Math.abs(this.selectedStep) - offset<= 0 && deplacement==="-"){  /*if the movement is possible, current + abs(step) - offset <= 0*/
+      /*movement between 0 and offset*/
+        this.coord[0].x = this.coord[0].x - this.selectedStep;
+      }
+      else if (this.coord[0].x + Math.abs(this.selectedStep) + offset <=14000 && deplacement===""){  /*if the movement is possible, current + abs(step) + offset >= X*/
+        this.coord[0].x = this.coord[0].x + this.selectedStep;
+      }
+      else if (this.coord[0].x + Math.abs(this.selectedStep) + offset >= 14000 && deplacement===""){  /*if the movement is possible, current + abs(step) + offset >= X*/
+        this.coord[0].x = 14000;
+      }
+      else if (this.coord[0].x + Number(deplacement + this.selectedStep) >= 0 && this.coord[0].x + Number(deplacement + this.selectedStep) <= 14000 && deplacement==="-"){  /*if the movement is possible, negative movement but between max and 0 of the offset*/
+        this.coord[0].x= this.coord[0].x - this.selectedStep;
+      }
+    }}
 
   DeplNoOffsetCoord(orientation : string){
     /*Add something to see the launch of the command*/

@@ -36,7 +36,7 @@ export class AppComponent implements OnDestroy {
   configurationdata : ConfigData[] = configurations;
   /*configurationdata : ConfigData[] = configurations;*/
   config? : Config;
-  currentConfig? : Config;
+  currentConfig : Config = this.configurationdata[0];
   movingAllowed? : boolean;
   home : boolean = false;
   receipelistitem : string[] = [];

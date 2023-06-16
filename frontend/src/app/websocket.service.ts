@@ -86,7 +86,7 @@ export class WebSocketService {
         this.acceleration = data.read.substring(data.read.indexOf("X") + 2, data.read.indexOf("Y") - 1);
       }
       if (data.message.includes("M851")) {
-        this.offset = data.read.substring(data.read.indexOf("X") + 2, data.read.indexOf("Y") - 1);
+        this.offset = data.read.substring(data.read.indexOf("X") + 3, data.read.indexOf("Y") - 1);
       }
       this.configUpdated.emit({ step: this.steppermm, acceleration: this.acceleration, offset: this.offset, name: "current configuration", speed: "fastspeed", mode: "relatif", id: 0 });
       this.count += 1;
