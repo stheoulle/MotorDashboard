@@ -4,6 +4,7 @@ import { CoordService } from '../coord.service';
 import { COORDONNEES } from '../mock.coordonnees';
 import { AppComponent } from '../app.component';
 import { WebSocketService } from '../websocket.service';
+import { ConfigService } from '../config.service';
 
 
 @Component({
@@ -30,8 +31,7 @@ export class DeplacementComponent implements OnChanges {
   coordinateY : number = 0;
   coordinateZ : number = 0;
 
-  constructor(private coordService: CoordService, 
-    public app : AppComponent, public ws : WebSocketService) {
+  constructor(private coordService: CoordService, public app : AppComponent, public ws : WebSocketService, private configService : ConfigService) {
   }
 
   /*ngOnChanges() {
@@ -63,7 +63,7 @@ export class DeplacementComponent implements OnChanges {
 
   onSelectHome(): void {
     /*select the home command, allow the movements and reset the coordinates*/
-    if (this.app.pause == false){
+    if (this.app.pause === false){
       this.commande = "G28";   
       this.app.sendMessage("G28");
       this.coord[0].x = 0;
@@ -76,57 +76,18 @@ export class DeplacementComponent implements OnChanges {
 
   onSelectDeplacement(orientation : string, deplacement : string){
     /*Add something to see the launch of the command*/
-    if ((this.selectedStep) && (this.app.home) && (this.app.movingAllowed == true)) {
+    if ((this.selectedStep) && (this.app.home) && (this.app.movingAllowed === true)) {
       /*if we can do a movement*/
       this.deplacement = deplacement;
       this.orientation = orientation;
-      if (orientation == "X"){
-        if (deplacement == "" ){
-          this.coord[0].x = Number(this.coord[0].x) + Number(this.selectedStep);
-        }
-        else{
-          if (this.coord[0].x - this.selectedStep >= 0){
-            this.coord[0].x = this.coord[0].x - this.selectedStep;
-          }
-          else{
-            this.coord[0].x = 0;
-          }
-        }
-        if (this.coord[0].x < 0){
-          this.coord[0].x = 0;
-        }
+      if(Number(this.configService.configurationdata[0].offset) === 0){
+        console.log("no offset");
+        console.log(this.configService.configurationdata[0].offset);
+        this.DeplNoOffset(deplacement, orientation);
       }
-      else if (orientation == "Y"){
-        if (deplacement == ""){
-          this.coord[0].y = Number(this.coord[0].y) + Number(this.selectedStep);
-        }
-        else{
-          if(this.coord[0].y - this.selectedStep >= 0){
-            this.coord[0].y = this.coord[0].y - this.selectedStep;
-          }
-          else{
-            this.coord[0].y = 0;
-          }
-        if (this.coord[0].y < 0){
-          this.coord[0].y = 0;
-        }
-      }
-      }
-      else if (orientation == "Z"){
-        if (deplacement == "" ){
-          this.coord[0].z = Number(this.coord[0].z) + Number(this.selectedStep);
-        }
-        else{
-          if (this.coord[0].z - this.selectedStep >= 0){
-            this.coord[0].z = this.coord[0].z - this.selectedStep;
-          }
-          else{
-            this.coord[0].z = 0;
-          }
-        }
-        if (this.coord[0].z < 0){
-          this.coord[0].z = 0;
-        }
+      else{
+        console.log("offset", this.configService.configurationdata[0].offset);
+        /*this.DeplOffset(orientation);*/
       }
       console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
       this.speedmode = "G1";  /*Set the speedmode to G1 (feedrate) when moving using the buttons*/
@@ -142,16 +103,17 @@ export class DeplacementComponent implements OnChanges {
       this.coordinateX = this.coord[0].x;
       this.coordinateY = this.coord[0].y;
       this.coordinateZ = this.coord[0].z;
+      console.log(this.coordinateX);
 
     }
     /*Create and display the exeptions*/
-    else if ((this.selectedStep) && !(this.app.home) && (this.app.pause == false)){
+    else if ((this.selectedStep) && !(this.app.home) && (this.app.pause === false)){
       this.commande = "Home not done";
     }
-    else if (!(this.selectedStep) && (this.app.home) && (this.app.pause == false)){
+    else if (!(this.selectedStep) && (this.app.home) && (this.app.pause === false)){
       this.commande = "Step not chosen";
     }
-    else if (this.app.pause == true){
+    else if (this.app.pause === true){
       this.commande = "Process paused";
     }
     else {
@@ -162,10 +124,10 @@ export class DeplacementComponent implements OnChanges {
   onSelectDeplacementCoord(orientation : string){
     /*Add something to see the launch of the command*/
 
-    if ((this.selectedStep) && (this.app.home) && (this.app.movingAllowed == true)) {
+    if ((this.selectedStep) && (this.app.home) && (this.app.movingAllowed === true)) {
       /*if we can do a movement*/
       this.orientation = orientation;
-      if (this.listSpeedMode == "feedrate")
+      if (this.listSpeedMode === "feedrate")
       {
         this.speedmode = "G1";
       }
@@ -173,61 +135,26 @@ export class DeplacementComponent implements OnChanges {
         this.speedmode = "G0";
       }
       console.log(this.speedmode);
-      if (orientation == "X"){
-          /*Create the command to send to the websocket*/
-          if (this.selectedStep > this.coord[0].x){
-            this.commande = this.speedmode + this.orientation + (this.selectedStep - this.coord[0].x);
-          }
-          else{
-            this.commande = this.speedmode + this.orientation +"-"+ (this.coord[0].x - this.selectedStep);
-            
-          }
-        
-        this.coord[0].x = Number(this.selectedStep);
-        this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
+      if(this.app.currentConfig?.offset === "0"){
+        console.log("no offset");
+        console.log(this.app.currentConfig?.offset)
+        this.DeplNoOffsetCoord(orientation);
       }
-      else if (orientation == "Y"){
-          /*Create the command to send to the websocket*/
-          if (this.selectedStep > this.coord[0].y){
-            this.commande = this.speedmode + this.orientation + (this.selectedStep - this.coord[0].y);
-          }
-          else{
-            this.commande = this.speedmode + this.orientation +"-"+ (this.coord[0].y - this.selectedStep);
-            
-          }
-        
-        this.coord[0].y = Number(this.selectedStep);
-        this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
+      else{
+        console.log("offset");
+        /*this.DeplOffset(orientation);*/
       }
-      
-      else if (this.orientation == "Z"){
-          /*Create the command to send to the websocket*/
-          if (this.selectedStep > this.coord[0].z){
-            this.commande = this.speedmode + this.orientation + (this.selectedStep - this.coord[0].z);
-          }
-          else{
-            this.commande = this.speedmode + this.orientation +"-"+ (this.coord[0].z - this.selectedStep);
-            
-          }
-        
-        this.coord[0].z = Number(this.selectedStep);
-        this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
-      }
-      
       console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
-      
-      
-      this.selectedStep = undefined;
-      
+      this.selectedStep = undefined;    
     }
     /*Create and display the exeptions*/
-    else if ((this.selectedStep) && !(this.app.home) && (this.app.pause == false)){
+    else if ((this.selectedStep) && !(this.app.home) && (this.app.pause === false)){
       this.commande = "Home not done";
     }
-    else if (!(this.selectedStep) && (this.app.home) && (this.app.pause == false)){
+    else if (!(this.selectedStep) && (this.app.home) && (this.app.pause === false)){
       this.commande = "Step not chosen";
     }
-    else if (this.app.pause == true){
+    else if (this.app.pause === true){
       this.commande = "Process paused";
     }
     else {
@@ -235,7 +162,102 @@ export class DeplacementComponent implements OnChanges {
     }
   }
 
+  DeplNoOffset(deplacement : string, orientation : string){
+    /*Add something to see the launch of the command*/
+    if (orientation === "X" && this.selectedStep){
+      if (deplacement === "" ){
+        this.coord[0].x = Number(this.coord[0].x) + Number(this.selectedStep);
+      }
+      else{
+        if (this.coord[0].x - this.selectedStep >= 0){
+          this.coord[0].x = this.coord[0].x - this.selectedStep;
+        }
+        else{
+          this.coord[0].x = 0;
+        }
+      }
+      if (this.coord[0].x < 0){
+        this.coord[0].x = 0;
+      }
+    }
+    else if (orientation === "Y" && this.selectedStep){
+      if (deplacement === ""){
+        this.coord[0].y = Number(this.coord[0].y) + Number(this.selectedStep);
+      }
+      else{
+        if(this.coord[0].y - this.selectedStep >= 0){
+          this.coord[0].y = this.coord[0].y - this.selectedStep;
+        }
+        else{
+          this.coord[0].y = 0;
+        }
+      if (this.coord[0].y < 0){
+        this.coord[0].y = 0;
+      }
+    }
+    }
+    else if (orientation === "Z" && this.selectedStep){
+      if (deplacement === "" ){
+        this.coord[0].z = Number(this.coord[0].z) + Number(this.selectedStep);
+      }
+      else{
+        if (this.coord[0].z - this.selectedStep >= 0){
+          this.coord[0].z = this.coord[0].z - this.selectedStep;
+        }
+        else{
+          this.coord[0].z = 0;
+        }
+      }
+      if (this.coord[0].z < 0){
+        this.coord[0].z = 0;
+      }
+    }
+  }
+
+  DeplNoOffsetCoord(orientation : string){
+    /*Add something to see the launch of the command*/
+    if (orientation === "X" && this.selectedStep){
+        
+      /*Create the command to send to the websocket*/
+      if (this.selectedStep > this.coord[0].x){
+        this.commande = this.speedmode + this.orientation + (this.selectedStep - this.coord[0].x);
+      }
+      else{
+        this.commande = this.speedmode + this.orientation +"-"+ (this.coord[0].x - this.selectedStep);
+        
+      }
     
+    this.coord[0].x = Number(this.selectedStep);
+    this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
+    }
+    else if (orientation === "Y" && this.selectedStep){
+        /*Create the command to send to the websocket*/
+        if (this.selectedStep > this.coord[0].y){
+          this.commande = this.speedmode + this.orientation + (this.selectedStep - this.coord[0].y);
+        }
+        else{
+          this.commande = this.speedmode + this.orientation +"-"+ (this.coord[0].y - this.selectedStep);
+          
+        }
+      
+      this.coord[0].y = Number(this.selectedStep);
+      this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
+    }
+
+    else if (this.orientation === "Z" && this.selectedStep){
+        /*Create the command to send to the websocket*/
+        if (this.selectedStep > this.coord[0].z){
+          this.commande = this.speedmode + this.orientation + (this.selectedStep - this.coord[0].z);
+        }
+        else{
+          this.commande = this.speedmode + this.orientation +"-"+ (this.coord[0].z - this.selectedStep);
+          
+        }
+      
+      this.coord[0].z = Number(this.selectedStep);
+      this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
+    }
+  }
 
     onGetCoords(): void {
       /*get the current coordinates of the machine*/
