@@ -215,6 +215,7 @@ export class AppComponent implements OnDestroy {
     this.webSocketService.sendMessage("?M201");
     this.webSocketService.sendMessage("?M92");
     this.webSocketService.sendMessage("?M851");
+    this.webSocketService.sendMessage("G91");   /*set the mode to relative per default*/
     /*this.inputConfig.acceleration = await this.webSocketService.receivedData[0].read;
     console.log(this.inputConfig.acceleration);*/
   }

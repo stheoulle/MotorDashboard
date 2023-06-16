@@ -1,9 +1,9 @@
 [
     {"id" :1, "speed": "?", "mode" : "?", "acceleration" : "?", "name" : "?", "movingmode" : "step/sec", "step" : "?", "offset" : "?"},
 
-    {"id" :2, "speed": "feedrate", "mode" : "absolu", "acceleration" : "2",  "name": "Configuration 1", "movingmode" : "mm/sec", "step" : "1", "offset" : "0"},
+    {"id" :2, "speed": "feedrate", "mode" : "absolu", "acceleration" : "100",  "name": "Sans offset", "movingmode" : "mm/sec", "step" : "1", "offset" : "0"},
 
-    {"id" :3, "speed": "speedrate", "mode" : "absolu", "acceleration" : "2",  "name": "Configuration 2", "movingmode" : "step/sec", "step" : "1", "offset" : "0"},
+    {"id" :3, "speed": "speedrate", "mode" : "absolu", "acceleration" : "100",  "name": "Avec offset", "movingmode" : "step/sec", "step" : "1", "offset" : "10"},
 
     {"id" :4, "speed": "speedrate", "mode" : "absolu", "acceleration" : "2",  "name": "Configuration 3", "movingmode" : "mm/sec", "step" : "1", "offset" : "0"}
 ]

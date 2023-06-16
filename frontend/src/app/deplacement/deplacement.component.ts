@@ -83,10 +83,14 @@ export class DeplacementComponent implements OnChanges {
       if(this.app.currentConfig.offset === '0'){
         console.log("no offset");
         this.DeplNoOffset(deplacement, orientation);
+        
       }
       else{
         console.log("offset = ", this.app.currentConfig.offset );
         this.DeplOffset(orientation, Number(this.app.currentConfig.offset), deplacement);
+        this.coordinateX = this.coord[0].x - Number(this.app.currentConfig.offset);
+        this.coordinateY = this.coord[0].y - Number(this.app.currentConfig.offset);
+        this.coordinateZ = this.coord[0].z - Number(this.app.currentConfig.offset);
       }
       console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
       this.speedmode = "G1";  /*Set the speedmode to G1 (feedrate) when moving using the buttons*/
@@ -98,9 +102,9 @@ export class DeplacementComponent implements OnChanges {
       }
       this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
       /*this.onCommand = true;*/
-      this.coordinateX = this.coord[0].x - Number(this.app.currentConfig.offset);
-      this.coordinateY = this.coord[0].y - Number(this.app.currentConfig.offset);
-      this.coordinateZ = this.coord[0].z - Number(this.app.currentConfig.offset);
+      this.coordinateX = this.coord[0].x ;
+      this.coordinateY = this.coord[0].y ;
+      this.coordinateZ = this.coord[0].z ;
 
     }
     /*Create and display the exeptions*/
@@ -116,6 +120,7 @@ export class DeplacementComponent implements OnChanges {
     else {
       this.commande = "Home not done and step not chosen";
     }
+    
   }
 
   onSelectDeplacementCoord(orientation : string){
@@ -212,20 +217,60 @@ export class DeplacementComponent implements OnChanges {
   DeplOffset(orientation : string, offset : number, deplacement : string ){
     /*Add something to see the launch of the command*/
     if (orientation === "X" && this.selectedStep){
-      if (this.coord[0].x + Math.abs(this.selectedStep) - offset<= 0 && deplacement==="-"){  /*if the movement is possible, current + abs(step) - offset <= 0*/
-      /*movement between 0 and offset*/
-        this.coord[0].x = this.coord[0].x - this.selectedStep;
+      if(deplacement === ""){
+        if(this.coord[0].x + this.selectedStep <= 14000){
+          this.coord[0].x = this.coord[0].x + this.selectedStep;
+        }
+        else{
+          this.coord[0].x = 14000;
+        }
       }
-      else if (this.coord[0].x + Math.abs(this.selectedStep) + offset <=14000 && deplacement===""){  /*if the movement is possible, current + abs(step) + offset >= X*/
-        this.coord[0].x = this.coord[0].x + this.selectedStep;
+      else{
+        if(this.coord[0].x - this.selectedStep >= 0){
+          this.coord[0].x = this.coord[0].x - this.selectedStep;
+        }
+        else{
+          this.coord[0].x = 0;
+        }
       }
-      else if (this.coord[0].x + Math.abs(this.selectedStep) + offset >= 14000 && deplacement===""){  /*if the movement is possible, current + abs(step) + offset >= X*/
-        this.coord[0].x = 14000;
+    }
+    else if (orientation === "Y" && this.selectedStep){
+      if(deplacement === ""){
+        if(this.coord[0].y + this.selectedStep <= 14000){
+          this.coord[0].y = this.coord[0].y + this.selectedStep;
+        }
+        else{
+          this.coord[0].y = 14000;
+        }
       }
-      else if (this.coord[0].x + Number(deplacement + this.selectedStep) >= 0 && this.coord[0].x + Number(deplacement + this.selectedStep) <= 14000 && deplacement==="-"){  /*if the movement is possible, negative movement but between max and 0 of the offset*/
-        this.coord[0].x= this.coord[0].x - this.selectedStep;
+      else{
+        if(this.coord[0].y - this.selectedStep >= 0){
+          this.coord[0].y = this.coord[0].y - this.selectedStep;
+        }
+        else{
+          this.coord[0].y = 0;
+        }
       }
-    }}
+    }
+    else if (orientation === "Z" && this.selectedStep){
+      if(deplacement === ""){
+        if(this.coord[0].z + this.selectedStep <= 14000){
+          this.coord[0].z = this.coord[0].z + this.selectedStep;
+        }
+        else{
+          this.coord[0].z = 14000;
+        }
+      }
+      else{
+        if(this.coord[0].z - this.selectedStep >= 0){
+          this.coord[0].z = this.coord[0].z - this.selectedStep;
+        }
+        else{
+          this.coord[0].z = 0;
+        }
+      }
+    }
+  }
 
   DeplNoOffsetCoord(orientation : string){
     /*Add something to see the launch of the command*/
