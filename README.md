@@ -16,7 +16,7 @@ Change the configuration of the system.
 
 ### Move
 
-send commands to the system to move on the axis.
+Send commands to the system to move on the axis.
 Home is required before any other movement.
 Movement allowed on a defined number of steps or to precise coordinates directly (in steps for now too).
 
