@@ -66,7 +66,7 @@
           <router-outlet></router-outlet>    <!--Tells the router where to display routed views-->
           
         </div>
-        <div class = "current-config">
+        <div class = "current-config" *ngIf="!this.webSocketService.onCommand">
           <app-default-conf [currentconfig]="inputConfig" class="elements" *ngIf=" router.url != '/receipe'"></app-default-conf>
           
         </div>
