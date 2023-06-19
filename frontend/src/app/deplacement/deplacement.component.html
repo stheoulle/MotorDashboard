@@ -85,6 +85,9 @@
                     <p> Z       </p>
                     <input [(ngModel)]="unknown" placeholder="coordinateZ" readonly>
                 </div> 
+                <button class="btn btn-dark" (click)="onGetCoords()">
+                    <i class="glyphicon glyphicon-retweet"></i>
+                </button> 
             </div>
             <div class="after-home" *ngIf="this.app.home">
                 <div class="X">

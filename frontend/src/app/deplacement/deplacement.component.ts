@@ -40,6 +40,7 @@ export class DeplacementComponent implements OnChanges {
 
   ngOnChanges(): void {
     this.GetX(this.ws.coordX);
+    
   }
 
   getCoords(): void {
@@ -52,8 +53,23 @@ export class DeplacementComponent implements OnChanges {
     this.ws.coordUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.coord[0].x = value.x;
       this.coord[0].y = value.y;
-      /*this.coord[0].z = value.z;*/
+      this.coord[0].z = value.z;
+      
     });
+    this.ws.coordShowedUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+      this.coordinateX = value.x;
+      this.coordinateY = value.y;
+      this.coordinateZ = value.z;
+    });
+    this.ws.newOffset.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+      
+      this.coordinateX = this.coordinateX-(Number(this.app.currentConfig.offset) - value);
+      this.app.currentConfig.offset = value.toString();
+      /*this.coordinateY = this.coordinateY-Number(value);
+      this.coordinateZ = this.coordinateZ-Number(value);*/
+      /*uncomment this if you want to update the coordinates when the offset is changed for multiple axis*/
+    });
+    
   }
 
   onSelect(n : number): void {
@@ -66,13 +82,11 @@ export class DeplacementComponent implements OnChanges {
     if (this.app.pause === false){
       this.commande = "G28";   
       this.app.sendMessage("G28");
-      this.coord[0].x = 0;
-      this.coord[0].y = 0;
-      this.coord[0].z = 0;
+      
       /*Add something to see the launch of the command*/
       /*this.onCommand = true;*/
+      }
     }
-  }
 
   onSelectDeplacement(orientation : string, deplacement : string){
     /*Add something to see the launch of the command*/
@@ -83,14 +97,13 @@ export class DeplacementComponent implements OnChanges {
       if(this.app.currentConfig.offset === '0'){
         console.log("no offset");
         this.DeplNoOffset(deplacement, orientation);
-        
+        this.coordinateX = this.coord[0].x ;
+        this.coordinateY = this.coord[0].y ;
+        this.coordinateZ = this.coord[0].z ;
       }
       else{
         console.log("offset = ", this.app.currentConfig.offset );
         this.DeplOffset(orientation, Number(this.app.currentConfig.offset), deplacement);
-        this.coordinateX = this.coord[0].x - Number(this.app.currentConfig.offset);
-        this.coordinateY = this.coord[0].y - Number(this.app.currentConfig.offset);
-        this.coordinateZ = this.coord[0].z - Number(this.app.currentConfig.offset);
       }
       console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
       this.speedmode = "G1";  /*Set the speedmode to G1 (feedrate) when moving using the buttons*/
@@ -102,9 +115,7 @@ export class DeplacementComponent implements OnChanges {
       }
       this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
       /*this.onCommand = true;*/
-      this.coordinateX = this.coord[0].x ;
-      this.coordinateY = this.coord[0].y ;
-      this.coordinateZ = this.coord[0].z ;
+      
 
     }
     /*Create and display the exeptions*/
@@ -220,17 +231,21 @@ export class DeplacementComponent implements OnChanges {
       if(deplacement === ""){
         if(this.coord[0].x + this.selectedStep <= 14000){
           this.coord[0].x = this.coord[0].x + this.selectedStep;
+          this.coordinateX = this.coord[0].x - Number(this.app.currentConfig.offset);
         }
         else{
           this.coord[0].x = 14000;
+          this.coordinateX = 14000- Number(this.app.currentConfig.offset);
         }
       }
       else{
         if(this.coord[0].x - this.selectedStep >= 0){
           this.coord[0].x = this.coord[0].x - this.selectedStep;
+          this.coordinateX = this.coord[0].x - Number(this.app.currentConfig.offset);
         }
         else{
           this.coord[0].x = 0;
+          this.coordinateX = 0 - Number(this.app.currentConfig.offset);
         }
       }
     }
@@ -238,17 +253,21 @@ export class DeplacementComponent implements OnChanges {
       if(deplacement === ""){
         if(this.coord[0].y + this.selectedStep <= 14000){
           this.coord[0].y = this.coord[0].y + this.selectedStep;
+          this.coordinateY = this.coord[0].y - Number(this.app.currentConfig.offset);
         }
         else{
           this.coord[0].y = 14000;
+          this.coordinateY = 14000 - Number(this.app.currentConfig.offset);
         }
       }
       else{
         if(this.coord[0].y - this.selectedStep >= 0){
           this.coord[0].y = this.coord[0].y - this.selectedStep;
+          this.coordinateY = this.coord[0].y - Number(this.app.currentConfig.offset);
         }
         else{
           this.coord[0].y = 0;
+          this.coordinateY = 0 - Number(this.app.currentConfig.offset);
         }
       }
     }
@@ -256,17 +275,21 @@ export class DeplacementComponent implements OnChanges {
       if(deplacement === ""){
         if(this.coord[0].z + this.selectedStep <= 14000){
           this.coord[0].z = this.coord[0].z + this.selectedStep;
+          this.coordinateZ = this.coord[0].z - Number(this.app.currentConfig.offset);
         }
         else{
           this.coord[0].z = 14000;
+          this.coordinateZ = 14000 - Number(this.app.currentConfig.offset);
         }
       }
       else{
         if(this.coord[0].z - this.selectedStep >= 0){
           this.coord[0].z = this.coord[0].z - this.selectedStep;
+          this.coordinateZ = this.coord[0].z - Number(this.app.currentConfig.offset);
         }
         else{
           this.coord[0].z = 0;
+          this.coordinateZ = 0 - Number(this.app.currentConfig.offset);
         }
       }
     }
@@ -326,14 +349,6 @@ export class DeplacementComponent implements OnChanges {
       /*this.coord[0].x = this.ws.coordX;*/
 
     }
-  
-    /*ChangeStatusOnCommand(newItem: boolean) {
-      this.onCommand= newItem;
-    }*/
-
-    /*ChangeCoord (value : number){
-      this.wscoordX.emit(value);
-    }*/
     
 
     GetX(value : number){

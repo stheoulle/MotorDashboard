@@ -20,8 +20,10 @@ export class WebSocketService {
   /*@Input() setup? : boolean;*/
   /*@Output() deplacement? : Coordonnees;*/
   coordUpdated : EventEmitter<Coordonnees> = new EventEmitter<Coordonnees>();
+  coordShowedUpdated : EventEmitter<Coordonnees> = new EventEmitter<Coordonnees>();
   recordedCommandUpdated : EventEmitter<string> = new EventEmitter<string>();
   configUpdated : EventEmitter<Config> = new EventEmitter<Config>();
+  newOffset : EventEmitter<number> = new EventEmitter<number>();
   onCommand : boolean = false;
   public socket$!: WebSocket;
   public receivedData: MessageData[] = [];
@@ -39,6 +41,7 @@ export class WebSocketService {
   onreceipe : boolean = false;
   totalLoop : number = -1;
   currentLoop : number = 1;
+
 
   constructor( /*private depl: DeplacementComponent, private app : AppComponent*/) {}
 
@@ -87,10 +90,35 @@ export class WebSocketService {
       }
       if (data.message.includes("M851")) {
         this.offset = data.read.substring(data.read.indexOf("X") + 3, data.read.indexOf("Y") - 1);
+        this.newOffset.emit(Number(this.offset));
+        /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
+        if(this.offset !== '0'){
+          this.coordX = -Number(this.offset);
+          /*this.coordY = -Number(this.offset);*/
+          this.coordShowedUpdated.emit({ x: this.coordX, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
+        }
+        else{
+          /*this.coordY = 0;*/
+          this.coordShowedUpdated.emit({ x: 0, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
+        }
+        console.log("offset : ", this.offset, "coordX : ", this.coordX, "coordY : ", this.coordY);
       }
+      
       this.configUpdated.emit({ step: this.steppermm, acceleration: this.acceleration, offset: this.offset, name: "current configuration", speed: "fastspeed", mode: "relatif", id: 0 });
       this.count += 1;
       
+    }
+    if(data.message.includes("G28")){
+      if(this.offset !== '0'){
+        this.coordX = -Number(this.offset);
+        /*this.coordY = -Number(this.offset);*/
+        this.coordShowedUpdated.emit({ x: this.coordX, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
+      }
+      else{
+        /*this.coordY = 0;*/
+        this.coordShowedUpdated.emit({ x: 0, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
+      }
+      console.log("offset : ", this.offset, "coordX : ", this.coordX, "coordY : ", this.coordY);
     }
     if (this.count === 3) {
       this.gettingconfig = false;

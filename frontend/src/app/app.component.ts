@@ -105,6 +105,7 @@ export class AppComponent implements OnDestroy {
         console.log(message);
       }
     }
+    
   }
 
   sendMessageList(message: string) {
