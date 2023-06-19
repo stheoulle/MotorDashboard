@@ -24,6 +24,7 @@ export class WebSocketService {
   recordedCommandUpdated : EventEmitter<string> = new EventEmitter<string>();
   configUpdated : EventEmitter<Config> = new EventEmitter<Config>();
   newOffset : EventEmitter<number> = new EventEmitter<number>();
+  axisUpdated : EventEmitter<{x : boolean, y : boolean, z : boolean}> = new EventEmitter<{x : boolean, y : boolean, z : boolean}> ();
   onCommand : boolean = false;
   public socket$!: WebSocket;
   public receivedData: MessageData[] = [];
@@ -41,6 +42,9 @@ export class WebSocketService {
   onreceipe : boolean = false;
   totalLoop : number = -1;
   currentLoop : number = 1;
+  axisX : boolean = false;
+  axisY : boolean = false;
+  axisZ : boolean = false;
 
 
   constructor( /*private depl: DeplacementComponent, private app : AppComponent*/) {}
@@ -69,7 +73,6 @@ export class WebSocketService {
   receive(ev: MessageEvent): void {
     var data : MessageData;
     data = JSON.parse(ev.data);
-    console.log("data received : ", data);
     this.receivedData.push(data);
     /* Check if it's a configuration command to free the loading screen or not */
     if (data.message.includes("M114")) {
@@ -106,8 +109,47 @@ export class WebSocketService {
       
       this.configUpdated.emit({ step: this.steppermm, acceleration: this.acceleration, offset: this.offset, name: "current configuration", speed: "fastspeed", mode: "relatif", id: 0 });
       this.count += 1;
-      
     }
+    else{
+      if (data.message.includes("M851")) {
+        this.offset = data.read.substring(data.read.indexOf("X") + 3, data.read.indexOf("Y") - 1);
+        this.newOffset.emit(Number(this.offset));
+        /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
+        if(this.offset !== '0'){
+          this.coordX = -Number(this.offset);
+          /*this.coordY = -Number(this.offset);*/
+          this.coordShowedUpdated.emit({ x: this.coordX, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
+        }
+        else{
+          /*this.coordY = 0;*/
+          this.coordShowedUpdated.emit({ x: 0, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
+        }
+        console.log("offset : ", this.offset, "coordX : ", this.coordX, "coordY : ", this.coordY);
+      }
+    }
+    if (data.message.includes("M92")) {
+      console.log("data message : ",data.message);
+      if (data.read.includes("X")) {
+        this.axisX = true;
+      }
+      else{
+        this.axisX = false;
+      }
+      if (data.read.includes("Y")) {
+        this.axisY = true;
+      }
+      else{
+        this.axisY = false;
+      }
+      if (data.read.includes("Z")) {
+        this.axisZ = true;
+      }
+      else{
+        this.axisZ = false;
+      }
+      this.axisUpdated.emit({x : this.axisX, y : this.axisY, z : this.axisZ});
+    }
+
     if(data.message.includes("G28")){
       if(this.offset !== '0'){
         this.coordX = -Number(this.offset);
@@ -160,7 +202,7 @@ export class WebSocketService {
   }
   
 
-  sendMessageStop(message: string) {
+  sendMessageStop() {
     /*send urgent stop and delete the queue*/
     this.onCommand = false;
     /*console.log("urgent stop");
@@ -169,6 +211,7 @@ export class WebSocketService {
     this.messageslist = [];
     this.messageslist.push("M112");
     console.log("stop done onCommand = ", this.onCommand);
+    this.messageslist.push("M114");
   }
 
   endloop(){

@@ -2,7 +2,7 @@
     <div class = "deplacement-panel" *ngIf="this.ws.onCommand==false" > <!---->
         <div class = "step"> <!--Selection of the step-->
             Step
-            <li *ngFor="let coords of coord">
+            <li *ngFor="let coords of coord" >
                 <a button type = "button" class="btn btn-dark " (click)="onSelect(200)">
                     200
                 </a> 
@@ -16,53 +16,51 @@
                 -----
             </li>
         </div>
-        <div class ="moveXYZ">   <!--Selection of the direction-->
-            <div class = "MoveY">
+        <div class="moveXYZ">   <!--Selection of the direction-->
+            <div class="MoveY" *ngIf="axisY">
                 - Y
             </div>
-            <div class = "MoveL">
+            <div class="MoveL" *ngIf="axisX">
                 X
-                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('X','')">
+                <a button type="button" class="btn btn-dark" (click)="onSelectDeplacement('X','')">
                     <i class="glyphicon glyphicon-arrow-up"></i>
                 </a> 
-                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('Y','-')">
+                <a button type="button" class="btn btn-dark" (click)="onSelectDeplacement('Y','-')">
                     <i class="glyphicon glyphicon-arrow-left"></i>
                 </a>
                 <!--Si pas cliqué le mettre au rouge, si cliqué en cours en orange et done en vert (faire des tests sur une variable)-->
                 
-                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('X','-')">
+                <a button type="button" class="btn btn-dark" (click)="onSelectDeplacement('X','-')">
                     <i class="glyphicon glyphicon-arrow-down"></i>
                 </a>  
                 -X
             </div>
-            <div class = "Home">
-                <a button type = "button" class="btn btn-dark" (click)="onSelectHome()">
+            <div [ngClass]="{'Home': !this.app.home, 'LastLine': !this.app.home}">
+                <a button type="button" class="btn btn-dark" (click)="onSelectHome()">
                     <i class="glyphicon glyphicon-home"></i>
                 </a>        
             </div>
             
-            <div class = "MoveR">
+            <div class="MoveR" *ngIf="axisZ">
                 Z
-                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('Z','')">
+                <a button type="button" class="btn btn-dark" (click)="onSelectDeplacement('Z','')">
                     <i class="glyphicon glyphicon-arrow-up"></i>
                 </a> 
-                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('Y','')">
+                <a button type="button" class="btn btn-dark" (click)="onSelectDeplacement('Y','')">
                     <i class="glyphicon glyphicon-arrow-right"></i>
                 </a>
                 <!--Si pas cliqué le mettre au rouge, si cliqué en cours en orange et done en vert (faire des tests sur une variable)-->
                 
-                <a button type = "button" class="btn btn-dark" (click)="onSelectDeplacement('Z','-')">
+                <a button type="button" class="btn btn-dark" (click)="onSelectDeplacement('Z','-')">
                     <i class="glyphicon glyphicon-arrow-down"></i>
                 </a>  
                 - Z
             </div>
-            <div class = "MoveY">
+            <div class="MoveY" *ngIf="axisY">
                 Y
             </div>
         </div>
-        <div class=" bar">
-            
-        </div>
+        
         <div class = "coordonnees"> <!--Selection of the coordinates-->
             <!-- Coordinates are in steps-->
             <div class = "speed">
@@ -85,9 +83,6 @@
                     <p> Z       </p>
                     <input [(ngModel)]="unknown" placeholder="coordinateZ" readonly>
                 </div> 
-                <button class="btn btn-dark" (click)="onGetCoords()">
-                    <i class="glyphicon glyphicon-retweet"></i>
-                </button> 
             </div>
             <div class="after-home" *ngIf="this.app.home">
                 <div class="X">

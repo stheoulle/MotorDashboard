@@ -65,7 +65,7 @@ a {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 18%;
+    width: 30%;
   }
 
   .step li{
@@ -146,6 +146,7 @@ a {
     align-items: center;
     width: 25%;
     margin-right: 5%;
+    margin-left: 5%;
   }
 
 
@@ -153,7 +154,13 @@ a {
   .Home{
     margin-left: 3%;
     margin-right: 3%;
+    
   }
+
+  .LastLine{
+    position: absolute;
+  }
+
   .MoveL{
     display: flex;
     flex-direction: column;
@@ -170,6 +177,13 @@ a {
 
   .after-home button{
     margin-left: 20%;
+  }
+
+  .speed{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 5%;
   }
   
 

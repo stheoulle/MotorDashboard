@@ -30,6 +30,9 @@ export class DeplacementComponent implements OnChanges {
   coordinateX : number = 0;
   coordinateY : number = 0;
   coordinateZ : number = 0;
+  axisX : boolean = false;
+  axisY : boolean = false;
+  axisZ : boolean = false;
 
   constructor(private coordService: CoordService, public app : AppComponent, public ws : WebSocketService, private configService : ConfigService) {
   }
@@ -57,6 +60,7 @@ export class DeplacementComponent implements OnChanges {
       
     });
     this.ws.coordShowedUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+    console.log("coordShowedUpdated : ", value);
       this.coordinateX = value.x;
       this.coordinateY = value.y;
       this.coordinateZ = value.z;
@@ -68,6 +72,12 @@ export class DeplacementComponent implements OnChanges {
       /*this.coordinateY = this.coordinateY-Number(value);
       this.coordinateZ = this.coordinateZ-Number(value);*/
       /*uncomment this if you want to update the coordinates when the offset is changed for multiple axis*/
+    });
+    this.ws.axisUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+      this.axisX = value.x;
+      this.axisY = value.y;
+      this.axisZ = value.z;
+      console.log("axisUpdated : ", value);
     });
     
   }
