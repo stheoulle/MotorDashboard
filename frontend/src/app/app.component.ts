@@ -80,7 +80,7 @@ export class AppComponent implements OnDestroy {
 
     if(message == "M112")
     {
-      this.webSocketService.sendMessageStop(message);
+      this.webSocketService.sendMessageStop();
     }
     else{
       if (this.knownConfig == false && message != "M112"){

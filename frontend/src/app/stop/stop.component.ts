@@ -15,10 +15,10 @@ export class StopComponent {
 
   constructor(private router:Router, private app : AppComponent, private ws : WebSocketService) {
     /*if we are on the stop page, we send the command M112 to stop the machine*/
-    this.ws.sendMessageStop("M112");
-    this.app.sendMessage("M114");
+    this.ws.sendMessageStop();
     this.app.lock = false;
-    alert("The machine has been stopped");
+    this.app.home = false;
+    alert("The machine will be stopped");
     /*this.app.home = false;    /*Remove this if an urgent stop does not reset the home position*/
 
   }  
