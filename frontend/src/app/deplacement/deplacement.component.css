@@ -73,7 +73,7 @@ a {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 40%;
+    width: 55%;
   }
 
   
@@ -82,7 +82,7 @@ a {
     display: flex;
     flex-direction: column;
     margin-right: 5%;
-    margin-left: 12%;
+    margin-left: 5%;
     align-items: center;
     border-left: solid;
   }
@@ -139,28 +139,96 @@ a {
     margin-left: 20%;
   }
 
-  .moveXYZ{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 25%;
-    margin-right: 5%;
-    margin-left: 5%;
+  .moveXYZ {
+    width: 100%;
+    height: 175px; /* Assumant une hauteur fixe */
+    position: relative;
   }
-
-
   
-  .Home{
-    margin-left: 3%;
-    margin-right: 3%;
-    
-  }
-
-  .LastLine{
+  .moveXYZ > div {
     position: absolute;
   }
+  
+  .Xpos {
+    left: 40%;
+    top: -5%;
+    transform: translate(-50%, 0%);
+  }
+  
+  .Xneg {
+    left: 40%;
+    top: 105%;
+    transform: translate(-50%, -100%);
+  }
 
+  .home {
+    left: 33.5%;
+    top: 37%;
+  }
+
+  .Xup {
+    left: 40%;
+    top: 5%;
+    transform: translate(-50%, 0%);
+  }
+  
+  .Xdown {
+    left: 40%;
+    top: 95%;
+    transform: translate(-50%, -100%);
+  }
+  
+  
+  .Ypos {
+    left: 75%;
+    top: 50%;
+    transform: translate(-100%, -50%);
+  }
+  
+  .Yneg {
+    left: 5%;
+    top: 45%;
+  }
+  
+  .Ydown {
+    left: 15%;
+    top: 37%;
+  }
+  
+  .Yup {
+    left: 67%;
+    top: 37%;
+    transform: translate(-100%, 0%);
+  }
+
+  
+  .Zpos {
+    left: 90%;
+    top: -5%;
+    transform: translate(-50%, 0%);
+  }
+  
+  .Zneg {
+    left: 90%;
+    top: 105%;
+    transform: translate(-50%, -100%);
+  }
+
+  .Zup {
+    left: 90%;
+    top: 5%;
+    transform: translate(-50%, 0%);
+  }
+  
+  .Zdown {
+    left: 90%;
+    top: 95%;
+    transform: translate(-50%, -100%);
+  }
+
+  
+  
+  
   .MoveL{
     display: flex;
     flex-direction: column;
