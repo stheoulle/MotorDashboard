@@ -259,4 +259,9 @@ a {
   }
   
 
+  .button-coord{
+    display: flex;
+    flex-direction: row;
+  }
+
   
