@@ -23,6 +23,7 @@ import { ReceipeDetailsComponent } from './receipe-details/receipe-details.compo
 import { RecordloopComponent } from './recordloop/recordloop.component';
 import { GcodeComponent } from './gcode/gcode.component';
 import { BarComponent } from './bar/bar.component';
+import { VoidComponent } from './void/void.component';
 /*import { DefaultConfComponent } from './default-conf/default-conf.component';*/
 
 /*import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api'; /**The HttpClientInMemoryWebApiModule module intercepts HTTP requests and returns simulated server responses. Remove it when a real server is ready to receive requests. 
@@ -43,6 +44,7 @@ import { InMemoryDataService } from './in-memory-data.service'; /**The InMemoryD
     RecordloopComponent,
     GcodeComponent,
     BarComponent,
+    VoidComponent,
     /*DefaultConfComponent,*/
   ],
   imports: [
