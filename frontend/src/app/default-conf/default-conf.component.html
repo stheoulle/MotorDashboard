@@ -1,8 +1,26 @@
-<div class="current-conf" >
-      <label for="config-name">Name : {{currentconfig.name}}</label>
-      <label for="speed">Speed : {{currentconfig.speed}} </label> 
-      <label for="mode">Mode : {{currentconfig.mode}} </label> 
-      <label for="config-acceleration">Acceleration : {{currentconfig.acceleration}}</label>
-      <label for="config-steppermm">Step per mm : {{currentconfig.step}}</label>
-      <label for="config-offset">Offset : {{currentconfig.offset}}</label>
+<div class = "configurations">
+      <div class="current-confX" *ngIf="currentconfigX.speed !== '?'">
+            <label for="config-name">Name : {{currentconfigX.name}}</label>
+            <label for="speed">Speed : {{currentconfigX.speed}} </label> 
+            <label for="mode">Mode : {{currentconfigX.mode}} </label> 
+            <label for="config-acceleration">Acceleration : {{currentconfigX.acceleration}}</label>
+            <label for="config-steppermm">Step per mm : {{currentconfigX.step}}</label>
+            <label for="config-offset">Offset : {{currentconfigX.offset}}</label>
+      </div>
+      <div class="current-confY" *ngIf="currentconfigY.speed !== '?'">
+            <label for="config-name">Name : {{currentconfigY.name}}</label>
+            <label for="speed">Speed : {{currentconfigY.speed}} </label> 
+            <label for="mode">Mode : {{currentconfigY.mode}} </label> 
+            <label for="config-acceleration">Acceleration : {{currentconfigY.acceleration}}</label>
+            <label for="config-steppermm">Step per mm : {{currentconfigY.step}}</label>
+            <label for="config-offset">Offset : {{currentconfigY.offset}}</label>
+      </div>
+      <div class="current-confZ" *ngIf="currentconfigZ.speed !== '?'">
+            <label for="config-name">Name : {{currentconfigZ.name}}</label>
+            <label for="speed">Speed : {{currentconfigZ.speed}} </label> 
+            <label for="mode">Mode : {{currentconfigZ.mode}} </label> 
+            <label for="config-acceleration">Acceleration : {{currentconfigZ.acceleration}}</label>
+            <label for="config-steppermm">Step per mm : {{currentconfigZ.step}}</label>
+            <label for="config-offset">Offset : {{currentconfigZ.offset}}</label>
+      </div>
 </div>

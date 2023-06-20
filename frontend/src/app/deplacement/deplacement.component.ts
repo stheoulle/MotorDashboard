@@ -65,13 +65,18 @@ export class DeplacementComponent implements OnChanges {
       this.coordinateY = value.y;
       this.coordinateZ = value.z;
     });
-    this.ws.newOffset.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+    this.ws.newOffsetX.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       
-      this.coordinateX = this.coordinateX-(Number(this.app.currentConfig.offset) - value);
-      this.app.currentConfig.offset = value.toString();
-      /*this.coordinateY = this.coordinateY-Number(value);
-      this.coordinateZ = this.coordinateZ-Number(value);*/
-      /*uncomment this if you want to update the coordinates when the offset is changed for multiple axis*/
+      this.coordinateX = this.coordinateX-(Number(this.app.currentConfigX.offset) - value);
+      this.app.currentConfigX.offset = value.toString();
+    });
+    this.ws.newOffsetY.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+      this.coordinateY = this.coordinateY-(Number(this.app.currentConfigY.offset) - value);
+      this.app.currentConfigY.offset = value.toString();
+    });
+    this.ws.newOffsetZ.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+      this.coordinateZ = this.coordinateZ-(Number(this.app.currentConfigZ.offset) - value);
+      this.app.currentConfigZ.offset = value.toString();
     });
     this.ws.axisUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.axisX = value.x;
@@ -104,7 +109,7 @@ export class DeplacementComponent implements OnChanges {
       /*if we can do a movement*/
       this.deplacement = deplacement;
       this.orientation = orientation;
-      if(this.app.currentConfig.offset === '0'){
+      if(this.app.currentConfigX.offset === '0'){
         console.log("no offset");
         this.DeplNoOffset(deplacement, orientation);
         this.coordinateX = this.coord[0].x ;
@@ -112,8 +117,8 @@ export class DeplacementComponent implements OnChanges {
         this.coordinateZ = this.coord[0].z ;
       }
       else{
-        console.log("offset = ", this.app.currentConfig.offset );
-        this.DeplOffset(orientation, Number(this.app.currentConfig.offset), deplacement);
+        console.log("offset = ", this.app.currentConfigX.offset );
+        this.DeplOffset(orientation, Number(this.app.currentConfigX.offset), deplacement);
       }
       console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
       this.speedmode = "G1";  /*Set the speedmode to G1 (feedrate) when moving using the buttons*/
@@ -157,12 +162,12 @@ export class DeplacementComponent implements OnChanges {
       else {
         this.speedmode = "G0";
       }
-      if(this.app.currentConfig.offset === '0'){
+      if(this.app.currentConfigX.offset === '0'){
         console.log("no offset");
         this.DeplNoOffsetCoord(orientation);
       }
       else{
-        console.log("offset = ", this.app.currentConfig.offset);
+        console.log("offset = ", this.app.currentConfigX.offset);
         /*this.DeplOffsetCoord(orientation, Number(this.configService.configurationdata[0].offset));*/
       }
       console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
@@ -241,21 +246,21 @@ export class DeplacementComponent implements OnChanges {
       if(deplacement === ""){
         if(this.coord[0].x + this.selectedStep <= 14000){
           this.coord[0].x = this.coord[0].x + this.selectedStep;
-          this.coordinateX = this.coord[0].x - Number(this.app.currentConfig.offset);
+          this.coordinateX = this.coord[0].x - Number(this.app.currentConfigX.offset);
         }
         else{
           this.coord[0].x = 14000;
-          this.coordinateX = 14000- Number(this.app.currentConfig.offset);
+          this.coordinateX = 14000- Number(this.app.currentConfigX.offset);
         }
       }
       else{
         if(this.coord[0].x - this.selectedStep >= 0){
           this.coord[0].x = this.coord[0].x - this.selectedStep;
-          this.coordinateX = this.coord[0].x - Number(this.app.currentConfig.offset);
+          this.coordinateX = this.coord[0].x - Number(this.app.currentConfigX.offset);
         }
         else{
           this.coord[0].x = 0;
-          this.coordinateX = 0 - Number(this.app.currentConfig.offset);
+          this.coordinateX = 0 - Number(this.app.currentConfigX.offset);
         }
       }
     }
@@ -263,21 +268,21 @@ export class DeplacementComponent implements OnChanges {
       if(deplacement === ""){
         if(this.coord[0].y + this.selectedStep <= 14000){
           this.coord[0].y = this.coord[0].y + this.selectedStep;
-          this.coordinateY = this.coord[0].y - Number(this.app.currentConfig.offset);
+          this.coordinateY = this.coord[0].y - Number(this.app.currentConfigY.offset);
         }
         else{
           this.coord[0].y = 14000;
-          this.coordinateY = 14000 - Number(this.app.currentConfig.offset);
+          this.coordinateY = 14000 - Number(this.app.currentConfigY.offset);
         }
       }
       else{
         if(this.coord[0].y - this.selectedStep >= 0){
           this.coord[0].y = this.coord[0].y - this.selectedStep;
-          this.coordinateY = this.coord[0].y - Number(this.app.currentConfig.offset);
+          this.coordinateY = this.coord[0].y - Number(this.app.currentConfigY.offset);
         }
         else{
           this.coord[0].y = 0;
-          this.coordinateY = 0 - Number(this.app.currentConfig.offset);
+          this.coordinateY = 0 - Number(this.app.currentConfigY.offset);
         }
       }
     }
@@ -285,21 +290,21 @@ export class DeplacementComponent implements OnChanges {
       if(deplacement === ""){
         if(this.coord[0].z + this.selectedStep <= 14000){
           this.coord[0].z = this.coord[0].z + this.selectedStep;
-          this.coordinateZ = this.coord[0].z - Number(this.app.currentConfig.offset);
+          this.coordinateZ = this.coord[0].z - Number(this.app.currentConfigZ.offset);
         }
         else{
           this.coord[0].z = 14000;
-          this.coordinateZ = 14000 - Number(this.app.currentConfig.offset);
+          this.coordinateZ = 14000 - Number(this.app.currentConfigZ.offset);
         }
       }
       else{
         if(this.coord[0].z - this.selectedStep >= 0){
           this.coord[0].z = this.coord[0].z - this.selectedStep;
-          this.coordinateZ = this.coord[0].z - Number(this.app.currentConfig.offset);
+          this.coordinateZ = this.coord[0].z - Number(this.app.currentConfigZ.offset);
         }
         else{
           this.coord[0].z = 0;
-          this.coordinateZ = 0 - Number(this.app.currentConfig.offset);
+          this.coordinateZ = 0 - Number(this.app.currentConfigZ.offset);
         }
       }
     }

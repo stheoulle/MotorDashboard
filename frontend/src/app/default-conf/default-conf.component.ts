@@ -10,7 +10,9 @@ import { AppComponent } from '../app.component';
   styleUrls: ['./default-conf.component.css']
 })
 export class DefaultConfComponent {
-  @Input() currentconfig : ConfigInput = this.configService.getDefaultConfig();
+  @Input() currentconfigX : ConfigInput = this.configService.getDefaultConfigX();
+  @Input() currentconfigY : ConfigInput = this.configService.getDefaultConfigY();
+  @Input() currentconfigZ : ConfigInput = this.configService.getDefaultConfigZ();
   
   constructor(private configService: ConfigService) {
     

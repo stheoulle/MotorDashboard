@@ -62,12 +62,12 @@
           
         </div>
         <div class="loader" *ngIf="this.webSocketService.onCommand" ></div> 
-        <div class ="changing page ">
+        <div class ="changing-page ">
           <router-outlet></router-outlet>    <!--Tells the router where to display routed views-->
           
         </div>
         <div class = "current-config" *ngIf="!this.webSocketService.onCommand">
-          <app-default-conf [currentconfig]="inputConfig" class="elements" *ngIf=" router.url != '/receipe'"></app-default-conf>
+          <app-default-conf [currentconfigX]="inputConfigX" [currentconfigY]="inputConfigY" [currentconfigZ]="inputConfigZ"class="elements" *ngIf=" router.url != '/receipe'"></app-default-conf>
           
         </div>
       </div>

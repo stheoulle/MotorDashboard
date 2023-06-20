@@ -59,7 +59,7 @@ export class ConfigDetailComponent {
         /*this.dialog.confirmThis("La configuration a été sauvegardée");*/
       this.app.sendConfig(this.config.acceleration, this.config.speed, this.config.mode, this.config.name, this.config.step, this.config.offset);
       /*this.app.sendMessage("M114");*/
-      this.app.currentConfig = this.config;
+      this.app.currentConfigX = this.config;
       /*this.configService.updateDefaultConfig(this.config);*/
       /*this.defaultconfig_C.config = this.config; /**update the default config*/
     }

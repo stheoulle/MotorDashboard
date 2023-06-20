@@ -85,10 +85,20 @@ export class ConfigService {
     console.log("deleted config"+id);
   }
 
-  getDefaultConfig(): Config {
+  getDefaultConfigX(): Config {
    /* this.app.sendRecipe(this.configurationdata[0].acceleration, this.configurationdata[0].speed, this.configurationdata[0].mode);*/
    /*return the default config*/
     return this.configurationdata[0];
+  }
+
+  getDefaultConfigY(): Config {
+    /*return the default config*/
+    return this.configurationdata[4];
+  }
+
+  getDefaultConfigZ(): Config {
+    /*return the default config*/
+    return this.configurationdata[5];
   }
 
   getAllConfigs(): Config[] {

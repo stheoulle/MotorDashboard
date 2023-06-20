@@ -36,7 +36,9 @@ export class AppComponent implements OnDestroy {
   configurationdata : ConfigData[] = configurations;
   /*configurationdata : ConfigData[] = configurations;*/
   config? : Config;
-  currentConfig : Config = this.configurationdata[0];
+  currentConfigX : Config = this.configurationdata[0];
+  currentConfigY : Config = this.configurationdata[4];
+  currentConfigZ : Config = this.configurationdata[5];
   movingAllowed? : boolean;
   home : boolean = false;
   receipelistitem : string[] = [];
@@ -48,7 +50,9 @@ export class AppComponent implements OnDestroy {
   
 
   /*config displayed in the default config component*/
-  inputConfig : ConfigInput = this.configurationdata[0];
+  inputConfigX : ConfigInput = this.configurationdata[0];
+  inputConfigY : ConfigInput = this.configurationdata[4];
+  inputConfigZ : ConfigInput = this.configurationdata[5];
 
   constructor( public webSocketService: WebSocketService, public routing : AppRoutingModule, public router: Router, private configService : ConfigService ){ 
     /*opening the websocket connection*/
@@ -56,8 +60,8 @@ export class AppComponent implements OnDestroy {
   } 
 
   ngOnInit() {
-    this.webSocketService.configUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
-      this.inputConfig = value;
+    this.webSocketService.configUpdatedX.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+      this.inputConfigX = value;
       this.configService.configurationdata[0].acceleration = value.acceleration;
       this.configService.configurationdata[0].speed = value.speed;
       this.configService.configurationdata[0].mode = value.mode;
@@ -65,7 +69,29 @@ export class AppComponent implements OnDestroy {
       this.configService.configurationdata[0].step = value.step;
       this.configService.configurationdata[0].offset = value.offset;
       /*copy all except id*/
-    });}
+    });
+    this.webSocketService.configUpdatedY.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+      this.inputConfigY = value;
+      this.configService.configurationdata[4].acceleration = value.acceleration;
+      this.configService.configurationdata[4].speed = value.speed;
+      this.configService.configurationdata[4].mode = value.mode;
+      this.configService.configurationdata[4].name = value.name;
+      this.configService.configurationdata[4].step = value.step;
+      this.configService.configurationdata[4].offset = value.offset;
+      /*copy all except id*/
+    });
+    this.webSocketService.configUpdatedZ.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+      this.inputConfigZ = value;
+      this.configService.configurationdata[5].acceleration = value.acceleration;
+      this.configService.configurationdata[5].speed = value.speed;
+      this.configService.configurationdata[5].mode = value.mode;
+      this.configService.configurationdata[5].name = value.name;
+      this.configService.configurationdata[5].step = value.step;
+      this.configService.configurationdata[5].offset = value.offset;
+      /*copy all except id*/
+    });
+  
+  }
 
     
 
@@ -204,7 +230,7 @@ export class AppComponent implements OnDestroy {
     /*this.sendMessage("M92"+step);*/
     /*console.log("movingmode saved");*/
     /*change the config displayed in the default config component*/
-    this.inputConfig = {speed: speed, mode : mode, acceleration : acceleration, name : name/*, movingmode : movingmode*/, step : step, offset : offset};
+    this.inputConfigX = {speed: speed, mode : mode, acceleration : acceleration, name : name/*, movingmode : movingmode*/, step : step, offset : offset};
     /*change the speedmode*/
     this.speedmode = speed;
 
@@ -217,6 +243,7 @@ export class AppComponent implements OnDestroy {
     this.webSocketService.sendMessage("?M92");
     this.webSocketService.sendMessage("?M851");
     this.webSocketService.sendMessage("G91");   /*set the mode to relative per default*/
+    this.knownConfig = true;
     /*this.inputConfig.acceleration = await this.webSocketService.receivedData[0].read;
     console.log(this.inputConfig.acceleration);*/
   }

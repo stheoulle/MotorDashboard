@@ -21,9 +21,16 @@ export class WebSocketService {
   /*@Output() deplacement? : Coordonnees;*/
   coordUpdated : EventEmitter<Coordonnees> = new EventEmitter<Coordonnees>();
   coordShowedUpdated : EventEmitter<Coordonnees> = new EventEmitter<Coordonnees>();
+  coordShowedUpdatedX : EventEmitter<number> = new EventEmitter<number>();
+  coordShowedUpdatedY : EventEmitter<number> = new EventEmitter<number>();
+  coordShowedUpdatedZ : EventEmitter<number> = new EventEmitter<number>();
   recordedCommandUpdated : EventEmitter<string> = new EventEmitter<string>();
-  configUpdated : EventEmitter<Config> = new EventEmitter<Config>();
-  newOffset : EventEmitter<number> = new EventEmitter<number>();
+  configUpdatedX : EventEmitter<Config> = new EventEmitter<Config>();
+  configUpdatedY : EventEmitter<Config> = new EventEmitter<Config>();
+  configUpdatedZ : EventEmitter<Config> = new EventEmitter<Config>();
+  newOffsetX : EventEmitter<number> = new EventEmitter<number>();
+  newOffsetY : EventEmitter<number> = new EventEmitter<number>();
+  newOffsetZ : EventEmitter<number> = new EventEmitter<number>();
   axisUpdated : EventEmitter<{x : boolean, y : boolean, z : boolean}> = new EventEmitter<{x : boolean, y : boolean, z : boolean}> ();
   onCommand : boolean = false;
   public socket$!: WebSocket;
@@ -31,12 +38,19 @@ export class WebSocketService {
   public  onCmd: boolean = true; 
   public coordX : number = 0;
   public coordY : number = 0;
+  public coordZ : number = 0;
   public X : number = 1000;
   record : boolean = false;
   gettingconfig : boolean = false;
-  steppermm : string = '4';
-  acceleration : string = '100';
-  offset : string = '0';
+  steppermmX : string = '4';
+  accelerationX : string = '100';
+  offsetX : string = '0';
+  steppermmY : string = '4';
+  accelerationY : string = '100';
+  offsetY : string = '0';
+  steppermmZ : string = '4';
+  accelerationZ : string = '100';
+  offsetZ : string = '0';
   count : number = 0;
   messageslist : string[] = [];
   onreceipe : boolean = false;
@@ -77,54 +91,27 @@ export class WebSocketService {
     /* Check if it's a configuration command to free the loading screen or not */
     if (data.message.includes("M114")) {
       /* get the coordinates of the machine */
-      this.coordX = Number(data.read.substring(data.read.indexOf("X") + 3, data.read.indexOf("Y") - 1));
-      this.coordY = Number(data.read.substring(data.read.indexOf("Y") + 3, data.read.length));
-      this.coordUpdated.emit({ x: this.coordX, y: this.coordY, z: 0 });
+      if(data.read.includes("X")){
+      this.coordX = Number(data.read.substring(data.read.indexOf("X") + 3, data.read.indexOf("X") + 5));
+      }
+      if(data.read.includes("Y")){
+      this.coordY = Number(data.read.substring(data.read.indexOf("Y") + 3, data.read.indexOf("Y") + 5));
+      }
+      if(data.read.includes("Z")){
+      this.coordZ = Number(data.read.substring(data.read.indexOf("Z") + 3, data.read.length));
+      }
+      this.coordUpdated.emit({ x: this.coordX, y: this.coordY, z: this.coordZ });
     }
     if (this.record) {
       this.recordedCommandUpdated.emit(data.message);
     }
     if (this.gettingconfig) {
-      if (data.message.includes("M92")) {
-        this.steppermm = data.read.substring(data.read.indexOf("X") + 2, data.read.indexOf("Y") - 1);
-      }
-      if (data.message.includes("M201")) {
-        this.acceleration = data.read.substring(data.read.indexOf("X") + 2, data.read.indexOf("Y") - 1);
-      }
-      if (data.message.includes("M851")) {
-        this.offset = data.read.substring(data.read.indexOf("X") + 3, data.read.indexOf("Y") - 1);
-        this.newOffset.emit(Number(this.offset));
-        /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
-        if(this.offset !== '0'){
-          this.coordX = -Number(this.offset);
-          /*this.coordY = -Number(this.offset);*/
-          this.coordShowedUpdated.emit({ x: this.coordX, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
-        }
-        else{
-          /*this.coordY = 0;*/
-          this.coordShowedUpdated.emit({ x: 0, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
-        }
-        console.log("offset : ", this.offset, "coordX : ", this.coordX, "coordY : ", this.coordY);
-      }
-      
-      this.configUpdated.emit({ step: this.steppermm, acceleration: this.acceleration, offset: this.offset, name: "current configuration", speed: "fastspeed", mode: "relatif", id: 0 });
+      this.updateConfig(data);
       this.count += 1;
     }
     else{
       if (data.message.includes("M851")) {
-        this.offset = data.read.substring(data.read.indexOf("X") + 3, data.read.indexOf("Y") - 1);
-        this.newOffset.emit(Number(this.offset));
-        /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
-        if(this.offset !== '0'){
-          this.coordX = -Number(this.offset);
-          /*this.coordY = -Number(this.offset);*/
-          this.coordShowedUpdated.emit({ x: this.coordX, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
-        }
-        else{
-          /*this.coordY = 0;*/
-          this.coordShowedUpdated.emit({ x: 0, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
-        }
-        console.log("offset : ", this.offset, "coordX : ", this.coordX, "coordY : ", this.coordY);
+        this.updateOffset(data);  
       }
     }
     if (data.message.includes("M92")) {
@@ -151,16 +138,36 @@ export class WebSocketService {
     }
 
     if(data.message.includes("G28")){
-      if(this.offset !== '0'){
-        this.coordX = -Number(this.offset);
-        /*this.coordY = -Number(this.offset);*/
-        this.coordShowedUpdated.emit({ x: this.coordX, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
+      if(data.read.includes("X")){
+        this.offsetX = data.read.substring(data.read.indexOf("X") + 3, data.read.indexOf("X") +5);
+        this.newOffsetX.emit(Number(this.offsetX));
+        /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
+        if(this.offsetX !== '0'){
+          this.coordX = -Number(this.offsetX);
+          /*this.coordY = -Number(this.offset);*/
+          this.coordShowedUpdatedX.emit(this.coordX); /*change if we have offset on multiples axis*/
+        }
       }
-      else{
-        /*this.coordY = 0;*/
-        this.coordShowedUpdated.emit({ x: 0, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
+      else if (data.read.includes("Y")){
+        this.offsetY = data.read.substring(data.read.indexOf("Y") + 3, data.read.indexOf("Y") +5);
+        this.newOffsetY.emit(Number(this.offsetY));
+        /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
+        if(this.offsetY !== '0'){
+          this.coordY = -Number(this.offsetY);
+          /*this.coordY = -Number(this.offset);*/
+          this.coordShowedUpdatedY.emit(this.coordY); /*change if we have offset on multiples axis*/
+        }
       }
-      console.log("offset : ", this.offset, "coordX : ", this.coordX, "coordY : ", this.coordY);
+      else if (data.read.includes("Z")){
+        this.offsetZ = data.read.substring(data.read.indexOf("Z") + 3, data.read.indexOf("Z") +5);
+        this.newOffsetZ.emit(Number(this.offsetZ));
+        /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
+        if(this.offsetZ !== '0'){
+          this.coordZ = -Number(this.offsetZ);
+          /*this.coordY = -Number(this.offset);*/
+          this.coordShowedUpdatedZ.emit(this.coordZ); /*change if we have offset on multiples axis*/
+        }
+      }     
     }
     if (this.count === 3) {
       this.gettingconfig = false;
@@ -222,6 +229,131 @@ export class WebSocketService {
     if (this.socket$) {
       this.socket$.close();
     }
+  }
+
+  updateConfig(data : MessageData){
+    ///Change the configuration of the machine
+    ///change the range of the substring might be better if we have longer steps, acceleration or offset (use a function to get the index of the first number and the last number)
+    const extractNumber = (input: string, key: string) => {
+      const regex = new RegExp(`${key}:\\s*(\\d+)`);
+      const matches = input.match(regex);
+      return matches ? parseInt(matches[1], 10) : '?';
+    };
+    
+    if(data.read.includes("X")){
+      if (data.message.includes("M92")) {
+        this.steppermmX = extractNumber(data.read, "X").toString();
+      }
+      if (data.message.includes("M201")) {
+        
+        this.accelerationX = extractNumber(data.read, "X").toString();
+      }
+      if (data.message.includes("M851")) {
+        this.offsetX = extractNumber(data.read, "X").toString();
+        this.newOffsetX.emit(Number(this.offsetX));
+        /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
+        if(this.offsetX !== '0'){
+          this.coordX = -Number(this.offsetX);
+          /*this.coordY = -Number(this.offset);*/
+          this.coordShowedUpdatedX.emit(this.coordX); /*change if we have offset on multiples axis*/
+        }
+        else{
+          /*this.coordY = 0;*/
+          this.coordShowedUpdated.emit({ x: 0, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
+        }
+      }
+      
+      this.configUpdatedX.emit({ step: this.steppermmX, acceleration: this.accelerationX, offset: this.offsetX, name: "Axis X", speed: "fastspeed", mode: "relatif", id: 0 });
+    }
+    if (data.read.includes("Y")) {
+      if (data.message.includes("M92")) {
+        this.steppermmY = extractNumber(data.read, "Y").toString();
+      }
+      if (data.message.includes("M201")) {
+        this.accelerationY = extractNumber(data.read, "Y").toString();
+      }
+      if (data.message.includes("M851")) {
+        this.offsetY = extractNumber(data.read, "Y").toString();
+        this.newOffsetY.emit(Number(this.offsetY));
+        /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
+        if(this.offsetY !== '0'){
+          this.coordY = -Number(this.offsetY);
+          /*this.coordY = -Number(this.offset);*/
+          this.coordShowedUpdatedY.emit( this.coordY); /*change if we have offset on multiples axis*/
+        }
+        else{
+          /*this.coordY = 0;*/
+          this.coordShowedUpdated.emit({ x: 0, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
+        }
+      }
+      
+      this.configUpdatedY.emit({ step: this.steppermmY, acceleration: this.accelerationY, offset: this.offsetY, name: "Axis Y", speed: "fastspeed", mode: "relatif", id: 4 });
+   
+    }
+    if (data.read.includes("Z")) {
+      if (data.message.includes("M92")) {
+        this.steppermmZ = extractNumber(data.read, "Z").toString();
+      }
+      if (data.message.includes("M201")) {
+        this.accelerationZ = extractNumber(data.read, "Z").toString();
+      }
+      if (data.message.includes("M851")) {
+        this.offsetZ = extractNumber(data.read, "Z").toString();
+        this.newOffsetZ.emit(Number(this.offsetZ));
+        /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
+        if(this.offsetZ !== '0'){
+          this.coordZ = -Number(this.offsetZ);
+          /*this.coordY = -Number(this.offset);*/
+          this.coordShowedUpdatedZ.emit( this.coordY); /*change if we have offset on multiples axis*/
+        }
+        else{
+          /*this.coordY = 0;*/
+          this.coordShowedUpdated.emit({ x: 0, y: 0, z: 0 }); /*change if we have offset on multiples axis*/
+        }
+      }
+      
+      this.configUpdatedZ.emit({ step: this.steppermmZ, acceleration: this.accelerationZ, offset: this.offsetZ, name: "Axis Z", speed: "fastspeed", mode: "relatif", id: 5 });
+   
+    }
+  }
+
+  updateOffset(data : MessageData){
+    const extractNumber = (input: string, key: string) => {
+      const regex = new RegExp(`${key}:\\s*(\\d+)`);
+      const matches = input.match(regex);
+      return matches ? parseInt(matches[1], 10) : '?';
+    };
+
+    if(data.read.includes("X")){
+      this.offsetX = extractNumber(data.read, "X").toString();
+      this.newOffsetX.emit(Number(this.offsetX));
+      /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
+      if(this.offsetX !== '0'){
+        this.coordX = -Number(this.offsetX);
+        /*this.coordY = -Number(this.offset);*/
+        this.coordShowedUpdatedX.emit(this.coordX); /*change if we have offset on multiples axis*/
+      }
+    }
+    else if (data.read.includes("Y")){
+      this.offsetY = extractNumber(data.read, "Y").toString();
+      this.newOffsetY.emit(Number(this.offsetY));
+      /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
+      if(this.offsetY !== '0'){
+        this.coordY = -Number(this.offsetY);
+        /*this.coordY = -Number(this.offset);*/
+        this.coordShowedUpdatedY.emit(this.coordY); /*change if we have offset on multiples axis*/
+      }
+    }
+    else if (data.read.includes("Z")){
+      this.offsetZ = extractNumber(data.read, "Z").toString();
+      this.newOffsetZ.emit(Number(this.offsetZ));
+      /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
+      if(this.offsetZ !== '0'){
+        this.coordZ = -Number(this.offsetZ);
+        /*this.coordY = -Number(this.offset);*/
+        this.coordShowedUpdatedZ.emit(this.coordZ); /*change if we have offset on multiples axis*/
+      }
+    }      
   }
   
 }
