@@ -71,6 +71,11 @@
                     <i class="glyphicon glyphicon-home"></i>
                 </a>        
             </div>
+            <div class = ask *ngIf="!this.app.knownConfig">
+                <a button type="button" class="btn btn-dark" (click)="this.app.getConfig()">
+                    <i class=" 	glyphicon glyphicon-question-sign"></i>
+                </a>        
+            </div>
         </div>
         <div class = "coordonnees"> <!--Selection of the coordinates-->
             <!-- Coordinates are in steps-->
