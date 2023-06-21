@@ -17,5 +17,4 @@ export class DefaultConfComponent {
   constructor(private configService: ConfigService) {
     
    } 
-
 }

@@ -287,7 +287,7 @@ export class WebSocketService {
         }
       }
       
-      this.configUpdatedY.emit({ step: this.steppermmY, acceleration: this.accelerationY, offset: this.offsetY, name: "Axis Y", speed: "fastspeed", mode: "relatif", id: 4, axis : "Y" });
+      this.configUpdatedY.emit({ step: this.steppermmY, acceleration: this.accelerationY, offset: this.offsetY, name: "Axis Y", speed: "fastspeed", mode: "relatif", id: 1, axis : "Y" });
    
     }
     if (data.read.includes("Z")) {
@@ -312,7 +312,7 @@ export class WebSocketService {
         }
       }
       
-      this.configUpdatedZ.emit({ step: this.steppermmZ, acceleration: this.accelerationZ, offset: this.offsetZ, name: "Axis Z", speed: "fastspeed", mode: "relatif", id: 5, axis : "Z" });
+      this.configUpdatedZ.emit({ step: this.steppermmZ, acceleration: this.accelerationZ, offset: this.offsetZ, name: "Axis Z", speed: "fastspeed", mode: "relatif", id: 2, axis : "Z" });
    
     }
   }

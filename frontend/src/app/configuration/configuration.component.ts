@@ -41,7 +41,7 @@ export class ConfigurationComponent implements OnInit {
 
   addConfig(): void {
     /*add a new config to the list with per default parameters*/
-    this.configService.addConfig( {name : this.nom, speed : "fastmode", mode : "relatif", acceleration : "2", id : this.getLastID()+1 , step : "1", offset : "0", axis : "X"});
+    this.configService.addConfig( {name : this.nom, speed : "fastmode", mode : "relatif", acceleration : "?", id : this.getLastID()+1 , step : "?", offset : "?", axis : "?"});
     }
 
   getLastID(): number {

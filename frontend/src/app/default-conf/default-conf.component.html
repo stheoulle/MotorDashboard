@@ -15,7 +15,7 @@
             <label for="config-steppermm">Step per mm : {{currentconfigY.step}}</label>
             <label for="config-offset">Offset : {{currentconfigY.offset}}</label>
       </div>
-      <div class="current-confZ" *ngIf="currentconfigZ.speed !== '?'">
+      <div class="current-confZ" *ngIf="!currentconfigZ.speed.includes('?')">
             <label for="config-name">Name : {{currentconfigZ.name}}</label>
             <label for="speed">Speed : {{currentconfigZ.speed}} </label> 
             <label for="mode">Mode : {{currentconfigZ.mode}} </label> 

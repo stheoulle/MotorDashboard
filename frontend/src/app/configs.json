@@ -1,11 +1,7 @@
 [
-    {"id" :1,"axis":"?", "speed": "?", "mode" : "?", "acceleration" : "?", "name" : "Configuration X", "movingmode" : "step/sec", "step" : "?", "offset" : "?"},
-
-    {"id" :2,"axis":"?", "speed": "feedrate", "mode" : "relatif", "acceleration" : "100",  "name": "Sans offset", "movingmode" : "mm/sec", "step" : "1", "offset" : "0"},
-
-    {"id" :3,"axis":"?", "speed": "speedrate", "mode" : "relatif", "acceleration" : "100",  "name": "Avec offset", "movingmode" : "step/sec", "step" : "1", "offset" : "10"},
-
-    {"id" :4,"axis":"X", "speed": "?", "mode" : "?", "acceleration" : "?",  "name": "Configuration X", "movingmode" : "mm/sec", "step" : "?", "offset" : "?"},
-    {"id" :5,"axis":"Y", "speed": "?", "mode" : "?", "acceleration" : "?",  "name": "Configuration Y", "movingmode" : "mm/sec", "step" : "?", "offset" : "?"},
-    {"id" :6,"axis":"Z", "speed": "?", "mode" : "?", "acceleration" : "?",  "name": "Configuration Z", "movingmode" : "mm/sec", "step" : "?", "offset" : "?"}
+    {"id" :0,"axis":"X", "speed": "?", "mode" : "?", "acceleration" : "?",  "name": "Configuration X", "movingmode" : "mm/sec", "step" : "?", "offset" : "?"},
+    {"id" :1,"axis":"Y", "speed": "?", "mode" : "?", "acceleration" : "?",  "name": "Configuration Y", "movingmode" : "mm/sec", "step" : "?", "offset" : "?"},
+    {"id" :2,"axis":"Z", "speed": "?", "mode" : "?", "acceleration" : "?",  "name": "Configuration Z", "movingmode" : "mm/sec", "step" : "?", "offset" : "?"},
+    {"id" :3,"axis":"?", "speed": "feedrate", "mode" : "relatif", "acceleration" : "100",  "name": "No offset", "movingmode" : "mm/sec", "step" : "1", "offset" : "0"},
+    {"id" :4,"axis":"?", "speed": "speedrate", "mode" : "relatif", "acceleration" : "100",  "name": "Offset", "movingmode" : "step/sec", "step" : "1", "offset" : "10"}
 ]

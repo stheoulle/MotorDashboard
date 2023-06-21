@@ -38,8 +38,8 @@ export class AppComponent implements OnDestroy {
   /*configurationdata : ConfigData[] = configurations;*/
   config? : Config;
   currentConfigX : Config = this.configurationdata[0];
-  currentConfigY : Config = this.configurationdata[4];
-  currentConfigZ : Config = this.configurationdata[5];
+  currentConfigY : Config = this.configurationdata[1];
+  currentConfigZ : Config = this.configurationdata[2];
   movingAllowed? : boolean;
   home : boolean = false;
   receipelistitem : string[] = [];
@@ -52,8 +52,8 @@ export class AppComponent implements OnDestroy {
 
   /*config displayed in the default config component*/
   inputConfigX : ConfigInput = this.configurationdata[0];
-  inputConfigY : ConfigInput = this.configurationdata[4];
-  inputConfigZ : ConfigInput = this.configurationdata[5];
+  inputConfigY : ConfigInput = this.configurationdata[1];
+  inputConfigZ : ConfigInput = this.configurationdata[2];
 
   constructor( public webSocketService: WebSocketService, public routing : AppRoutingModule, public router: Router, private configService : ConfigService ){ 
     /*opening the websocket connection*/
@@ -64,35 +64,17 @@ export class AppComponent implements OnDestroy {
     ///Use the indexOf instead of 0, 4 and 5
     this.webSocketService.configUpdatedX.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.inputConfigX = value;
-      this.configService.configurationdata[0].acceleration = value.acceleration;
-      this.configService.configurationdata[0].speed = value.speed;
-      this.configService.configurationdata[0].mode = value.mode;
-      this.configService.configurationdata[0].name = value.name;
-      this.configService.configurationdata[0].step = value.step;
-      this.configService.configurationdata[0].offset = value.offset;
-      this.configService.configurationdata[0].axis = value.axis;
+      this.configService.configurationdata[0] = value;
       /*copy all except id*/
     });
     this.webSocketService.configUpdatedY.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.inputConfigY = value;
-      this.configService.configurationdata[4].acceleration = value.acceleration;
-      this.configService.configurationdata[4].speed = value.speed;
-      this.configService.configurationdata[4].mode = value.mode;
-      this.configService.configurationdata[4].name = value.name;
-      this.configService.configurationdata[4].step = value.step;
-      this.configService.configurationdata[4].offset = value.offset;
-      this.configService.configurationdata[4].axis = value.axis;
+      this.configService.configurationdata[1] = value;
       /*copy all except id*/
     });
     this.webSocketService.configUpdatedZ.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.inputConfigZ = value;
-      this.configService.configurationdata[5].acceleration = value.acceleration;
-      this.configService.configurationdata[5].speed = value.speed;
-      this.configService.configurationdata[5].mode = value.mode;
-      this.configService.configurationdata[5].name = value.name;
-      this.configService.configurationdata[5].step = value.step;
-      this.configService.configurationdata[5].offset = value.offset;
-      this.configService.configurationdata[5].axis = value.axis;
+      this.configService.configurationdata[2] = value;
       /*copy all except id*/
     });
   

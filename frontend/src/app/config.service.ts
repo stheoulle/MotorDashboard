@@ -94,12 +94,14 @@ export class ConfigService {
 
   getDefaultConfigY(): Config {
     /*return the default config*/
-    return this.configurationdata[4];
+    return this.configurationdata[0];
   }
 
   getDefaultConfigZ(): Config {
     /*return the default config*/
-    return this.configurationdata[5];
+    console.log("get the config on Z");
+    console.log(this.configurationdata[2]);
+    return this.configurationdata[0];
   }
 
   getAllConfigs(): Config[] {
