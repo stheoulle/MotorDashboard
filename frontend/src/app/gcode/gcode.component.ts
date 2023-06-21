@@ -8,7 +8,7 @@ import { WebSocketService } from '../websocket.service';
 })
 export class GcodeComponent {
   message : string = "";
-  constructor( private ws : WebSocketService) { }
+  constructor( public ws : WebSocketService) { }
 
   send(){
     /*send the gcode to the backend*/

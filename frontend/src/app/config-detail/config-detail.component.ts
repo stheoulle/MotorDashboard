@@ -47,7 +47,15 @@ export class ConfigDetailComponent {
         /*this.dialog.confirmThis("La configuration a été sauvegardée");*/
       this.app.sendConfig(this.config.acceleration, this.config.speed, this.config.mode, this.config.name, this.config.step, this.config.offset, this.config.axis);
       /*this.app.sendMessage("M114");*/
-      this.app.currentConfigX = this.config;
+      if(this.config.axis == "X"){
+        this.app.currentConfigX = this.config;
+      }
+      if(this.config.axis == "Y"){
+        this.app.currentConfigY = this.config;
+      }
+      if(this.config.axis == "Z"){
+        this.app.currentConfigZ = this.config;
+      }
       /*this.configService.updateDefaultConfig(this.config);*/
       /*this.defaultconfig_C.config = this.config; /**update the default config*/
     }

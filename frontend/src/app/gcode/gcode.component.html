@@ -1,4 +1,4 @@
-<div class = "send">
+<div class = "send" *ngIf="!this.ws.onCommand">
     <a button type="button" class="btn btn-dark" (click)="send()" >   <!--Send the receipe to the device-->
           Send to device
     <i class="glyphicon glyphicon-ok"></i>

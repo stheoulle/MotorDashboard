@@ -38,7 +38,6 @@ export class ReceipeListComponent {
         console.log(this.app.receipelistitem[j], typeof(this.app.receipelistitem[j]));
         this.app.sendMessageList(this.app.receipelistitem[j]);
      }
-     this.ws.sendMessage("endloop");
     }
     
 

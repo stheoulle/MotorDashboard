@@ -50,27 +50,33 @@ export class AppComponent implements OnDestroy {
   inputConfigX : ConfigInput = this.configurationdata[0];
   inputConfigY : ConfigInput = this.configurationdata[1];
   inputConfigZ : ConfigInput = this.configurationdata[2];
+  Xsent : boolean = false;
+  Ysent : boolean = false;
+  Zsent : boolean = false;
 
   constructor( public webSocketService: WebSocketService, public routing : AppRoutingModule, public router: Router, private configService : ConfigService ){ 
     /*opening the websocket connection*/
     this.webSocketService.connect();
   } 
-  
+
   ngOnInit() {
     ///Use the indexOf instead of 0, 4 and 5
     this.webSocketService.configUpdatedX.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.inputConfigX = value;
       this.configService.configurationdata[0] = value;
+      this.Xsent = true;
       /*copy all except id*/
     });
     this.webSocketService.configUpdatedY.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.inputConfigY = value;
       this.configService.configurationdata[1] = value;
+      this.Ysent = true;
       /*copy all except id*/
     });
     this.webSocketService.configUpdatedZ.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.inputConfigZ = value;
       this.configService.configurationdata[2] = value;
+      this.Zsent = true;
       /*copy all except id*/
     });
   
@@ -167,7 +173,7 @@ export class AppComponent implements OnDestroy {
       
   }
   sendConfig(acceleration : string, speed : string, mode : string, name : string/*, movingmode : string*/, step : string, offset : string, axis : string): void {
-
+    
     this.knownConfig = true;
     if (speed== "fastspeed"){
       this.speedmode = "G0";

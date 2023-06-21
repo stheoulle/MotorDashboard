@@ -14,7 +14,6 @@ export class DefaultConfComponent {
   @Input() currentconfigY : ConfigInput = this.configService.getDefaultConfigY();
   @Input() currentconfigZ : ConfigInput = this.configService.getDefaultConfigZ();
   
-  constructor(private configService: ConfigService) {
-    
+  constructor(private configService: ConfigService, public app : AppComponent) { 
    } 
 }
