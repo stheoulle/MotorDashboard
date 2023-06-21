@@ -327,30 +327,24 @@ export class WebSocketService {
     if(data.read.includes("X")){
       this.offsetX = extractNumber(data.read, "X").toString();
       this.newOffsetX.emit(Number(this.offsetX));
-      /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
       if(this.offsetX !== '0'){
         this.coordX = -Number(this.offsetX);
-        /*this.coordY = -Number(this.offset);*/
         this.coordShowedUpdatedX.emit(this.coordX); /*change if we have offset on multiples axis*/
       }
     }
     else if (data.read.includes("Y")){
       this.offsetY = extractNumber(data.read, "Y").toString();
       this.newOffsetY.emit(Number(this.offsetY));
-      /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
       if(this.offsetY !== '0'){
         this.coordY = -Number(this.offsetY);
-        /*this.coordY = -Number(this.offset);*/
         this.coordShowedUpdatedY.emit(this.coordY); /*change if we have offset on multiples axis*/
       }
     }
     else if (data.read.includes("Z")){
       this.offsetZ = extractNumber(data.read, "Z").toString();
       this.newOffsetZ.emit(Number(this.offsetZ));
-      /*change the type of the newOffset to {} if we have offset on multiples axis, and add 2 others variables to keep track of them (newOffsetY and newOffsetZ*/
       if(this.offsetZ !== '0'){
         this.coordZ = -Number(this.offsetZ);
-        /*this.coordY = -Number(this.offset);*/
         this.coordShowedUpdatedZ.emit(this.coordZ); /*change if we have offset on multiples axis*/
       }
     }      

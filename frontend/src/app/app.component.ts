@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { Router } from '@angular/router';
 import { ConfigService } from './config.service';
 
-
 "./services/websocket.service.ts:"
 
 interface ConfigData {
@@ -21,12 +20,12 @@ interface ConfigData {
   /*movingmode: string;*/
 }
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent implements OnDestroy {
   title : string = 'WebApp Scantech';
   /*state : string = "Etat : undefined";*/
@@ -47,9 +46,6 @@ export class AppComponent implements OnDestroy {
   href : string = "";
   lock : boolean = false;
   gettingconfig : boolean = false;
-  
-  
-
   /*config displayed in the default config component*/
   inputConfigX : ConfigInput = this.configurationdata[0];
   inputConfigY : ConfigInput = this.configurationdata[1];
@@ -59,7 +55,7 @@ export class AppComponent implements OnDestroy {
     /*opening the websocket connection*/
     this.webSocketService.connect();
   } 
-
+  
   ngOnInit() {
     ///Use the indexOf instead of 0, 4 and 5
     this.webSocketService.configUpdatedX.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
@@ -79,14 +75,6 @@ export class AppComponent implements OnDestroy {
     });
   
   }
-
-    
-
-
-  /*ngOnChanges() {   /*What is this function for ?
-    this.href = this.router.url;
-    console.log(this.href);
-  }*/
   sendMessage(message: string) {
     /*sending the message to the backend*/
     console.log("onreceipe : ",this.webSocketService.onreceipe);
@@ -120,7 +108,6 @@ export class AppComponent implements OnDestroy {
     }
     
   }
-
   sendMessageList(message: string) {
 
     /*sending the message to the backend*/
@@ -147,10 +134,6 @@ export class AppComponent implements OnDestroy {
       console.log(message);
     }
   }
-
-  
-
-
   Play(): void {
 
      if (this.movingAllowed == false){   /*Go again after the pause*/
@@ -163,7 +146,6 @@ export class AppComponent implements OnDestroy {
       this.state = "Etat : Waiting for home";
     }*/
   }
-
   Pause(): void {
 
     if (this.movingAllowed == true){   /*We want a pause*/
@@ -179,14 +161,11 @@ export class AppComponent implements OnDestroy {
       this.state = "Etat : Waiting for home";
     }*/
   }
-
   StateChange(): void {
       this.movingAllowed = true;
       /*this.state = "Etat : Start";*/
       
   }
-
-
   sendConfig(acceleration : string, speed : string, mode : string, name : string/*, movingmode : string*/, step : string, offset : string, axis : string): void {
 
     this.knownConfig = true;
@@ -222,7 +201,6 @@ export class AppComponent implements OnDestroy {
     this.speedmode = speed;
 
   }
-
   getConfig(): void {
     /*ask the server for the current config on the motor, using the norm ?...*/
     this.webSocketService.gettingconfig =true;
@@ -234,40 +212,27 @@ export class AppComponent implements OnDestroy {
     /*this.inputConfig.acceleration = await this.webSocketService.receivedData[0].read;
     console.log(this.inputConfig.acceleration);*/
   }
-
   getReceipe(): Config {
     /*get the config displayed in the default config component*/
     return this.configurationdata[0];
   }
-
-/*
-  Stop() : void {
-    this.movingAllowed = undefined;
-    this.etat = "Etat : Stop";
-    this.stop.stopThis("La configuration a été sauvegardée");
-  }*/
-
   addCommandRecord(newItem: string) {
     this.recordlist.push(newItem);
   }
-
   deleteRecord(): void {
     /*delete the config with the corresponding id*/
     this.recordlist = [];
   }
-
   unlock(): void {
     this.lock = false;
     this.sendMessage("#505 0");
     console.log("unlocked",this.lock);
   }
-
   locker(): void {
     this.lock = true;
     this.sendMessage("#505 1");
     console.log("locked",this.lock);
   }
-
   ngOnDestroy() {
     /*closing the websocket connection*/
     this.webSocketService.close();

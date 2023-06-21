@@ -23,12 +23,10 @@ export class ReceipeListComponent {
   ngOnInit(): void {
     this.getReceipes(); /*get the current coordinates of the machine*/
   }
-
   delete(item : string): void {
     /*delete the config*/
     this.app.receipelistitem?.splice(this.app.receipelistitem?.indexOf(item), 1);
   }
-
   launch(): void {
     /*launch the receipe*/
     /*send lines one by one*/
@@ -45,7 +43,6 @@ export class ReceipeListComponent {
     
 
   }
-
   onSelect(receipe: Receipe): void {
     /*add the items of the receipe to the list*/
     this.app.receipelistitem = []
@@ -53,27 +50,22 @@ export class ReceipeListComponent {
       this.app.receipelistitem?.push(receipe.receipe[i]);
     }
   }
-
   addReceipe(name : string, receipeList : Array<string>): void {
     /*add a new config to the list with per default parameters*/
     this.receipeService.addReceipe( name, receipeList, this.getLastID()+1);
-    }
-
+  }
   newReceipe(): void {
     /*clear the list of commands*/
     this.app.receipelistitem = [];
   }
-
   getReceipes(): void { 
     /*get the list of all the configs from the JSON*/
     this.receipelist = this.receipeService.getAllConfigs();
   }
-
   deleteReceipe(id : number): void {
     /*delete the config*/
     this.receipeService.deleteReceipe(id);
   }
-
   getLastID(): number {
     /*get the last ID of the list*/
     return this.app.receipelistitem.length;

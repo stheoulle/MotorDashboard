@@ -12,9 +12,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { StopComponent } from './stop/stop.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; /**HttpClientModule is the module that includes the HttpClient service */
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service'; 
 import { CommonModule } from '@angular/common';
 import { DefaultConfComponent } from './default-conf/default-conf.component';
 import { ReceipeComponent } from './receipe/receipe.component';
@@ -22,7 +19,6 @@ import { ReceipeListComponent } from './receipe-list/receipe-list.component';
 import { ReceipeDetailsComponent } from './receipe-details/receipe-details.component';
 import { RecordloopComponent } from './recordloop/recordloop.component';
 import { GcodeComponent } from './gcode/gcode.component';
-import { BarComponent } from './bar/bar.component';
 import { VoidComponent } from './void/void.component';
 /*import { DefaultConfComponent } from './default-conf/default-conf.component';*/
 
@@ -36,14 +32,12 @@ import { InMemoryDataService } from './in-memory-data.service'; /**The InMemoryD
     DeplacementComponent,
     ConfigDetailComponent,
     StopComponent,
-    ConfirmDialogComponent,
     DefaultConfComponent,
     ReceipeComponent,
     ReceipeListComponent,
     ReceipeDetailsComponent,
     RecordloopComponent,
     GcodeComponent,
-    BarComponent,
     VoidComponent,
     /*DefaultConfComponent,*/
   ],
@@ -56,8 +50,6 @@ import { InMemoryDataService } from './in-memory-data.service'; /**The InMemoryD
 
     CommonModule
   ],
-  providers: [ConfirmDialogService  ],
-  bootstrap: [AppComponent],
-  exports: [ ConfirmDialogComponent]   
+  bootstrap: [AppComponent], 
 })
 export class AppModule { }

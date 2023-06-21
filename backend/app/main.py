@@ -36,26 +36,20 @@ def data_processing(data: dict):
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     global connected, websocket_connection
-
     if connected:
         await websocket.close()
         print("Connection already established")
         return
-
     connected = True
     websocket_connection = websocket
-
     await websocket.accept()
-
     while True:
         try:
             # Receive the JSON data sent by a client.
             data = await websocket.receive_text()
             print("Received message: " + data)  # Log the received message.
             message_processed = data_processing(json.loads(data))
-
             logger.info("Received message: %s", message_processed)  # Log the received message.
-
             # Send JSON data to the client.
             if ser.isOpen():
                 if 'config sent' not in message_processed:  # Check if the configuration is done
@@ -100,6 +94,5 @@ async def websocket_endpoint(websocket: WebSocket):
             # If the client is disconnected, inform the client
             logger.info("The connection is closed.")
             break
-
     connected = False
     websocket_connection = None

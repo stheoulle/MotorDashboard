@@ -40,17 +40,6 @@ export class DeplacementComponent implements OnChanges {
   /*ngOnChanges() {
     this.systemCoord[0] = this.coord[0];  /*Update the coordinates of the system
   }*/
-
-  ngOnChanges(): void {
-    this.GetX(this.ws.coordX);
-    
-  }
-
-  getCoords(): void {
-    /*get the current coordinates of the machine*/
-    this.coordonnees = this.coordService.getCoord();
-  }
-
   ngOnInit(): void {
     this.getCoords(); /*get the current coordinates of the machine*/
     this.ws.coordUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
@@ -86,12 +75,18 @@ export class DeplacementComponent implements OnChanges {
     });
     
   }
-
+  ngOnChanges(): void {
+    this.GetX(this.ws.coordX);
+    
+  }
+  getCoords(): void {
+    /*get the current coordinates of the machine*/
+    this.coordonnees = this.coordService.getCoord();
+  }
   onSelect(n : number): void {
     /*select the step of the deplacement*/
     this.selectedStep = n;
   }
-
   onSelectHome(): void {
     /*select the home command, allow the movements and reset the coordinates*/
     if (this.app.pause === false){
@@ -101,8 +96,7 @@ export class DeplacementComponent implements OnChanges {
       /*Add something to see the launch of the command*/
       /*this.onCommand = true;*/
       }
-    }
-
+  }
   onSelectDeplacement(orientation : string, deplacement : string){
     /*Add something to see the launch of the command*/
     if ((this.selectedStep) && (this.app.home) && (this.app.movingAllowed === true)) {
@@ -148,7 +142,6 @@ export class DeplacementComponent implements OnChanges {
     }
     
   }
-
   onSelectDeplacementCoord(orientation : string){
     /*Add something to see the launch of the command*/
 
@@ -187,7 +180,6 @@ export class DeplacementComponent implements OnChanges {
       this.commande = "Home not done and step not chosen";
     }
   }
-
   DeplNoOffset(deplacement : string, orientation : string){
     /*Add something to see the launch of the command*/
     if (orientation === "X" && this.selectedStep){
@@ -239,7 +231,6 @@ export class DeplacementComponent implements OnChanges {
       }
     }
   }
-
   DeplOffset(orientation : string, offset : number, deplacement : string ){
     /*Add something to see the launch of the command*/
     if (orientation === "X" && this.selectedStep){
@@ -309,7 +300,6 @@ export class DeplacementComponent implements OnChanges {
       }
     }
   }
-
   DeplNoOffsetCoord(orientation : string){
     /*Add something to see the launch of the command*/
     if (orientation === "X" && this.selectedStep){
@@ -354,8 +344,7 @@ export class DeplacementComponent implements OnChanges {
       this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
     }
   }
-
-    onGetCoords(): void {
+  onGetCoords(): void {
       /*get the current coordinates of the machine*/
       if(!this.app.home) {
         this.app.sendMessage("G28");
@@ -363,14 +352,11 @@ export class DeplacementComponent implements OnChanges {
       this.app.sendMessage("M114");
       /*this.coord[0].x = this.ws.coordX;*/
 
-    }
-    
-
-    GetX(value : number){
+  }
+  GetX(value : number){
       this.coord[0].x = value;
-    }
-
-    onSelectCoordinates(x : number, y : number, z : number){
+  }
+  onSelectCoordinates(x : number, y : number, z : number){
       /*select the coordinates of the machine*/
       
       if (x != undefined){
@@ -403,6 +389,5 @@ export class DeplacementComponent implements OnChanges {
         
       }
       
-    }
-    
-  }
+  } 
+}
