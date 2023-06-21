@@ -33,11 +33,12 @@ export class ReceipeListComponent {
     this.ws.onreceipe = true;
     this.i = this.app.receipelistitem?.length;
     this.ws.totalLoop = this.loop;
-    for(let i = 0; i < this.loop; i++){
+    for(let k = 0; k < this.loop; k++){
       for ( let j = 0; j < this.i; j++){
         console.log(this.app.receipelistitem[j], typeof(this.app.receipelistitem[j]));
         this.app.sendMessageList(this.app.receipelistitem[j]);
      }
+   
     }
     
 
