@@ -16,6 +16,7 @@ interface ConfigData {
   name: string;
   step : string;
   offset : string;
+  axis : string;
 }
 
 @Injectable({     /**object that chooses and injects the provider where the application requires it. */

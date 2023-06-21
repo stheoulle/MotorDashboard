@@ -263,7 +263,7 @@ export class WebSocketService {
         }
       }
       
-      this.configUpdatedX.emit({ step: this.steppermmX, acceleration: this.accelerationX, offset: this.offsetX, name: "Axis X", speed: "fastspeed", mode: "relatif", id: 0 });
+      this.configUpdatedX.emit({ step: this.steppermmX, acceleration: this.accelerationX, offset: this.offsetX, name: "Axis X", speed: "fastspeed", mode: "relatif", id: 0, axis : "X" });
     }
     if (data.read.includes("Y")) {
       if (data.message.includes("M92")) {
@@ -287,7 +287,7 @@ export class WebSocketService {
         }
       }
       
-      this.configUpdatedY.emit({ step: this.steppermmY, acceleration: this.accelerationY, offset: this.offsetY, name: "Axis Y", speed: "fastspeed", mode: "relatif", id: 4 });
+      this.configUpdatedY.emit({ step: this.steppermmY, acceleration: this.accelerationY, offset: this.offsetY, name: "Axis Y", speed: "fastspeed", mode: "relatif", id: 4, axis : "Y" });
    
     }
     if (data.read.includes("Z")) {
@@ -312,7 +312,7 @@ export class WebSocketService {
         }
       }
       
-      this.configUpdatedZ.emit({ step: this.steppermmZ, acceleration: this.accelerationZ, offset: this.offsetZ, name: "Axis Z", speed: "fastspeed", mode: "relatif", id: 5 });
+      this.configUpdatedZ.emit({ step: this.steppermmZ, acceleration: this.accelerationZ, offset: this.offsetZ, name: "Axis Z", speed: "fastspeed", mode: "relatif", id: 5, axis : "Z" });
    
     }
   }

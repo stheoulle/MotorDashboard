@@ -30,3 +30,42 @@ button:active{
     display: flex;
     flex-direction: row;
 }
+
+.partAxis{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left : 100%;
+    width: 110%;
+}
+
+.partAxis a{
+    margin-left: 20px;
+}
+
+.btn {
+    /* Styles pour l'état au repos */
+    background-color: #dddddd; /* Couleur de fond au repos */
+    color: #000000; /* Couleur du texte au repos */
+  }
+  
+  .btn:hover {
+    /* Styles pour l'état survolé par la souris */
+    background-color:  #e6e6e6; /* Couleur de fond au survol */
+    color: #000000; /* Couleur du texte au survol */
+  }
+  
+  .btn:active {
+    /* Styles pour l'état cliqué */
+    background-color: #615f5f; /* Couleur de fond au clic */
+    color: #ffffff; /* Couleur du texte au clic */
+  }
+  
+  .btn.selected {
+    /* Styles pour le bouton sélectionné */
+    background-color: #000000; /* Couleur de fond du bouton sélectionné */
+    color: #ffffff; /* Couleur du texte du bouton sélectionné */
+  }
+  
+  

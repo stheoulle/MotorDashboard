@@ -17,6 +17,7 @@ interface ConfigData {
   name: string;
   step : string;
   offset : string;
+  axis : string;
   /*movingmode: string;*/
 }
 
@@ -60,6 +61,7 @@ export class AppComponent implements OnDestroy {
   } 
 
   ngOnInit() {
+    ///Use the indexOf instead of 0, 4 and 5
     this.webSocketService.configUpdatedX.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.inputConfigX = value;
       this.configService.configurationdata[0].acceleration = value.acceleration;
@@ -68,6 +70,7 @@ export class AppComponent implements OnDestroy {
       this.configService.configurationdata[0].name = value.name;
       this.configService.configurationdata[0].step = value.step;
       this.configService.configurationdata[0].offset = value.offset;
+      this.configService.configurationdata[0].axis = value.axis;
       /*copy all except id*/
     });
     this.webSocketService.configUpdatedY.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
@@ -78,6 +81,7 @@ export class AppComponent implements OnDestroy {
       this.configService.configurationdata[4].name = value.name;
       this.configService.configurationdata[4].step = value.step;
       this.configService.configurationdata[4].offset = value.offset;
+      this.configService.configurationdata[4].axis = value.axis;
       /*copy all except id*/
     });
     this.webSocketService.configUpdatedZ.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
@@ -88,6 +92,7 @@ export class AppComponent implements OnDestroy {
       this.configService.configurationdata[5].name = value.name;
       this.configService.configurationdata[5].step = value.step;
       this.configService.configurationdata[5].offset = value.offset;
+      this.configService.configurationdata[5].axis = value.axis;
       /*copy all except id*/
     });
   
@@ -200,7 +205,7 @@ export class AppComponent implements OnDestroy {
   }
 
 
-  sendConfig(acceleration : string, speed : string, mode : string, name : string/*, movingmode : string*/, step : string, offset : string): void {
+  sendConfig(acceleration : string, speed : string, mode : string, name : string/*, movingmode : string*/, step : string, offset : string, axis : string): void {
 
     this.knownConfig = true;
     if (speed== "fastspeed"){
@@ -210,7 +215,7 @@ export class AppComponent implements OnDestroy {
       this.speedmode = "G1";
     }
     /*Definition of the acceleration on unit/second^2 for one motor */
-    this.sendMessage("M201 X"+acceleration);
+    this.sendMessage("M201 " + axis +acceleration);
     if (mode == "relatif"){
       this.sendMessage("G91");
     }
@@ -224,13 +229,13 @@ export class AppComponent implements OnDestroy {
       this.webSocketService.sendMessage("#505 =1");
     }
     /*Definition of the offset on unit for one motor */
-    this.webSocketService.sendMessage("M851 X"+offset);
+    this.webSocketService.sendMessage("M851 "+axis+offset);
     this.lock = true;
     console.log("locked",this.lock);
     /*this.sendMessage("M92"+step);*/
     /*console.log("movingmode saved");*/
     /*change the config displayed in the default config component*/
-    this.inputConfigX = {speed: speed, mode : mode, acceleration : acceleration, name : name/*, movingmode : movingmode*/, step : step, offset : offset};
+    this.inputConfigX = {speed: speed, mode : mode, acceleration : acceleration, name : name/*, movingmode : movingmode*/, step : step, offset : offset, axis : axis};
     /*change the speedmode*/
     this.speedmode = speed;
 
