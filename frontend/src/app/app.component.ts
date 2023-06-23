@@ -53,6 +53,7 @@ export class AppComponent implements OnDestroy {
   Xsent : boolean = false;
   Ysent : boolean = false;
   Zsent : boolean = false;
+  showConfigs : boolean = false;
 
   constructor( public webSocketService: WebSocketService, public routing : AppRoutingModule, public router: Router, private configService : ConfigService ){ 
     /*opening the websocket connection*/

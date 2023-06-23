@@ -16,7 +16,7 @@ export class ConfigDetailComponent {
   defaultconfig? : Config;
 
 
-  constructor(private route: ActivatedRoute, private configService: ConfigService, private app : AppComponent, public ws : WebSocketService
+  constructor(private route: ActivatedRoute, private configService: ConfigService, public app : AppComponent, public ws : WebSocketService
     /*private defaultconfig_C : DefaultConfComponent*/) { } /**The ActivatedRoute holds information about the route to this instance of the HeroDetailComponent.The HeroService gets hero data from the remote server and this component will use it to get the hero-to-display. The location is an Angular service for interacting with the browser*/
   ngOnInit(): void {
     this.getConfig();
@@ -38,7 +38,7 @@ export class ConfigDetailComponent {
     /*return to the previous page*/
     this.config = undefined;
   }
-  save(): void {
+  send(): void {
     if (this.config) {
       this.configService.updateConfig(this.config.id, this.config)
       /*this.configService.updateConfig(this.config)
@@ -56,6 +56,7 @@ export class ConfigDetailComponent {
       if(this.config.axis == "Z"){
         this.app.currentConfigZ = this.config;
       }
+      this.app.showConfigs=false;
       /*this.configService.updateDefaultConfig(this.config);*/
       /*this.defaultconfig_C.config = this.config; /**update the default config*/
     }
