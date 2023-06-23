@@ -10,7 +10,9 @@
 
 
 <body>
-  <h1>{{title}} </h1>    <!--Ceci est un titre, les {{}} indiquent une interpolation de binding-->
+  <h1>
+    {{title}} 
+  </h1>    <!--Ceci est un titre, les {{}} indiquent une interpolation de binding-->
 
     <div class="tac">
       <div class = "left">
@@ -54,7 +56,12 @@
             <!-- <div class = "loops" *ngIf="this.webSocketService.onreceipe">
               Loop : {{this.webSocketService.currentLoop}} / {{this.webSocketService.totalLoop}}
              </div>-->
-            
+             <a button type = "button" class="btn btn-dark" (click)="showConfigs = true" *ngIf="knownConfig && !this.webSocketService.onCommand && !showConfigs">
+              Configs
+            </a>
+            <a button type = "button" class="btn btn-dark" (click)="showConfigs = false" *ngIf="showConfigs">
+              Hide
+            </a>
             <a routerLink="/stop" 
               href="#" class="btn_PP btn-danger btn-lg">    <!--(click)="Stop()"-->
                 <i class="glyphicon glyphicon-stop"></i> Stop
@@ -62,46 +69,42 @@
           
         </div>
         <div class="loader" *ngIf="this.webSocketService.onCommand" ></div> 
-        <div class ="changing-page ">
+        <div class ="changing-page">
           <router-outlet></router-outlet>    <!--Tells the router where to display routed views-->
           
         </div>
         <div class = "current-config" *ngIf="!this.webSocketService.onCommand">
-          <app-default-conf [currentconfigX]="inputConfigX" [currentconfigY]="inputConfigY" [currentconfigZ]="inputConfigZ"class="elements" *ngIf=" router.url != '/receipe'"></app-default-conf>
+          <app-default-conf class="elements" [currentconfigX]="inputConfigX" [currentconfigY]="inputConfigY" [currentconfigZ]="inputConfigZ" *ngIf=" router.url != '/receipe' && showConfigs===true"></app-default-conf>
           
         </div>
       </div>
-      <div class="debug">
-      <div class = "messagesserver">
-        <h2>Messages sent to the server:</h2>
-        <ul>
-          <li *ngFor="let data of webSocketService.receivedData" >    <!-- *ngFor ="let <value> of <collection> "-->
-              <!--<div *ngIf="data.done" (AppComponent)="OnDone()" >-->
-                <div *ngIf="data.read != ''">
-                {{ data.time }}: {{ data.message }} recieved : {{ data.read }}
-                </div>
-             <!-- </div>-->
-          </li>
-        </ul>
-      </div>
-        <ul>
-          <h2>Elements on the record list:</h2>
-          <div class = "delete" *ngIf="this.recordlist">
-            <a button type="button" class="btn btn-dark" (click)="deleteRecord()" >   <!--Send the receipe to the device-->
-             <i class="glyphicon glyphicon-trash"></i>
-             </a>
-       </div>
-          <li *ngFor="let data of recordlist" >    <!-- *ngFor ="let <value> of <collection> "-->
-              <!--<div *ngIf="data.done" (AppComponent)="OnDone()" >-->
-                {{data}}
-          </li>
-        </ul>
-    </div>
-    <!-- app.component.html -->
-
-    <!--<app-bar [max]="100" [offset]="100"></app-bar>-->
-
+      
   </div>
-  <!--<app-websockets-service (newItemEvent)="ChangeStatusOnCommand($event)"></app-websockets-service >-->
 </body>
-<!--<app-default-conf [currentconfig]="inputConfig"></app-default-conf>-->
+<footer>
+  <div class="debug">
+    <div class = "messagesserver">
+      <h2>Messages sent to the server:</h2>
+      <ul>
+        <li *ngFor="let data of webSocketService.receivedData" >    <!-- *ngFor ="let <value> of <collection> "-->
+            <!--<div *ngIf="data.done" (AppComponent)="OnDone()" >-->
+              <div *ngIf="data.read != ''">
+              {{ data.time }}: {{ data.message }} recieved : {{ data.read }}
+              </div>
+          <!-- </div>-->
+        </li>
+      </ul>
+    </div>
+    <ul>
+      <h2>Elements on the record list:</h2>
+      <div class = "delete" *ngIf="this.recordlist">
+        <a button type="button" class="btn btn-dark" (click)="deleteRecord()" >   <!--Send the receipe to the device-->
+         <i class="glyphicon glyphicon-trash"></i>
+         </a>
+   </div>
+      <li *ngFor="let data of recordlist" >
+            {{data}}
+      </li>
+    </ul>
+</div>
+</footer>

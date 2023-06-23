@@ -10,8 +10,7 @@
     flex-direction: row;
     justify-content :stretch;
     align-items: center;
-    width: 120%;
-    margin: 20px;
+    width: 100%;
     background-color: rgb(170, 204, 204);
 }
 .coordinates-panel{
@@ -55,10 +54,6 @@ a {
     color: white;
 }
 
-  .step p {
-    width: 200px;
-    text-align: center;
-  }
 
   .step{
     display: flex;
@@ -73,7 +68,7 @@ a {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 55%;
+    width: 70%;
   }
 
   
@@ -81,8 +76,6 @@ a {
   .coordonnees{
     display: flex;
     flex-direction: column;
-    margin-right: 5%;
-    margin-left: 5%;
     align-items: center;
     border-left: solid;
   }
@@ -140,7 +133,7 @@ a {
   }
 
   .moveXYZ {
-    width: 100%;
+    width: 90%;
     height: 175px; /* Assumant une hauteur fixe */
     position: relative;
   }
@@ -150,37 +143,37 @@ a {
   }
   
   .Xpos {
-    left: 40%;
+    left: 45%;
     top: -5%;
     transform: translate(-50%, 0%);
   }
   
   .Xneg {
-    left: 40%;
+    left: 45%;
     top: 105%;
     transform: translate(-50%, -100%);
   }
 
   .home {
-    left: 33.5%;
+    left: 36.5%;
     top: 37%;
   }
 
   .Xup {
-    left: 40%;
+    left: 45%;
     top: 5%;
     transform: translate(-50%, 0%);
   }
   
   .Xdown {
-    left: 40%;
+    left: 45%;
     top: 95%;
     transform: translate(-50%, -100%);
   }
   
   
   .Ypos {
-    left: 75%;
+    left: 82%;
     top: 50%;
     transform: translate(-100%, -50%);
   }
@@ -196,7 +189,7 @@ a {
   }
   
   .Yup {
-    left: 67%;
+    left: 75%;
     top: 37%;
     transform: translate(-100%, 0%);
   }
@@ -227,7 +220,7 @@ a {
   }
 
   .ask{
-      left: 53.5%;
+      left: 60%;
       top: 37%;
   }
   
@@ -248,7 +241,7 @@ a {
   }
 
   .after-home button{
-    margin-left: 20%;
+    margin-left: 10%;
   }
 
   .speed{
