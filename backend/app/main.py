@@ -20,9 +20,11 @@ for conn in psutil.net_connections():
     if conn.laddr.port == SERIAL_PORT:
         process = psutil.Process(conn.pid)
         process.terminate()  # Terminate the process using the port
-
-
-ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
+try:
+    ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
+except serial.SerialException:
+    logger.info("Serial port not connected")
+    ser = serial.Serial()
 connected = False
 websocket_connection = None
 
@@ -35,16 +37,18 @@ def data_processing(data: dict):
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
-    global connected, websocket_connection
+    global connected, websocket_connection, ser
     if connected:
         await websocket.close()
         print("Connection already established")
         return
+    if not ser.isOpen():
+        ser.open()
     connected = True
     websocket_connection = websocket
     await websocket.accept()
-    while True:
-        try:
+    try:
+        while True:
             # Receive the JSON data sent by a client.
             data = await websocket.receive_text()
             print("Received message: " + data)  # Log the received message.
@@ -83,16 +87,20 @@ async def websocket_endpoint(websocket: WebSocket):
                         }
                     )
             else:
-                # If the message is not successfully sent, send the message and the current time to the client.
-                await websocket.send_json(
-                    {
-                        "message": "Serial port not connected",
-                        "time": datetime.now().strftime("%H:%M:%S"),
-                    }
-                )
-        except WebSocketDisconnect:
-            # If the client is disconnected, inform the client
-            logger.info("The connection is closed.")
-            break
+                raise serial.SerialException("Serial port not connected")
+    except WebSocketDisconnect:
+        # If the client is disconnected, inform the client
+        logger.info("The connection is closed.")
+    except serial.SerialException as e:
+        # If the message is not successfully sent, send the message and the current time to the client.
+        await websocket.send_json(
+            {
+                "message": "Serial port not connected",
+                "time": datetime.now().strftime("%H:%M:%S"),
+            }
+        )
+        await websocket.close()
+        ser.close()
+        logger.info(f"Error: {e=}")
     connected = False
     websocket_connection = None
