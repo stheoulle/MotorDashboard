@@ -1,6 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { AppComponent } from '../app.component';
-import { delay } from 'rxjs';
 import { WebSocketService } from '../websocket.service';
 import { ReceipeService } from '../receipe.service';
 
@@ -39,13 +38,7 @@ export class RecordloopComponent {
     /*send the recorded commands to the backend*/
     if(this.ws.record == false){
       this.receipe.addReceipe("new recording", this.app.recordlist, this.app.receipelistitem.length+1);
-      /*for(let j = 0; j < this.loop; j++){   Uncomment if we want to send the recording as soon as we stop recording
-        for (let i = 0; i < this.app.recordlist.length; i++) {
-          this.app.sendMessage(this.app.recordlist[i]);
-          }
-      }*/
     }
   }
 
-  
 }

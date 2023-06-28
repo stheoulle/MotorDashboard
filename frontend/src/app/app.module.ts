@@ -11,7 +11,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { StopComponent } from './stop/stop.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; /**HttpClientModule is the module that includes the HttpClient service */
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { CommonModule } from '@angular/common';
 import { DefaultConfComponent } from './default-conf/default-conf.component';
 import { ReceipeComponent } from './receipe/receipe.component';
@@ -20,10 +19,6 @@ import { ReceipeDetailsComponent } from './receipe-details/receipe-details.compo
 import { RecordloopComponent } from './recordloop/recordloop.component';
 import { GcodeComponent } from './gcode/gcode.component';
 import { VoidComponent } from './void/void.component';
-/*import { DefaultConfComponent } from './default-conf/default-conf.component';*/
-
-/*import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api'; /**The HttpClientInMemoryWebApiModule module intercepts HTTP requests and returns simulated server responses. Remove it when a real server is ready to receive requests. 
-import { InMemoryDataService } from './in-memory-data.service'; /**The InMemoryDataService class replaces the mock config.ts file for the tutorial. */
 
 @NgModule({
   declarations: [
@@ -47,7 +42,6 @@ import { InMemoryDataService } from './in-memory-data.service'; /**The InMemoryD
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule, /***The HttpClientInMemoryWebApiModule module intercepts HTTP requests and returns simulated server responses. Remove it when a real server is ready to receive requests. */
-
     CommonModule
   ],
   bootstrap: [AppComponent], 

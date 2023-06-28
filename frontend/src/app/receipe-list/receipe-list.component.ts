@@ -17,16 +17,17 @@ export class ReceipeListComponent {
   receipeName : string = "";
   loop : number = 1;
 
-
   constructor(public app : AppComponent, public receipeService : ReceipeService, private ws : WebSocketService) { }  /*Change to private if only used in this component, public if used in another component*/
 
   ngOnInit(): void {
     this.getReceipes(); /*get the current coordinates of the machine*/
   }
+
   delete(item : string): void {
     /*delete the config*/
     this.app.receipelistitem?.splice(this.app.receipelistitem?.indexOf(item), 1);
   }
+
   launch(): void {
     /*launch the receipe*/
     /*send lines one by one*/
@@ -38,11 +39,9 @@ export class ReceipeListComponent {
         console.log(this.app.receipelistitem[j], typeof(this.app.receipelistitem[j]));
         this.app.sendMessageList(this.app.receipelistitem[j]);
      }
-   
     }
-    
-
   }
+
   onSelect(receipe: Receipe): void {
     /*add the items of the receipe to the list*/
     this.app.receipelistitem = []
@@ -50,24 +49,30 @@ export class ReceipeListComponent {
       this.app.receipelistitem?.push(receipe.receipe[i]);
     }
   }
+
   addReceipe(name : string, receipeList : Array<string>): void {
     /*add a new config to the list with per default parameters*/
     this.receipeService.addReceipe( name, receipeList, this.getLastID()+1);
   }
+
   newReceipe(): void {
     /*clear the list of commands*/
     this.app.receipelistitem = [];
   }
+
   getReceipes(): void { 
     /*get the list of all the configs from the JSON*/
     this.receipelist = this.receipeService.getAllConfigs();
   }
+
   deleteReceipe(id : number): void {
     /*delete the config*/
     this.receipeService.deleteReceipe(id);
   }
+
   getLastID(): number {
     /*get the last ID of the list*/
     return this.app.receipelistitem.length;
   }
+  
 }

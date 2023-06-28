@@ -40,16 +40,12 @@ export class DeplacementComponent implements OnChanges {
   constructor(private coordService: CoordService, public app : AppComponent, public ws : WebSocketService, private configService : ConfigService) {
   }
 
-  /*ngOnChanges() {
-    this.systemCoord[0] = this.coord[0];  /*Update the coordinates of the system
-  }*/
   ngOnInit(): void {
     this.getCoords(); /*get the current coordinates of the machine*/
     this.ws.coordUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.coord[0].x = value.x;
       this.coord[0].y = value.y;
       this.coord[0].z = value.z;
-      
     });
     this.ws.coordShowedUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
     console.log("coordShowedUpdated : ", value);
@@ -101,18 +97,21 @@ export class DeplacementComponent implements OnChanges {
     });
     
   }
+
   ngOnChanges(): void {
     this.GetX(this.ws.coordX);
-    
   }
+
   getCoords(): void {
     /*get the current coordinates of the machine*/
     this.coordonnees = this.coordService.getCoord();
   }
+
   onSelect(n : number): void {
     /*select the step of the deplacement*/
     this.selectedStep = n;
   }
+
   onSelectHome(): void {
     /*select the home command, allow the movements and reset the coordinates*/
     if (this.app.pause === false){
@@ -123,6 +122,7 @@ export class DeplacementComponent implements OnChanges {
       /*this.onCommand = true;*/
       }
   }
+
   onSelectDeplacement(orientation : string, deplacement : string){
     /*Add something to see the launch of the command*/
     if ((this.selectedStep) && (this.app.home) && (this.app.movingAllowed === true)) {
@@ -173,9 +173,6 @@ export class DeplacementComponent implements OnChanges {
         }
      }
       this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
-      /*this.onCommand = true;*/
-      
-
     }
     /*Create and display the exeptions*/
     else if ((this.selectedStep) && !(this.app.home) && (this.app.pause === false)){
@@ -192,9 +189,8 @@ export class DeplacementComponent implements OnChanges {
     }
     
   }
-  onSelectDeplacementCoord(orientation : string){
-    /*Add something to see the launch of the command*/
 
+  onSelectDeplacementCoord(orientation : string){
     if ((this.selectedStep) && (this.app.home) && (this.app.movingAllowed === true)) {
       /*if we can do a movement*/
       this.orientation = orientation;
@@ -230,6 +226,7 @@ export class DeplacementComponent implements OnChanges {
       this.commande = "Home not done and step not chosen";
     }
   }
+
   DeplNoOffset(deplacement : string, orientation : string){
     /*Add something to see the launch of the command*/
     if (orientation === "X" && this.selectedStep){
@@ -284,6 +281,7 @@ export class DeplacementComponent implements OnChanges {
       }
     }
   }
+
   DeplOffset(orientation : string, offset : number, deplacement : string ){
     /*Calculate the coordinate where to send the system, and the coordonate to display*/
     if (orientation === "X" && this.selectedStep){
@@ -356,6 +354,7 @@ export class DeplacementComponent implements OnChanges {
     this.ws.coordY = this.coord[0].y;
     this.ws.coordZ = this.coord[0].z;
   }
+
   DeplNoOffsetCoord(orientation : string){
     /*Add something to see the launch of the command*/
     if (orientation === "X" && this.selectedStep){
@@ -366,11 +365,9 @@ export class DeplacementComponent implements OnChanges {
       }
       else{
         this.commande = this.speedmode + this.orientation +"-"+ (this.coord[0].x - this.selectedStep);
-        
       }
-    
-    this.coord[0].x = Number(this.selectedStep);
-    this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
+      this.coord[0].x = Number(this.selectedStep);
+      this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
     }
     else if (orientation === "Y" && this.selectedStep){
         /*Create the command to send to the websocket*/
@@ -379,27 +376,23 @@ export class DeplacementComponent implements OnChanges {
         }
         else{
           this.commande = this.speedmode + this.orientation +"-"+ (this.coord[0].y - this.selectedStep);
-          
         }
-      
       this.coord[0].y = Number(this.selectedStep);
       this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
     }
-
     else if (this.orientation === "Z" && this.selectedStep){
         /*Create the command to send to the websocket*/
         if (this.selectedStep > this.coord[0].z){
           this.commande = this.speedmode + this.orientation + (this.selectedStep - this.coord[0].z);
         }
         else{
-          this.commande = this.speedmode + this.orientation +"-"+ (this.coord[0].z - this.selectedStep);
-          
+          this.commande = this.speedmode + this.orientation +"-"+ (this.coord[0].z - this.selectedStep); 
         }
-      
       this.coord[0].z = Number(this.selectedStep);
       this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
     }
   }
+
   onGetCoords(): void {
       /*get the current coordinates of the machine*/
       if(!this.app.home) {
@@ -407,14 +400,14 @@ export class DeplacementComponent implements OnChanges {
       }
       this.app.sendMessage("M114");
       /*this.coord[0].x = this.ws.coordX;*/
-
   }
+
   GetX(value : number){
       this.coord[0].x = value;
   }
+
   onSelectCoordinates(x : number, y : number, z : number){
       /*select the coordinates of the machine*/
-      
       if (x != undefined){
         if(x>=0 && this.coord[0].x != x){
           this.selectedStep = x;
@@ -441,9 +434,6 @@ export class DeplacementComponent implements OnChanges {
         else if (z<0){
           console.log("Z cannot be negative");
         }
-        
-        
       }
-      
   } 
 }

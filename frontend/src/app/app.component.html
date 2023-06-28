@@ -1,19 +1,11 @@
-<!--script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script-->
-
-
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-
-
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-
 
 <body>
   <h1>
     {{title}} 
-  </h1>    <!--Ceci est un titre, les {{}} indiquent une interpolation de binding-->
-
+  </h1>
     <div class="tac">
       <div class = "left">
         <div class = "navigation-buttons ">
@@ -34,22 +26,6 @@
                 href="#" class="btn btn-primary btn-lg">
                 <span class="fas fa-code"></span> G-Code
             </a>  
-            <!--<div class ="button-playpause" *ngIf="this.home"> 
-                <a class="btn btn-info btn-lg" (click)="Play()">
-                  <span class="glyphicon glyphicon-play"></span>  Play
-                </a>  
-                <a class="btn btn-info btn-lg" (click)="Pause()">
-                  <span class="glyphicon glyphicon-pause"></span>  Pause
-                </a>  deplacemdeplacement 
-            </div>    --> 
-            <!--<a routerLink="/deplacement"
-              href ="#" class="btn btn-info" (click)="unlock()" *ngIf="this.lock" >   <!--Send the receipe to the device-
-              <span class="glyphicon glyphicon-floppy-disk"></span> Unlock
-            </a> 
-            <a routerLink="/deplacement"
-              href ="#" class="btn btn-info" (click)="locker()" *ngIf="!this.lock" >   <!--Send the receipe to the device-
-              <span class="glyphicon glyphicon-floppy-disk"></span> Lock
-            </a> -->
             <div class = "record" >
               <app-recordloop ></app-recordloop>
             </div> 
@@ -63,23 +39,19 @@
               Hide
             </a>
             <a routerLink="/stop" 
-              href="#" class="btn_PP btn-danger btn-lg">    <!--(click)="Stop()"-->
+              href="#" class="btn_PP btn-danger btn-lg">
                 <i class="glyphicon glyphicon-stop"></i> Stop
             </a>  
-          
         </div>
         <div class="loader" *ngIf="this.webSocketService.onCommand" ></div> 
         <div class ="changing-page">
-          <router-outlet></router-outlet>    <!--Tells the router where to display routed views-->
-          
+          <router-outlet></router-outlet>   
         </div>
         <div class = "current-config" *ngIf="!this.webSocketService.onCommand">
           <app-default-conf class="elements" [currentconfigX]="inputConfigX" [currentconfigY]="inputConfigY" [currentconfigZ]="inputConfigZ" *ngIf=" router.url != '/receipe' && showConfigs===true"></app-default-conf>
-          
         </div>
       </div>
-      
-  </div>
+    </div>
 </body>
 <footer>
   <div class="debug">
@@ -87,11 +59,9 @@
       <h2>Messages sent to the server:</h2>
       <ul>
         <li *ngFor="let data of webSocketService.receivedData" >    <!-- *ngFor ="let <value> of <collection> "-->
-            <!--<div *ngIf="data.done" (AppComponent)="OnDone()" >-->
               <div *ngIf="data.read != ''">
-              {{ data.time }}: {{ data.message }} recieved : {{ data.read }}
+                {{ data.time }}: {{ data.message }} recieved : {{ data.read }}
               </div>
-          <!-- </div>-->
         </li>
       </ul>
     </div>

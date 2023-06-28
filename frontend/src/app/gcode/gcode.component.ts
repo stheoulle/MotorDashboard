@@ -14,5 +14,4 @@ export class GcodeComponent {
     /*send the gcode to the backend*/
     this.ws.sendMessage(this.message);
   }
-
 }

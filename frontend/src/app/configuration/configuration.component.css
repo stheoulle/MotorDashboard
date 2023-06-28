@@ -1,23 +1,16 @@
 
 .configuration-panel{
   display: flex;
-  align-items: center;
-  margin-left: auto;
-  margin-right: auto;
   padding: 0;
-  width: 100%;
+
 } 
 .config-detail{
   display: flex;
   flex-direction: column;
-  margin-right: auto;
-  padding: 0;
-  width: 40%;
+  width: 34%;
 }
 
 .configurations-list{
-  
-  
   width: 30em;
   display: flex;
   flex-direction: row;
@@ -38,9 +31,7 @@
   padding: 0;
   border-radius: 10px;
   display: flex;
-  
   height: 2em;
-
 }
 
 .configurations-list button:hover {
@@ -83,18 +74,6 @@
 .configurations-list.name {
   align-self: center;
 }
-
-.delete {
-  position: relative;
-  top: -0.57em;
-  left: 1em;
-  font-size: 1em;
-  color: #b80d0d;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-}
-
 .delete button.selected {
   background-color: black;
   color: white;

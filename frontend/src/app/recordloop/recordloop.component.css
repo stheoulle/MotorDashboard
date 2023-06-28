@@ -1,56 +1,54 @@
 
-   a {
-    border-radius: 2px;
-    padding: 1rem;
-    font-size: 1.2rem;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-    width: 90%;
-    min-width: 70px;
-    max-width: 300px;
-    margin: 1rem;
-    box-sizing: border-box;
- 
- 
- }
+a {
+   border-radius: 2px;
+   padding: 1rem;
+   font-size: 1.2rem;
+   text-decoration: none;
+   display: inline-block;
+   text-align: center;
+   width: 90%;
+   min-width: 70px;
+   max-width: 300px;
+   margin: 1rem;
+   box-sizing: border-box;
+}
 
- .record{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
- }
+.record{
+display: flex;
+flex-direction: column;
+align-items: center;
+}
 
- .recordfalse{
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-  }
+.recordfalse{
+display: flex;
+flex-direction: column;
+align-items: center;
+}
   
-  .recordtrue{
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-  }
+.recordtrue{
+display: flex;
+flex-direction: column;
+align-items: center;
+}
 
-  .send{
-   display: flex;
-   flex-direction: row;
-   align-items: center;
-   justify-content: center;
-   width: 85%;
-  }
+.send{
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+width: 85%;
+}
 
-  .send label{
-   color : white;
-   margin-right: 3%;
-  }
+.send label{
+color : white;
+margin-right: 3%;
+}
 
-  .send input{
-   width: 40%;
-   height: 30px;
-   border-radius: 5px;
-   border: 1px solid #ccc;
-   background-color: #f1f1f1;
-   margin-right: 3%;
-  }
+.send input{
+width: 40%;
+height: 30px;
+border-radius: 5px;
+border: 1px solid #ccc;
+background-color: #f1f1f1;
+margin-right: 3%;
+}

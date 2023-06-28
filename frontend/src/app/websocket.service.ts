@@ -82,9 +82,6 @@ export class WebSocketService {
     }
   }
   
-
-
-
   receive(ev: MessageEvent): void {
     const extractNumber = (input: string, key: string) => {
       const regex = new RegExp(`${key}:\\s*(\\d+)`);
@@ -102,10 +99,10 @@ export class WebSocketService {
       this.coordX = Number(extractNumber(data.read, "X").toString());
       }
       if(data.read.includes("Y")){
-      this.coordY = Number(extractNumber(data.read, "X").toString());
+      this.coordY = Number(extractNumber(data.read, "Y").toString());
       }
       if(data.read.includes("Z")){
-      this.coordZ = Number(extractNumber(data.read, "X").toString());
+      this.coordZ = Number(extractNumber(data.read, "Z").toString());
       }
       this.coordUpdated.emit({ x: this.coordX, y: this.coordY, z: this.coordZ });
     }
@@ -141,45 +138,35 @@ export class WebSocketService {
       console.log("axis updated");
       this.axisUpdated.emit({x : this.axisX, y : this.axisY, z : this.axisZ});
     }
-
     if(data.message.includes("G28")){
       if (this.axisX) {
         console.log("X is true on G28", this.offsetX);
         this.newOffsetX.emit(Number(this.offsetX));
-      
         if (this.offsetX !== '0') {
           this.coordX = Number(this.offsetX);
-          /*this.coordShowedUpdatedX.emit(this.coordX);*/
         }
         else{
           this.coordX = 0;
-          /*this.coordShowedUpdatedX.emit(this.coordX);*/
         }
       } 
       if (this.axisY) {
         console.log("Y is true on G28", this.offsetY);
         this.newOffsetY.emit(Number(this.offsetY));
-      
         if (this.offsetY !== '0') {
           this.coordY = Number(this.offsetY);
-          /*this.coordShowedUpdatedY.emit(Number(this.coordY));*/
         }
         else{
           this.coordY = 0;
-          /*this.coordShowedUpdatedY.emit(this.coordY);*/
         }
       } 
       if (this.axisZ) {
         console.log("Z is true on G28", this.offsetZ);
         this.newOffsetZ.emit(Number(this.offsetZ));
-      
         if (this.offsetZ !== '0') {
           this.coordZ = Number(this.offsetZ);
-          /*this.coordShowedUpdatedZ.emit(this.coordZ);*/
         }
         else{
           this.coordZ = 0;
-          /*this.coordShowedUpdatedZ.emit(this.coordZ);*/
         }
       } 
       this.coordShowedUpdated.emit({x: this.coordX, y : this.coordY, z: this.coordZ});     

@@ -15,8 +15,7 @@
                 <input [(ngModel)]="selectedStep" placeholder="..." class = "step-input">
                 -----
             </li>
-        </div>
-              
+        </div>  
         <div class="moveXYZ">   <!--Selection of the direction-->
             <div *ngIf= "this.ws.axisX" class = "Xpos">
                 X       
@@ -127,39 +126,4 @@
             
         </div>          
     </div>
-    <!--<div class = "coordinates-panel" *ngIf="this.ws.onCommand==false">
-        <div class = "homestatus">
-            <p> Home status : </p>
-            <p> {{this.app.home}} </p>
-        </div>
-        <div class = "affiche" *ngIf="this.app.home">   <!--Display of the coordinates
-            <a button type = "button" class="btn btn-dark" (click)="onGetCoords()">
-                <i class="glyphicon glyphicon-retweet"></i>
-            </a>
-            <li *ngFor="let coords of coord">
-                
-                <label for="coord-X">X : {{coords.x}}</label>
-                <label for="coord-Y">Y : {{coords.y}}</label>
-                <label for="coord-Z">Z : {{coords.z}}</label>
-            </li>
-        </div>
-
-        <div class = "affiche" *ngIf="!this.app.home">  <!--Display of the coordinates when the home is not done
-            <a button type = "button" class="btn btn-dark" (click)="onGetCoords()">
-                <i class="glyphicon glyphicon-retweet"></i>
-            </a>
-            <li *ngFor="let coords of coord">
-                
-                <label for="coord-X">X : unknown</label>
-                <label for="coord-Y">Y : unknown</label>
-                <label for="coord-Z">Z : unknown</label>
-            </li>
-        </div>
-    </div>-->
-
 </div>
-
-    
-
-
-<!--<app-websockets-service (newItemEvent)="ChangeStatusOnCommand($event)"></app-websockets-service >-->

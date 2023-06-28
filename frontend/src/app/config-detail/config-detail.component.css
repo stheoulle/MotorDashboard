@@ -21,9 +21,7 @@ button:active{
     flex-direction: column;
     margin-left: 20px;
 }
-/*h2 {
-    margin-left: 120%;
-}*/
+
 .buttons-gestion{
     margin-left: 100%;
     margin-top: 50px;
@@ -45,27 +43,26 @@ button:active{
 }
 
 .btn {
-    /* Styles pour l'état au repos */
-    background-color: #dddddd; /* Couleur de fond au repos */
-    color: #000000; /* Couleur du texte au repos */
+    background-color: #dddddd; 
+    color: #000000; 
   }
   
   .btn:hover {
-    /* Styles pour l'état survolé par la souris */
-    background-color:  #e6e6e6; /* Couleur de fond au survol */
-    color: #000000; /* Couleur du texte au survol */
+    /* Hooverd style */
+    background-color:  #e6e6e6;
+    color: #000000; 
   }
   
   .btn:active {
-    /* Styles pour l'état cliqué */
-    background-color: #615f5f; /* Couleur de fond au clic */
-    color: #ffffff; /* Couleur du texte au clic */
+    /* state : survolé */
+    background-color: #615f5f; 
+    color: #ffffff; 
   }
   
   .btn.selected {
-    /* Styles pour le bouton sélectionné */
-    background-color: #000000; /* Couleur de fond du bouton sélectionné */
-    color: #ffffff; /* Couleur du texte du bouton sélectionné */
+    /* selected button style */
+    background-color: #000000;
+    color: #ffffff; 
   }
   
   

@@ -10,14 +10,8 @@ export class ReceipeDetailsComponent {
   type? : string;
   direction? : string;
   coordinates? : string;
-  constructor(public app : AppComponent) { }
 
-  /*addCommand(type : string, direction : string, coordinates : string): void {
-    /*add a command to the receipe
-    this.type = type;
-    this.direction = direction;
-    this.coordinates = coordinates;
-  }*/
+  constructor(public app : AppComponent) { }
 
   saveCommand(): void {
     /*save the command to the receipe list*/
@@ -29,18 +23,16 @@ export class ReceipeDetailsComponent {
       else{
         this.app.receipelistitem?.push("G1 " + this.direction + "" + this.coordinates);
       }
-     
-      /*this.app.receipelistitem?.push(this.type + " " + this.direction + " " + this.coordinates);*/
     }
     else if (this.type == "G28" || this.type == "M24" || this.type == "M25"){
       this.app.receipelistitem?.push(this.type);
     }
   }
+
   deleteCommand(): void {
     /*delete the command to the receipe*/
     this.type = undefined;
     this.direction = undefined;
     this.coordinates = undefined;
   }
-
 }

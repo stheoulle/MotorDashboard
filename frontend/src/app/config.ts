@@ -8,7 +8,6 @@ export interface Config {
     step : string;
     offset : string;
     axis : string;
-    /*movingmode : string;*/
 }
 
 export interface ConfigInput {
@@ -20,5 +19,4 @@ export interface ConfigInput {
     step : string;
     offset : string;
     axis : string;
-    /*movingmode : string;*/
 }
