@@ -1,28 +1,31 @@
-.panel{
+  .panel{
   display: flex;
   flex-direction: column;
   width: 100%;
   box-shadow: none;
-}
+  margin-left: 5%;
+  margin-top: 3.5%;
+  }
 
-.deplacement-panel{
+  .deplacement-panel{
     display: flex;
     flex-direction: row;
     justify-content :stretch;
     align-items: center;
     width: 100%;
     background-color: rgb(170, 204, 204);
-}
-.coordinates-panel{
+  }
+
+  .coordinates-panel{
   display: flex;
   flex-direction: row;
   align-items: center;
   width: 120%;
   margin: 20px;
   background-color: rgb(170, 204, 204);
-}
+  }
 
-a {
+  a {
     border-radius: 2px;
     padding: 1rem;
     font-size: 1.2rem;
@@ -31,29 +34,27 @@ a {
     text-align: center;
     width: 100%;
     margin: .5rem auto;
-    
-}
+  }
 
-.affiche{
+  .affiche{
     display : flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-}
+  }
 
-.affiche li{
+  .affiche li{
     display : flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
     width: 100%;
-}
-.step button.selected:hover {
+  }
+  .step button.selected:hover {
     background-color: black;
     color: white;
-}
-
+  }
 
   .step{
     display: flex;
@@ -71,24 +72,22 @@ a {
     width: 70%;
   }
 
-  
-
   .coordonnees{
     display: flex;
     flex-direction: column;
     align-items: center;
     border-left: solid;
   }
+
   .coordonnees p{
     align-items: center;
     margin-top: 5%;
     margin-right: 5%;
   }
+
   .coordonnees input{
     width: 100%;
   }
-
-
   
   .X{
     display: flex;
@@ -134,7 +133,7 @@ a {
 
   .moveXYZ {
     width: 90%;
-    height: 175px; /* Assumant une hauteur fixe */
+    height: 175px; 
     position: relative;
   }
   
@@ -224,8 +223,6 @@ a {
       top: 37%;
   }
   
-  
-  
   .MoveL{
     display: flex;
     flex-direction: column;
@@ -251,10 +248,7 @@ a {
     margin-left: 5%;
   }
   
-
   .button-coord{
     display: flex;
     flex-direction: row;
   }
-
-  
