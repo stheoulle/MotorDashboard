@@ -184,15 +184,31 @@ export class WebSocketService {
     } 
     else {
       const message: string = this.messageslist[0];
-      this.messageslist = this.messageslist.slice(1); // delete the first element of the array
+      this.messageslist = this.messageslist.slice(1); // supprimer le premier élément du tableau
+      console.log("messages in the list : ", this.messageslist.length);
       if (message.includes("endloop")) {
         this.endloop();
+        // Vérifier si d'autres messages restent dans la liste
+        if (this.messageslist.length > 0) {
+          const nextMessage: string = this.messageslist[0];
+          if (!nextMessage.includes("endloop")) {
+            this.socket$.send(JSON.stringify({ message: nextMessage }));
+            /*console.log("message sent to server: ", nextMessage);*/
+            this.messageslist = this.messageslist.slice(1); // supprimer le message traité de la liste
+          }
+        }
+        else{
+          this.onreceipe = false;
+          this.totalLoop = -1;
+          this.onCommand = false; /*reset the command to stop the loading screen*/
+        }
       }
       else {
-        this.socket$.send(JSON.stringify({message:message}));
+        this.socket$.send(JSON.stringify({ message: message }));
         /*console.log("message sent to server: ", message);*/
       }
     }
+    
   }
     
 

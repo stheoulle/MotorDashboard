@@ -29,10 +29,10 @@
             <div class = "record" >
               <app-recordloop ></app-recordloop>
             </div> 
-            <!-- <div class = "loops" *ngIf="this.webSocketService.onreceipe">
+            <div class = "loops" *ngIf="this.webSocketService.onreceipe">
               Loop : {{this.webSocketService.currentLoop}} / {{this.webSocketService.totalLoop}}
-             </div>-->
-             <a button type = "button" class="btn btn-dark" (click)="showConfigs = true" *ngIf="knownConfig && !this.webSocketService.onCommand && !showConfigs">
+            </div>
+            <a button type = "button" class="btn btn-dark" (click)="showConfigs = true" *ngIf="knownConfig && !this.webSocketService.onCommand && !showConfigs">
               Configs
             </a>
             <a button type = "button" class="btn btn-dark" (click)="showConfigs = false" *ngIf="showConfigs">
