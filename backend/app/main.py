@@ -6,6 +6,7 @@ import serial
 import psutil  # Import the psutil module
 import json
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+import subprocess
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("FastAPI app")
@@ -15,16 +16,35 @@ app = FastAPI()
 SERIAL_PORT = "/dev/ttyACM0"
 BAUD_RATE = 9600
 
-# Check if a process is using the specified port
-for conn in psutil.net_connections():
-    if conn.laddr.port == SERIAL_PORT:
-        process = psutil.Process(conn.pid)
-        process.terminate()  # Terminate the process using the port
+def kill_process_by_device(device_name):
+    try:
+        for proc in psutil.process_iter():
+            try:
+                if device_name in proc.open_files()[0].path:
+                    proc.terminate()
+                    proc.wait(timeout=5)  # Attendre jusqu'à 5 secondes pour que le processus se termine
+            except (psutil.AccessDenied, psutil.NoSuchProcess):
+                pass
+    except Exception as e:
+        print(f"Erreur lors de la tentative de terminaison du processus : {e}")
+
+def get_process_using_port(port):
+    try:
+        output = subprocess.check_output(["lsof", "-t", f"-c {port}"])
+        pid = int(output.decode().strip())
+        return pid
+    except (subprocess.CalledProcessError, ValueError):
+        return None
+
+pid = get_process_using_port(SERIAL_PORT)
+
 try:
     ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
+    print(f"Serial port {SERIAL_PORT} connected on PID : {pid}")
 except serial.SerialException:
     logger.info("Serial port not connected")
     ser = serial.Serial()
+
 
 connected = False
 websocket_connection = None
@@ -104,6 +124,13 @@ async def websocket_endpoint(websocket: WebSocket):
         )
         await websocket.close()
         ser.close()
+        pid = get_process_using_port(SERIAL_PORT)
+        print(f"Le port {SERIAL_PORT} est utilisé par le processus avec PID {pid}, il va etre fermé.")
+        try:
+            kill_process_by_device("/dev/ttyACM0")
+            print(f"Le processus avec PID {pid} a été fermé.")
+        except subprocess.CalledProcessError as f:
+            print(f"Le processus avec PID {pid} n'a pas pu être fermé.")
         logger.info(f"Error: {e=}")
     connected = False
     websocket_connection = None
