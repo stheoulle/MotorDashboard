@@ -1,7 +1,7 @@
   .panel{
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: auto;
   box-shadow: none;
   margin-left: 5%;
   margin-top: 3.5%;
@@ -154,7 +154,7 @@
   }
 
   .home {
-    left: 36.5%;
+    left: 38%;
     top: 37%;
   }
 

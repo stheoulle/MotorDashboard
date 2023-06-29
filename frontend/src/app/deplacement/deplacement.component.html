@@ -78,7 +78,7 @@
         </div>
         <div class = "coordonnees"> <!--Selection of the coordinates-->
             <!-- Coordinates are in steps-->
-            <div class = "speed">
+            <!--<div class = "speed">
                 Speed option
                 <select name="speed option" id="speed option" [(ngModel)]="listSpeedMode" placeholder="speedmode">
                     <option value="feedrate" >feedrate</option>
@@ -98,8 +98,15 @@
                     <p> Z       </p>
                     <input [(ngModel)]="unknown" placeholder="coordinateZ" readonly>
                 </div> 
-            </div>
+            </div>-->
             <div class="after-home" *ngIf="this.app.home">
+                <div class = "speed">
+                    Speed option
+                    <select name="speed option" id="speed option" [(ngModel)]="listSpeedMode" placeholder="speedmode">
+                        <option value="feedrate" >feedrate</option>
+                        <option value="fastspeed" >fastspeed</option>
+                    </select>
+                </div>
                 <div class="X">
                     <p>X</p>
                     <input [(ngModel)]="coordinateX" placeholder="coordinateX">
