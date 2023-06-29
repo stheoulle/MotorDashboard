@@ -6,7 +6,6 @@ import serial
 import psutil  # Import the psutil module
 import json
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-import uvicorn
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("FastAPI app")
@@ -17,14 +16,16 @@ SERIAL_PORT = "/dev/ttyACM0"
 BAUD_RATE = 9600
 
 # Check if a process is using the specified port
-  # Terminate the process using the port
-
-
+for conn in psutil.net_connections():
+    if conn.laddr.port == SERIAL_PORT:
+        process = psutil.Process(conn.pid)
+        process.terminate()  # Terminate the process using the port
 try:
     ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
 except serial.SerialException:
     logger.info("Serial port not connected")
     ser = serial.Serial()
+
 connected = False
 websocket_connection = None
 
@@ -42,6 +43,8 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.close()
         print("Connection already established")
         return
+    else:
+        print("Connection established")
     if not ser.isOpen():
         ser.open()
     connected = True
@@ -102,9 +105,5 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.close()
         ser.close()
         logger.info(f"Error: {e=}")
-        
     connected = False
     websocket_connection = None
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8015)

@@ -88,60 +88,60 @@ export class AppComponent implements OnDestroy {
   sendMessage(message: string) {
     /*sending the message to the backend*/
     if(this.webSocketService.socket$.readyState == 1){
-      console.log("onreceipe : ",this.webSocketService.onreceipe);
-      if(message == "M112")
-      {
-        this.webSocketService.sendMessageStop();
+    console.log("onreceipe : ",this.webSocketService.onreceipe);
+    if(message == "M112")
+    {
+      this.webSocketService.sendMessageStop();
+    }
+    else{
+      if (this.knownConfig == false && message != "M112"){
+        /*this.sendConfig(this.config.acceleration, this.config.speed, this.config.mode, this.config.name, this.config.step, this.config.offset);*/
+        this.getConfig();
+        this.knownConfig = true;
+        console.log("default config sent");
+        if (message== "G28"){
+          this.movingAllowed = true;
+          this.home = true;
+        }
+        this.webSocketService.sendMessage(message);
+        console.log(message);
       }
-      else{
-        if (this.knownConfig == false && message != "M112"){
-          /*this.sendConfig(this.config.acceleration, this.config.speed, this.config.mode, this.config.name, this.config.step, this.config.offset);*/
-          this.getConfig();
-          this.knownConfig = true;
-          console.log("default config sent");
-          if (message== "G28"){
-            this.movingAllowed = true;
-            this.home = true;
-          }
-          this.webSocketService.sendMessage(message);
-          console.log(message);
+      else {
+        if (message== "G28" && this.home == false){   /*if the config is known, we send the home, if the home is unknown*/
+          this.movingAllowed = true;
+          this.home = true;
         }
-        else {
-          if (message== "G28" && this.home == false){   /*if the config is known, we send the home, if the home is unknown*/
-            this.movingAllowed = true;
-            this.home = true;
-          }
-          this.webSocketService.sendMessage(message);
-          console.log(message);
-        }
+        this.webSocketService.sendMessage(message);
+        console.log(message);
       }
     }
+  }
   }
 
   sendMessageList(message: string) {
     /*sending the message to the backend*/
     if(this.webSocketService.socket$.readyState == 1){
-      if (this.knownConfig == false && message != "M112"){
-        /*if the config is not known, we ask the default config*/
-          this.config = this.getReceipe();
-          this.getConfig();
-          this.knownConfig = true;
-          console.log("default config sent");
-          this.webSocketService.sendMessage("G28");
-          this.home = true;
-      }
-      if (message != "M112" && this.home == false && message != "G28"){
-        /*if the config is known and the home is not asked first we send the home*/
+    if (this.knownConfig == false && message != "M112"){
+      /*if the config is not known, we ask the default config*/
+        this.config = this.getReceipe();
+        this.getConfig();
+        this.knownConfig = true;
+        console.log("default config sent");
         this.webSocketService.sendMessage("G28");
-        this.movingAllowed = true;
         this.home = true;
-      }
-      if (this.knownConfig == true && this.home == true && message != "G28" || message == "M112" ){
-        /*if the config is known and we know the home, we send the message, or urgent stop bypass the other*/
-        this.webSocketService.sendMessage(message);
-        console.log(message);
-      }
     }
+    if (message != "M112" && this.home == false && message != "G28"){
+      /*if the config is known and the home is not asked first we send the home*/
+      this.webSocketService.sendMessage("G28");
+      this.movingAllowed = true;
+      this.home = true;
+    }
+    if (this.knownConfig == true && this.home == true && message != "G28" || message == "M112" ){
+      /*if the config is known and we know the home, we send the message, or urgent stop bypass the other*/
+      this.webSocketService.sendMessage(message);
+      console.log(message);
+    }
+  }
   }
 
   Play(): void {
@@ -163,45 +163,45 @@ export class AppComponent implements OnDestroy {
 
   sendConfig(acceleration : string, speed : string, mode : string, name : string/*, movingmode : string*/, step : string, offset : string, axis : string): void {
     if(this.webSocketService.socket$.readyState == 1){
-      this.knownConfig = true;
-      if (speed== "fastspeed"){
-        this.speedmode = "G0";
-      }
-      else {
-        this.speedmode = "G1";
-      }
-      /*Definition of the acceleration on unit/second^2 for one motor */
-      this.sendMessage("M201 " + axis +acceleration);
-      if (mode == "relatif"){
-        this.sendMessage("G91");
-      }
-      else {
-        this.sendMessage("G90");
-      }
-      /*Definition of the speed on unit/second for one motor */
-      this.webSocketService.sendMessage("M92"+axis +step);
-      if(!this.lock){
-        /*Change the lock status*/
-        this.webSocketService.sendMessage("#505 =1");
-      }
-      /*Definition of the offset on unit for one motor */
-      this.webSocketService.sendMessage("M851 "+axis+offset);
-      this.lock = true;
-      console.log("locked",this.lock);
-      this.inputConfigX = {speed: speed, mode : mode, acceleration : acceleration, name : name/*, movingmode : movingmode*/, step : step, offset : offset, axis : axis};
-      this.speedmode = speed;
+    this.knownConfig = true;
+    if (speed== "fastspeed"){
+      this.speedmode = "G0";
+    }
+    else {
+      this.speedmode = "G1";
+    }
+    /*Definition of the acceleration on unit/second^2 for one motor */
+    this.sendMessage("M201 " + axis +acceleration);
+    if (mode == "relatif"){
+      this.sendMessage("G91");
+    }
+    else {
+      this.sendMessage("G90");
+    }
+    /*Definition of the speed on unit/second for one motor */
+    this.webSocketService.sendMessage("M92"+axis +step);
+    if(!this.lock){
+      /*Change the lock status*/
+      this.webSocketService.sendMessage("#505 =1");
+    }
+    /*Definition of the offset on unit for one motor */
+    this.webSocketService.sendMessage("M851 "+axis+offset);
+    this.lock = true;
+    console.log("locked",this.lock);
+    this.inputConfigX = {speed: speed, mode : mode, acceleration : acceleration, name : name/*, movingmode : movingmode*/, step : step, offset : offset, axis : axis};
+    this.speedmode = speed;
     }
   }
   getConfig(): void {
     /*ask the server for the current config on the motor, using the norm ?...*/
     if(this.webSocketService.socket$.readyState == 1){
-      this.webSocketService.gettingconfig =true;
-      this.webSocketService.sendMessage("?M201");
-      this.webSocketService.sendMessage("?M92");
-      this.webSocketService.sendMessage("?M851");
-      this.webSocketService.sendMessage("G91");   /*set the mode to relative per default*/
-      this.knownConfig = true;
-    }
+    this.webSocketService.gettingconfig =true;
+    this.webSocketService.sendMessage("?M201");
+    this.webSocketService.sendMessage("?M92");
+    this.webSocketService.sendMessage("?M851");
+    this.webSocketService.sendMessage("G91");   /*set the mode to relative per default*/
+    this.knownConfig = true;
+  }
   }
   getReceipe(): Config {
     /*get the config displayed in the default config component*/

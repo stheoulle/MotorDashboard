@@ -268,55 +268,55 @@ export class WebSocketService {
       return matches ? parseInt(matches[1], 10) : '?';
     };
     try {
-      if(data.read.includes("X")){
-        if (data.message.includes("M92")) {
-          this.steppermmX = extractNumber(data.read, "X").toString();
-        }
-        if (data.message.includes("M201")) {
-          
-          this.accelerationX = extractNumber(data.read, "X").toString();
-        }
-        if (data.message.includes("M851")) {
-          this.updateOffset(data);
-          console.log("UC offsetX : ", this.offsetX);
-          console.log("coordX : ", this.coordX);
-        }
-        
-        this.configUpdatedX.emit({ step: this.steppermmX, acceleration: this.accelerationX, offset: this.offsetX, name: "Axis X", speed: "fastspeed", mode: "relatif", id: 0, axis : "X" });
+    if(data.read.includes("X")){
+      if (data.message.includes("M92")) {
+        this.steppermmX = extractNumber(data.read, "X").toString();
       }
-      if (data.read.includes("Y")) {
-        if (data.message.includes("M92")) {
-          this.steppermmY = extractNumber(data.read, "Y").toString();
-        }
-        if (data.message.includes("M201")) {
-          this.accelerationY = extractNumber(data.read, "Y").toString();
-        }
-        if (data.message.includes("M851")) {
-          this.updateOffset(data);
-          console.log("UC offsetY : ", this.offsetY);
-          console.log("coordY : ", this.coordY);
-        }
+      if (data.message.includes("M201")) {
         
-        this.configUpdatedY.emit({ step: this.steppermmY, acceleration: this.accelerationY, offset: this.offsetY, name: "Axis Y", speed: "fastspeed", mode: "relatif", id: 1, axis : "Y" });
-    
+        this.accelerationX = extractNumber(data.read, "X").toString();
       }
-      if (data.read.includes("Z")) {
-        if (data.message.includes("M92")) {
-          this.steppermmZ = extractNumber(data.read, "Z").toString();
-        }
-        if (data.message.includes("M201")) {
-          this.accelerationZ = extractNumber(data.read, "Z").toString();
-        }
-        if (data.message.includes("M851")) {
-          this.updateOffset(data);
-          console.log("UC offsetZ : ", this.offsetZ);
-          console.log("coordZ : ", this.coordZ);
-        }
-        
-        this.configUpdatedZ.emit({ step: this.steppermmZ, acceleration: this.accelerationZ, offset: this.offsetZ, name: "Axis Z", speed: "fastspeed", mode: "relatif", id: 2, axis : "Z" });
-    
+      if (data.message.includes("M851")) {
+        this.updateOffset(data);
+        console.log("UC offsetX : ", this.offsetX);
+        console.log("coordX : ", this.coordX);
       }
+      
+      this.configUpdatedX.emit({ step: this.steppermmX, acceleration: this.accelerationX, offset: this.offsetX, name: "Axis X", speed: "fastspeed", mode: "relatif", id: 0, axis : "X" });
     }
+    if (data.read.includes("Y")) {
+      if (data.message.includes("M92")) {
+        this.steppermmY = extractNumber(data.read, "Y").toString();
+      }
+      if (data.message.includes("M201")) {
+        this.accelerationY = extractNumber(data.read, "Y").toString();
+      }
+      if (data.message.includes("M851")) {
+        this.updateOffset(data);
+        console.log("UC offsetY : ", this.offsetY);
+        console.log("coordY : ", this.coordY);
+      }
+      
+      this.configUpdatedY.emit({ step: this.steppermmY, acceleration: this.accelerationY, offset: this.offsetY, name: "Axis Y", speed: "fastspeed", mode: "relatif", id: 1, axis : "Y" });
+   
+    }
+    if (data.read.includes("Z")) {
+      if (data.message.includes("M92")) {
+        this.steppermmZ = extractNumber(data.read, "Z").toString();
+      }
+      if (data.message.includes("M201")) {
+        this.accelerationZ = extractNumber(data.read, "Z").toString();
+      }
+      if (data.message.includes("M851")) {
+        this.updateOffset(data);
+        console.log("UC offsetZ : ", this.offsetZ);
+        console.log("coordZ : ", this.coordZ);
+      }
+      
+      this.configUpdatedZ.emit({ step: this.steppermmZ, acceleration: this.accelerationZ, offset: this.offsetZ, name: "Axis Z", speed: "fastspeed", mode: "relatif", id: 2, axis : "Z" });
+   
+    }
+  }
     catch (error) {
       console.log("error on updateConfig : ", error);
       this.onCommand = false;
