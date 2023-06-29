@@ -14,14 +14,14 @@
   <div class="form-group">
     <div class = "part1">
       <label for="config-name">Name : {{config.name}}</label>
-      <input id="config-name" [(ngModel)]="config.name" placeholder="name">
+      <input id="config-name" [(ngModel)]="config.name" placeholder="name" [readonly]="!this.app.knownConfig">
       <div>
         <label for="config-acceleration">Acceleration : {{config.acceleration}}</label>
-        <input id="config-acceleration" [(ngModel)]="config.acceleration" placeholder="acceleration">
+        <input id="config-acceleration" [(ngModel)]="config.acceleration" placeholder="acceleration" [readonly]="!this.app.knownConfig">
       </div>
       <div>
         <label for="config-offset">Offset (in steps): {{config.offset}}</label>
-        <input id="config-offset" [(ngModel)]="config.offset" placeholder="offset">
+        <input id="config-offset" [(ngModel)]="config.offset" placeholder="offset" [readonly]="!this.app.knownConfig">
       </div>
     </div>
     <div class = "part2">
@@ -29,7 +29,7 @@
         <form action="#">
           <label for="mode">Mode : {{config.mode}} </label> 
           <br>
-          <select name="mode" id="mode" [(ngModel)]="config.mode" placeholder="mode">
+          <select name="mode" id="mode" [(ngModel)]="config.mode" placeholder="mode" >
             <option value="" > </option>
             <option value="relatif" >relatif</option>
             <option value="absolu" >absolu</option>
@@ -40,7 +40,7 @@
           <form action="#">
             <label for="speed">Speed : {{config.speed}} </label> 
             <br>
-            <select name="speed" id="speed" [(ngModel)]="config.speed" placeholder="speed">
+            <select name="speed" id="speed" [(ngModel)]="config.speed" placeholder="speed" >
               <option value="" > </option>
               <option value="fastspeed" >fastspeed</option>
               <option value="feedrate" >feedrate</option>
@@ -53,7 +53,7 @@
         </div>
     </div>
   </div>
-  <div class = "buttons-gestion">
+  <div class = "buttons-gestion" *ngIf="this.app.knownConfig">
     <button type="button" class="btn btn-light" (click)="send()">
       Send
       <span class="glyphicon glyphicon-save"></span>

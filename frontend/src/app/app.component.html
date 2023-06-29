@@ -49,12 +49,12 @@
         </div>
     </div>
   </body>
-  <aside class="right">
-    <a button type = "button" class="btn btn-light" (click)="showConfigs = true" *ngIf="knownConfig && !this.webSocketService.onCommand && !showConfigs">
-      <i class="glyphicon glyphicon-arrow-left"></i>
+  <aside class="right" *ngIf="router.url != '/receipe'">
+    <a button type = "button" class="btn btn-outline-dark" (click)="showConfigs = true" *ngIf="knownConfig && !this.webSocketService.onCommand && !showConfigs">
+      <i class="glyphicon glyphicon-triangle-left"></i>
     </a> 
-    <a button type="button" class="btn btn-light" (click)="showConfigs = false" *ngIf="showConfigs">
-      <i class="glyphicon glyphicon-cross"></i>
+    <a button type="button" class="btn btn-outline-dark" (click)="showConfigs = false" *ngIf="showConfigs">
+      <i class="glyphicon glyphicon-remove"></i>
     </a>
     <div class = "current-config" *ngIf="!this.webSocketService.onCommand">
       <app-default-conf class="elements" [currentconfigX]="inputConfigX" [currentconfigY]="inputConfigY" [currentconfigZ]="inputConfigZ" *ngIf=" router.url != '/receipe' && showConfigs===true"></app-default-conf>

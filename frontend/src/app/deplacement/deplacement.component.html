@@ -65,7 +65,7 @@
                     <i class="glyphicon glyphicon-arrow-down"></i>
                 </a>      
             </div>
-            <div class = home>
+            <div class = home [ngClass]="{ 'show-configs': this.app.showConfigs, 'hide-config' : !this.app.showConfigs}">
                 <a button type="button" class="btn btn-dark" (click)="onSelectHome()">
                     <i class="glyphicon glyphicon-home"></i>
                 </a>        
@@ -76,29 +76,7 @@
                 </a>        
             </div>
         </div>
-        <div class = "coordonnees"> <!--Selection of the coordinates-->
-            <!-- Coordinates are in steps-->
-            <!--<div class = "speed">
-                Speed option
-                <select name="speed option" id="speed option" [(ngModel)]="listSpeedMode" placeholder="speedmode">
-                    <option value="feedrate" >feedrate</option>
-                    <option value="fastspeed" >fastspeed</option>
-                </select>
-            </div>
-            <div class="before-home" *ngIf="!this.app.home">
-                <div class = " X">
-                    <p> X       </p>
-                    <input [(ngModel)]="unknown" placeholder="coordinateX" readonly>
-                </div>
-                <div class = " Y">
-                    <p> Y       </p>
-                    <input [(ngModel)]="unknown" placeholder="coordinateY" readonly>
-                </div>
-                <div class = " Z">
-                    <p> Z       </p>
-                    <input [(ngModel)]="unknown" placeholder="coordinateZ" readonly>
-                </div> 
-            </div>-->
+        <div class = "coordonnees">
             <div class="after-home" *ngIf="this.app.home">
                 <div class = "speed">
                     Speed option

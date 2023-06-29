@@ -14,6 +14,11 @@
     margin-right: 3px;
 }
 
+.detail-buttons input {
+    width: 150%;
+  }
+  
+
 .detail-scroll{
     display: flex;
     flex-direction: column;
@@ -26,9 +31,14 @@
 
 .detail-buttons{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .move input{
     width: 150%;
 }
+  
+
+  
+  

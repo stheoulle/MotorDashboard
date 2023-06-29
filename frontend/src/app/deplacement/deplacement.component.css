@@ -153,10 +153,16 @@
     transform: translate(-50%, -100%);
   }
 
-  .home {
-    left: 38%;
+  .home.show-configs {
+    left: 35.5%; /* Valeur lorsque showConfigs est true */
     top: 37%;
   }
+  
+  .home.hide-config {
+    left: 37.5%; /* Valeur lorsque showConfigs est false */
+    top: 37%;
+  }
+  
 
   .Xup {
     left: 45%;
