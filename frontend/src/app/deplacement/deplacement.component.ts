@@ -207,7 +207,7 @@ export class DeplacementComponent implements OnChanges {
       }
       else{
         console.log("offset = ", this.app.currentConfigX.offset);
-        /*this.DeplOffsetCoord(orientation, Number(this.configService.configurationdata[0].offset));*/
+        this.DeplOffsetCoord(orientation, Number(this.configService.configurationdata[0].offset),Number(this.configService.configurationdata[1].offset),Number(this.configService.configurationdata[2].offset));
       }
       console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
       this.selectedStep = undefined;    
@@ -392,6 +392,40 @@ export class DeplacementComponent implements OnChanges {
       this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
     }
   }
+
+  DeplOffsetCoord(orientation: string, offsetX: number, offsetY: number, offsetZ: number) {
+    /* Add something to see the launch of the command */
+    if (orientation === "X" && this.selectedStep) {
+      /* Create the command to send to the websocket */
+      if (this.selectedStep > this.coord[0].x) {
+        this.commande = this.speedmode + this.orientation + (this.selectedStep - this.coord[0].x - offsetX);
+      } else {
+        this.commande = this.speedmode + this.orientation + "-" + (this.coord[0].x - this.selectedStep - offsetX);
+      }
+      this.coord[0].x = Number(this.selectedStep) + offsetX;
+      this.app.sendMessage(this.commande); /* Send the command to the websocket */
+    } else if (orientation === "Y" && this.selectedStep) {
+      /* Create the command to send to the websocket */
+      if (this.selectedStep > this.coord[0].y) {
+        this.commande = this.speedmode + this.orientation + (this.selectedStep - this.coord[0].y - offsetY);
+      } else {
+        this.commande = this.speedmode + this.orientation + "-" + (this.coord[0].y - this.selectedStep - offsetY);
+      }
+      this.coord[0].y = Number(this.selectedStep) + offsetY;
+      this.app.sendMessage(this.commande); /* Send the command to the websocket */
+    } else if (orientation === "Z" && this.selectedStep) {
+      /* Create the command to send to the websocket */
+      if (this.selectedStep > this.coord[0].z) {
+        this.commande = this.speedmode + this.orientation + (this.selectedStep - this.coord[0].z - offsetZ);
+      } else {
+        this.commande = this.speedmode + this.orientation + "-" + (this.coord[0].z - this.selectedStep - offsetZ);
+      }
+      this.coord[0].z = Number(this.selectedStep) + offsetZ;
+      this.app.sendMessage(this.commande); /* Send the command to the websocket */
+    }
+  }
+  
+  
 
   onGetCoords(): void {
       /*get the current coordinates of the machine*/
