@@ -32,6 +32,7 @@ Button to launch the recording of the commands sent. Once the recording is finis
 ### Running
 
 ```shell
-> sudo apt install uvicorn
-> uvicorn main:app --reload --host 0.0.0.0 --port #port number"
+> cd backend
+> sudo apt install python3
+> python3 main.py
 ```
