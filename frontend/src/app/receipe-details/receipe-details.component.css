@@ -4,7 +4,7 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    margin-left: 300px;
+    margin-left: 50%;
     margin-top: 5px;
     width: 100%;
     margin-bottom: auto;
@@ -12,4 +12,23 @@
 
 .detail-buttons button{
     margin-right: 3px;
+}
+
+.detail-scroll{
+    display: flex;
+    flex-direction: column;
+}
+
+.move{
+    display: flex;
+    flex-direction: row;
+}
+
+.detail-buttons{
+    display: flex;
+    flex-direction: row;
+}
+
+.move input{
+    width: 150%;
 }

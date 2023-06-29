@@ -107,15 +107,15 @@
                         <option value="fastspeed" >fastspeed</option>
                     </select>
                 </div>
-                <div class="X">
+                <div class="X" *ngIf="this.ws.axisX">
                     <p>X</p>
                     <input [(ngModel)]="coordinateX" placeholder="coordinateX">
                 </div>
-                <div class="Y">
+                <div class="Y" *ngIf="this.ws.axisY">
                     <p>Y</p>
                     <input [(ngModel)]="coordinateY" placeholder="coordinateY">
                 </div>
-                <div class="Z">
+                <div class="Z" *ngIf="this.ws.axisZ">
                     <p>Z</p>
                     <input [(ngModel)]="coordinateZ" placeholder="coordinateZ">
                 </div>

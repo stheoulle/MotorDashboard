@@ -1,8 +1,7 @@
 .receipelist{
-    padding-right: 30px;
     align-items: center;
-    margin-right: 150%;
-    width: 200%;
+    width: 140%;
+    border-right: solid;
 }
 
 li {
@@ -10,7 +9,7 @@ li {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 60%;
     margin-left: 5%;
 }
 
@@ -32,7 +31,7 @@ li {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: 60%;
+    width: 70%;
     margin-left: 5%;
 }
 
@@ -48,6 +47,11 @@ li {
     background-color: #f1f1f1;
     margin-right: 3%;
 }
+
+.centered-input {
+    text-align: center;
+  }
+  
 
 .name{
     display: flex;
