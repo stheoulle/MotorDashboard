@@ -1,5 +1,5 @@
 import { Component, OnInit, Input} from '@angular/core';
-import { Config, ConfigInput} from '../config';
+import { Config} from '../config';
 import { ConfigService } from '../config.service';
 import { WebSocketService } from '../websocket.service';
 
@@ -9,7 +9,7 @@ import { WebSocketService } from '../websocket.service';
   styleUrls: ['./configuration.component.css']
 })
 export class ConfigurationComponent implements OnInit {
-  @Input() configDisplayed? : ConfigInput;
+  @Input() configDisplayed? : Config;
   selectedConfig?: Config;
   configurations : Config[] = [];
   nom : string = "new config";
@@ -29,10 +29,6 @@ export class ConfigurationComponent implements OnInit {
   delete(config: Config): void {
     /*delete the config*/
     this.configService.deleteConfig(config.id);
-  }
-  addConfig(): void {
-    /*add a new config to the list with per default parameters*/
-    this.configService.addConfig( {name : this.nom, speed : "fastmode", mode : "relatif", acceleration : "?", id : this.getLastID()+1 , step : "?", offset : "?", axis : "?"});
   }
   getLastID(): number {
     /*get the last ID of the list*/

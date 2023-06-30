@@ -23,7 +23,7 @@ interface ConfigData {
   providedIn: 'root'
 })
 export class ConfigService {
-  configurationdata : ConfigData[] = Configurations;
+  configurationdata : Config[] = Configurations;
 
   constructor( /**constructor parameters */
     private http: HttpClient,  /**declares a private messageService property. Angular injects the singleton MessageService into that property when it creates the HeroService. */

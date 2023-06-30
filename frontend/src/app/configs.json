@@ -1,5 +1,5 @@
 [
-    {"id" :0,"axis":"X", "speed": "?", "mode" : "?", "acceleration" : "?",  "name": "Configuration X", "movingmode" : "mm/sec", "step" : "?", "offset" : "?"},
-    {"id" :1,"axis":"Y", "speed": "?", "mode" : "?", "acceleration" : "?",  "name": "Configuration Y", "movingmode" : "mm/sec", "step" : "?", "offset" : "?"},
-    {"id" :2,"axis":"Z", "speed": "?", "mode" : "?", "acceleration" : "?",  "name": "Configuration Z", "movingmode" : "mm/sec", "step" : "?", "offset" : "?"}
+    {"id" :0,"axis":"X", "speed": "?", "mode" : "relative", "acceleration" : null,  "name": "Configuration X", "movingmode" : "mm/sec", "step" : null, "offset" : null, "maxlength": 22},
+    {"id" :1,"axis":"Y", "speed": "?", "mode" : "relative", "acceleration" : null,  "name": "Configuration Y", "movingmode" : "mm/sec", "step" : null, "offset" : null, "maxlength": 22},
+    {"id" :2,"axis":"Z", "speed": "?", "mode" : "relative", "acceleration" : null,  "name": "Configuration Z", "movingmode" : "mm/sec", "step" : null, "offset" : null, "maxlength": 22}
 ]

@@ -7,7 +7,8 @@
 .config-detail{
   display: flex;
   flex-direction: column;
-  width: 34%;
+  align-items: left;
+  width: 20%;
 }
 
 .configurations-list{

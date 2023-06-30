@@ -21,16 +21,11 @@ export class WebSocketService {
   /*@Output() deplacement? : Coordonnees;*/
   coordUpdated : EventEmitter<Coordonnees> = new EventEmitter<Coordonnees>();
   coordShowedUpdated : EventEmitter<Coordonnees> = new EventEmitter<Coordonnees>();
-  coordShowedUpdatedX : EventEmitter<number> = new EventEmitter<number>();
   coordShowedUpdatedY : EventEmitter<number> = new EventEmitter<number>();
   coordShowedUpdatedZ : EventEmitter<number> = new EventEmitter<number>();
   recordedCommandUpdated : EventEmitter<string> = new EventEmitter<string>();
-  configUpdatedX : EventEmitter<Config> = new EventEmitter<Config>();
-  configUpdatedY : EventEmitter<Config> = new EventEmitter<Config>();
-  configUpdatedZ : EventEmitter<Config> = new EventEmitter<Config>();
-  newOffsetX : EventEmitter<number> = new EventEmitter<number>();
-  newOffsetY : EventEmitter<number> = new EventEmitter<number>();
-  newOffsetZ : EventEmitter<number> = new EventEmitter<number>();
+  configUpdated : EventEmitter<Config> = new EventEmitter<Config>();
+  newOffset : EventEmitter<{name: String, value: number}> = new EventEmitter<{name: String, value: number}>();
   axisUpdated : EventEmitter<{x : boolean, y : boolean, z : boolean}> = new EventEmitter<{x : boolean, y : boolean, z : boolean}> ();
   homeUpdate : EventEmitter<boolean> = new EventEmitter<boolean>();
   error : EventEmitter<string> = new EventEmitter<string>();
@@ -44,15 +39,15 @@ export class WebSocketService {
   public X : number = 1000;
   record : boolean = false;
   gettingconfig : boolean = false;
-  steppermmX : string = '4';
-  accelerationX : string = '100';
-  offsetX : string = '?';
-  steppermmY : string = '4';
-  accelerationY : string = '100';
-  offsetY : string = '?';
-  steppermmZ : string = '4';
-  accelerationZ : string = '100';
-  offsetZ : string = '?';
+  steppermmX : (number|null) = 4;
+  accelerationX : (number|null) = 100;
+  offsetX : (number|null) = null;
+  steppermmY : (number|null) = 4;
+  accelerationY : (number|null) = 100;
+  offsetY : (number|null) = null;
+  steppermmZ : (number|null) = 4;
+  accelerationZ : (number|null) = 100;
+  offsetZ : (number|null) = null;
   count : number = 0;
   messageslist : string[] = [];
   onreceipe : boolean = false;
@@ -114,6 +109,9 @@ export class WebSocketService {
       }
       this.coordUpdated.emit({ x: this.coordX, y: this.coordY, z: this.coordZ });
     }
+    if (data.message.includes("G0") || data.message.includes("G1")) {
+      this.sendMessage("M114");
+    }
     if (this.record) {
       this.recordedCommandUpdated.emit(data.message);
     }
@@ -149,8 +147,8 @@ export class WebSocketService {
     if(data.message.includes("G28")){
       if (this.axisX) {
         console.log("X is true on G28", this.offsetX);
-        this.newOffsetX.emit(Number(this.offsetX));
-        if (this.offsetX !== '0') {
+        this.newOffset.emit({name: "X", value: Number(this.offsetX)});
+        if (this.offsetX !== 0) {
           this.coordX = Number(this.offsetX);
         }
         else{
@@ -159,8 +157,8 @@ export class WebSocketService {
       } 
       if (this.axisY) {
         console.log("Y is true on G28", this.offsetY);
-        this.newOffsetY.emit(Number(this.offsetY));
-        if (this.offsetY !== '0') {
+        this.newOffset.emit({name: "Y", value: Number(this.offsetY)});
+        if (this.offsetY !== 0) {
           this.coordY = Number(this.offsetY);
         }
         else{
@@ -169,8 +167,8 @@ export class WebSocketService {
       } 
       if (this.axisZ) {
         console.log("Z is true on G28", this.offsetZ);
-        this.newOffsetZ.emit(Number(this.offsetZ));
-        if (this.offsetZ !== '0') {
+        this.newOffset.emit({name: "Z", value: Number(this.offsetZ)});
+        if (this.offsetZ !== 0) {
           this.coordZ = Number(this.offsetZ);
         }
         else{
@@ -230,6 +228,12 @@ export class WebSocketService {
     }
     else {
       /*console.log("message added to the list: ", message);*/
+      if (message === "M114") {
+        let i = this.messageslist.indexOf("M114");
+        if (i !== -1) {
+          this.messageslist.splice(i, 1);
+        }
+      }
       this.messageslist.push(message);
     }
   }
@@ -265,16 +269,16 @@ export class WebSocketService {
     const extractNumber = (input: string, key: string) => {
       const regex = new RegExp(`${key}:\\s*(\\d+)`);
       const matches = input.match(regex);
-      return matches ? parseInt(matches[1], 10) : '?';
+      return matches ? parseInt(matches[1], 10) : null;
     };
     try {
     if(data.read.includes("X")){
       if (data.message.includes("M92")) {
-        this.steppermmX = extractNumber(data.read, "X").toString();
+        this.steppermmX = extractNumber(data.read, "X");
       }
       if (data.message.includes("M201")) {
         
-        this.accelerationX = extractNumber(data.read, "X").toString();
+        this.accelerationX = extractNumber(data.read, "X");
       }
       if (data.message.includes("M851")) {
         this.updateOffset(data);
@@ -282,14 +286,14 @@ export class WebSocketService {
         console.log("coordX : ", this.coordX);
       }
       
-      this.configUpdatedX.emit({ step: this.steppermmX, acceleration: this.accelerationX, offset: this.offsetX, name: "Axis X", speed: "fastspeed", mode: "relatif", id: 0, axis : "X" });
+      this.configUpdated.emit({ step: this.steppermmX, acceleration: this.accelerationX, offset: this.offsetX, name: "Axis X", speed: "fastspeed", mode: "relative", id: 0, axis : "X", maxlength: 22 });
     }
     if (data.read.includes("Y")) {
       if (data.message.includes("M92")) {
-        this.steppermmY = extractNumber(data.read, "Y").toString();
+        this.steppermmY = extractNumber(data.read, "Y");
       }
       if (data.message.includes("M201")) {
-        this.accelerationY = extractNumber(data.read, "Y").toString();
+        this.accelerationY = extractNumber(data.read, "Y");
       }
       if (data.message.includes("M851")) {
         this.updateOffset(data);
@@ -297,15 +301,15 @@ export class WebSocketService {
         console.log("coordY : ", this.coordY);
       }
       
-      this.configUpdatedY.emit({ step: this.steppermmY, acceleration: this.accelerationY, offset: this.offsetY, name: "Axis Y", speed: "fastspeed", mode: "relatif", id: 1, axis : "Y" });
+      this.configUpdated.emit({ step: this.steppermmY, acceleration: this.accelerationY, offset: this.offsetY, name: "Axis Y", speed: "fastspeed", mode: "relative", id: 1, axis : "Y" , maxlength: 22});
    
     }
     if (data.read.includes("Z")) {
       if (data.message.includes("M92")) {
-        this.steppermmZ = extractNumber(data.read, "Z").toString();
+        this.steppermmZ = extractNumber(data.read, "Z");
       }
       if (data.message.includes("M201")) {
-        this.accelerationZ = extractNumber(data.read, "Z").toString();
+        this.accelerationZ = extractNumber(data.read, "Z");
       }
       if (data.message.includes("M851")) {
         this.updateOffset(data);
@@ -313,7 +317,7 @@ export class WebSocketService {
         console.log("coordZ : ", this.coordZ);
       }
       
-      this.configUpdatedZ.emit({ step: this.steppermmZ, acceleration: this.accelerationZ, offset: this.offsetZ, name: "Axis Z", speed: "fastspeed", mode: "relatif", id: 2, axis : "Z" });
+      this.configUpdated.emit({ step: this.steppermmZ, acceleration: this.accelerationZ, offset: this.offsetZ, name: "Axis Z", speed: "fastspeed", mode: "relative", id: 2, axis : "Z" , maxlength: 22});
    
     }
   }
@@ -336,16 +340,16 @@ export class WebSocketService {
   
     const read = data.read;
     if (read.indexOf('X') !== -1) {
-      this.offsetX = extractOffset(read, 'X').toString();
-      this.newOffsetX.emit(Number(this.offsetX));
+      this.offsetX = extractOffset(read, 'X');
+      this.newOffset.emit({name: "X", value: Number(this.offsetX)});
     }
     if (read.indexOf('Y') !== -1) {
-      this.offsetY = extractOffset(read, 'Y').toString();
-      this.newOffsetY.emit(Number(this.offsetY));
+      this.offsetY = extractOffset(read, 'Y');
+      this.newOffset.emit({name: "Y", value: Number(this.offsetY)});
     }
     if (read.indexOf('Z') !== -1) {
-      this.offsetZ = extractOffset(read, 'Z').toString();
-      this.newOffsetZ.emit(Number(this.offsetZ));
+      this.offsetZ = extractOffset(read, 'Z');
+      this.newOffset.emit({name: "Z", value: Number(this.offsetZ)});
     }
   
     console.log('offset updated, gettingconfig = ', this.gettingconfig);

@@ -1,5 +1,5 @@
 <div *ngIf="config && !this.ws.onCommand" class = "config-details">
-  <div class="partAxis">
+  <!--<div class="partAxis">
     <label for="config-axis">Axis : {{config.axis}}</label>
     <a button type="button" class="btn btn-dark" (click)="onSelectAxis('X')" [class.selected]="config.axis === 'X'">
       X
@@ -10,7 +10,7 @@
     <a button type="button" class="btn btn-dark" (click)="onSelectAxis('Z')" [class.selected]="config.axis === 'Z'">
       Z
     </a>
-  </div>
+  </div>-->
   <div class="form-group">
     <div class = "part1">
       <label for="config-name">Name : {{config.name}}</label>
@@ -31,8 +31,8 @@
           <br>
           <select name="mode" id="mode" [(ngModel)]="config.mode" placeholder="mode" >
             <option value="" > </option>
-            <option value="relatif" >relatif</option>
-            <option value="absolu" >absolu</option>
+            <option value="relatif" >relative</option>
+            <option value="absolu" >absolute</option>
           </select>
         </form>
         </div>
@@ -53,15 +53,16 @@
         </div>
     </div>
   </div>
-  <div class = "buttons-gestion" *ngIf="this.app.knownConfig">
+  <div class = "buttons-gestion" >
     <button type="button" class="btn btn-light" (click)="send()">
       Send
       <span class="glyphicon glyphicon-save"></span>
     </button>
-    <button type="button" class="btn btn-light" title="delete config" (click)="delete(config.id)">
-      Delete
-      <span class="glyphicon glyphicon-trash"></span>
-    </button>
+    <div class = ask *ngIf="!this.app.knownConfig">
+      <a button type="button" class="btn btn-dark" (click)="this.app.getConfig()">
+          <i class=" 	glyphicon glyphicon-question-sign"></i>
+      </a>        
+  </div>
 
   </div>
 </div>

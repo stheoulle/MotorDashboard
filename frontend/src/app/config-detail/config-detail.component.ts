@@ -35,17 +35,13 @@ export class ConfigDetailComponent {
   }
 
   send(): void {
-    if (this.config) {
+    if (this.config && this.config.axis != undefined) {
       this.configService.updateConfig(this.config.id, this.config)
-      this.app.sendConfig(this.config.acceleration, this.config.speed, this.config.mode, this.config.name, this.config.step, this.config.offset, this.config.axis);
-      if(this.config.axis == "X"){
-        this.app.currentConfigX = this.config;
-      }
-      if(this.config.axis == "Y"){
-        this.app.currentConfigY = this.config;
-      }
-      if(this.config.axis == "Z"){
-        this.app.currentConfigZ = this.config;
+      this.app.sendConfig(this.config.axis, this.config);
+      let axis = this.app.axis.find(entry => entry.name === this.config?.axis);
+      if (axis != undefined)
+      {
+        axis.conf= this.config;
       }
       this.app.showConfigs=false;
     }

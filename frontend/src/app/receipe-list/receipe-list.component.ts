@@ -38,9 +38,13 @@ export class ReceipeListComponent {
       for ( let j = 0; j < this.i; j++){
         console.log(this.app.receipelistitem[j], typeof(this.app.receipelistitem[j]));
         this.app.sendMessageList(this.app.receipelistitem[j]);
-     }
-     this.app.sendMessageList("endloop");
+      }
+      this.app.sendMessageList("endloop");
+      for (let axis of this.app.axis){
+        axis.conf.offset = 0;
+      }    
     }
+
   }
 
   onSelect(receipe: Receipe): void {

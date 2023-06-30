@@ -27,15 +27,20 @@ export class DeplacementComponent implements OnChanges {
   listSpeedMode : string = "feedrate";
   unknown : string = "unknown";
   update : boolean = false;
-  coordinateX : number = 0;
-  coordinateY : number = 0;
-  coordinateZ : number = 0;
+
   axisX : boolean = false;
   axisY : boolean = false;
   axisZ : boolean = false;
   tempX : number = 0;
   tempY : number = 0;
   tempZ : number = 0;
+
+  coordinateX : number = 0;
+  coordinateY : number = 0;
+  coordinateZ : number = 0;
+
+  mm : boolean = true;
+  steps : boolean = false;
 
   constructor(private coordService: CoordService, public app : AppComponent, public ws : WebSocketService, private configService : ConfigService) {
   }
@@ -44,42 +49,33 @@ export class DeplacementComponent implements OnChanges {
     this.getCoords(); /*get the current coordinates of the machine*/
     this.ws.coordUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.coord[0].x = value.x;
-      this.coord[0].y = value.y;
-      this.coord[0].z = value.z;
-    });
-    this.ws.coordShowedUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
-    console.log("coordShowedUpdated : ", value);
       this.coordinateX = value.x;
+      this.coord[0].y = value.y;
       this.coordinateY = value.y;
+      this.coord[0].z = value.z;
       this.coordinateZ = value.z;
     });
-    this.ws.coordShowedUpdatedX.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
-      console.log("coordShowedUpdatedX : ", value);
-      this.coordinateX = value;
-      console.log("coordShowedUpdatedX : ", this.coordinateX);
+    this.ws.coordShowedUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+      console.log("coordShowedUpdated : ", value);
+      for (let axis of this.app.axis) {
+        if (axis.name == "X") {
+          axis.coordinate = value.x;
+        }
+        if (axis.name == "Y") {
+          axis.coordinate = value.y;
+        }
+        if (axis.name == "Z") {
+          axis.coordinate = value.z;
+        }
+      }
     });
-    this.ws.coordShowedUpdatedY.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
-      console.log("coordShowedUpdatedY : ", value);
-      this.coordinateY = value;
-    });
-    this.ws.coordShowedUpdatedZ.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
-      console.log("coordShowedUpdatedZ : ", value);
-      this.coordinateZ = value;
-    });
-    this.ws.newOffsetX.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
-      console.log("newOffsetX : ", value);
-      this.coordinateX = this.coordinateX-(Number(this.app.currentConfigX.offset) - value);
-      this.app.currentConfigX.offset = value.toString();
-    });
-    this.ws.newOffsetY.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
-      console.log("newOffsetY : ", value);
-      /*this.coordinateY = this.coordinateY-(Number(this.app.currentConfigY.offset) - value);*/
-      this.app.currentConfigY.offset = value.toString();
-    });
-    this.ws.newOffsetZ.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
-      console.log("newOffsetZ : ", value);
-      this.coordinateZ = this.coordinateZ-(Number(this.app.currentConfigZ.offset) - value);
-      this.app.currentConfigZ.offset = value.toString();
+    this.ws.newOffset.subscribe((event) => { /*get the current coordinates of the machine when there is an update or pause*/
+      console.log("newOffset" + event.name+" : ", event.value);
+      let axis = this.app.axis.find((entry) => entry.name == event.name);
+      if (axis != undefined) {
+        axis.coordinate = null;
+        axis.conf.offset = event.value;
+      }
     });
     this.ws.axisUpdated.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
       this.axisX = value.x;
@@ -94,6 +90,11 @@ export class DeplacementComponent implements OnChanges {
       this.ws.axisZ = false;
       this.app.knownConfig = false;
       console.log("homeUpdated : ", value);
+    });
+    this.app.resetCoord.subscribe((value) => { /*get the current coordinates of the machine when there is an update or pause*/
+      this.coord[0].x = 0;
+      this.coord[0].y = 0;
+      this.coord[0].z = 0;
     });
     
   }
@@ -127,51 +128,38 @@ export class DeplacementComponent implements OnChanges {
     /*Add something to see the launch of the command*/
     if ((this.selectedStep) && (this.app.home) && (this.app.movingAllowed === true)) {
       /*if we can do a movement*/
+      let value : string = "0";
       this.deplacement = deplacement;
       this.orientation = orientation;
-      if(this.app.currentConfigX.offset === '0'){
-        console.log("no offset");
-        this.DeplNoOffset(deplacement, orientation);
-        this.tempX = this.coord[0].x - this.coordinateX;
-        this.tempY = this.coord[0].y - this.coordinateY;
-        this.tempZ = this.coord[0].z - this.coordinateZ;
-        this.coordinateX = this.coord[0].x ;
-        this.coordinateY = this.coord[0].y ;
-        this.coordinateZ = this.coord[0].z ;
-        console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
-      }
-      else{
-        console.log("offset = ", this.app.currentConfigX.offset );
-        this.DeplOffset(orientation, Number(this.app.currentConfigX.offset), deplacement);
-        this.tempX = this.selectedStep;
-        this.tempY = this.selectedStep;
-        this.tempZ = this.selectedStep;
+      this.speedmode = "G1";  /*Set the speedmode to G1 (feedrate) when moving using the buttons*/
+      let axis = this.app.axis.find(entry => entry.name == orientation);
+      if(axis != undefined) {
+        if ( axis.conf.offset === 0 || axis.conf.offset === null ){
+          this.DeplNoOffset(deplacement, orientation);
+          console.log("no offset");
+          let coord: number = 0;
+          if (orientation === "X")
+            coord = this.coord[0].x;
+          if (orientation === "Y")
+            coord = this.coord[0].y;
+          if (orientation === "Z")
+            coord = this.coord[0].z;
+          if (axis.coordinate !== null) {
+            value = (coord - axis.coordinate).toString();
+          }
+          axis.coordinate = coord;
+        }
+        else{
+          console.log("offset = ", axis.conf.offset );
+          this.DeplOffset(orientation, axis.conf.offset, deplacement);
+          value = this.selectedStep.toString();
+        }
       }
       
-      this.speedmode = "G1";  /*Set the speedmode to G1 (feedrate) when moving using the buttons*/
-      if(this.deplacement === ""){
-        console.log("ici",this.coord[0].x, this.selectedStep )
-        if(orientation === "X"){
-          this.commande = this.speedmode + orientation + this.tempX; /*Create the command to send to the websocket if sent from the 3 coordinates, already using the signs*/
-        }
-        if(orientation === "Y"){
-          this.commande = this.speedmode + orientation + this.tempY; /*Create the command to send to the websocket if sent from the 3 coordinates, already using the signs*/
-        }
-        if(orientation === "Z"){
-          this.commande = this.speedmode + orientation + this.tempZ; /*Create the command to send to the websocket if sent from the 3 coordinates, already using the signs*/
-        }
+      console.log("ici",this.coord[0].x, this.selectedStep )
+      for (let axis in ["X", "Y", "Z"]){
+        this.commande = this.speedmode + orientation + deplacement + value; /*Create the command to send to the websocket if sent from the 3 coordinates, already using the signs*/
       }
-      else{
-        if(orientation === "X"){
-          this.commande = this.speedmode + orientation + this.deplacement + this.tempX; /*Create the command to send to the websocket if sent from the 3 coordinates, already using the signs*/
-        }
-        if(orientation === "Y"){
-          this.commande = this.speedmode + orientation + this.deplacement + this.tempY; /*Create the command to send to the websocket if sent from the 3 coordinates, already using the signs*/
-        }
-        if(orientation === "Z"){
-          this.commande = this.speedmode + orientation + this.deplacement + this.tempZ; /*Create the command to send to the websocket if sent from the 3 coordinates, already using the signs*/
-        }
-     }
       this.app.sendMessage(this.commande)  /*Send the command to the websocket*/
     }
     /*Create and display the exeptions*/
@@ -190,7 +178,7 @@ export class DeplacementComponent implements OnChanges {
     
   }
 
-  onSelectDeplacementCoord(orientation : string){
+  onSelectDeplacementCoord(orientation : string, value : number){
     if ((this.selectedStep) && (this.app.home) && (this.app.movingAllowed === true)) {
       /*if we can do a movement*/
       this.orientation = orientation;
@@ -201,13 +189,16 @@ export class DeplacementComponent implements OnChanges {
       else {
         this.speedmode = "G0";
       }
-      if(this.app.currentConfigX.offset === '0'){
-        console.log("no offset");
-        this.DeplNoOffsetCoord(orientation);
-      }
-      else{
-        console.log("offset = ", this.app.currentConfigX.offset);
-        this.DeplOffsetCoord(orientation, Number(this.configService.configurationdata[0].offset),Number(this.configService.configurationdata[1].offset),Number(this.configService.configurationdata[2].offset));
+      let axis = this.app.axis.find(entry => entry.name == orientation);
+      if(axis != undefined) {
+        if(axis.conf.offset === 0 || axis.conf.offset === null){
+          console.log("no offset");
+          this.DeplNoOffsetCoord(orientation);
+        }
+        else{
+          console.log("offset = ", axis.conf.offset);
+          this.DeplOffsetCoord(orientation, Number(this.configService.configurationdata[0].offset),Number(this.configService.configurationdata[1].offset),Number(this.configService.configurationdata[2].offset));
+        }
       }
       console.log(this.coord[0].x, this.coord[0].y, this.coord[0].z);
       this.selectedStep = undefined;    
@@ -232,8 +223,8 @@ export class DeplacementComponent implements OnChanges {
     if (orientation === "X" && this.selectedStep){
       if (deplacement === "" ){
         this.coord[0].x = Number(this.coord[0].x) + Number(this.selectedStep);
-        if(this.coord[0].x > 14000){
-          this.coord[0].x=14000;
+        if(this.coord[0].x > 22){ ///Change to the max amplitude of the machine
+          this.coord[0].x=22;
         }
       }
       else{
@@ -251,6 +242,9 @@ export class DeplacementComponent implements OnChanges {
     else if (orientation === "Y" && this.selectedStep){
       if (deplacement === ""){
         this.coord[0].y = Number(this.coord[0].y) + Number(this.selectedStep);
+        if(this.coord[0].y > 22){   ///Change to the max amplitude of the machine
+          this.coord[0].y=22;
+        }
       }
       else{
         if(this.coord[0].y - this.selectedStep >= 0){
@@ -267,6 +261,9 @@ export class DeplacementComponent implements OnChanges {
     else if (orientation === "Z" && this.selectedStep){
       if (deplacement === "" ){
         this.coord[0].z = Number(this.coord[0].z) + Number(this.selectedStep);
+        if(this.coord[0].z > 22){   
+          this.coord[0].z=22;
+        }
       }
       else{
         if (this.coord[0].z - this.selectedStep >= 0){
@@ -285,68 +282,77 @@ export class DeplacementComponent implements OnChanges {
   DeplOffset(orientation : string, offset : number, deplacement : string ){
     /*Calculate the coordinate where to send the system, and the coordonate to display*/
     if (orientation === "X" && this.selectedStep){
-      if(deplacement === ""){
-        if(Number(this.coordinateX) + Number(this.selectedStep) <= 14000){
-          this.coord[0].x = this.coord[0].x + Number(this.selectedStep);
-          this.coordinateX = this.coord[0].x + Number(this.app.currentConfigX.offset);
+      let axis = this.app.axis.find(entry => entry.name == orientation);
+      if (axis != undefined) {
+        if(deplacement === ""){
+          if(axis.coordinate != null && axis.coordinate + Number(this.selectedStep) <= axis.conf.maxlength){ ///Change 22 to the max amplitude in Z of the machine
+            this.coord[0].x = this.coord[0].x + Number(this.selectedStep);
+            axis.coordinate = this.coord[0].x + Number(axis.conf.offset);
+          }
+          else{
+            this.coord[0].x = axis.conf.maxlength-Number(axis.conf.offset);
+            axis.coordinate = axis.conf.maxlength;
+          }
         }
-        else{
-          this.coord[0].x = 14000-Number(this.app.currentConfigX.offset);
-          this.coordinateX = 14000;
-        }
-      }
-      else{
-        if(this.coord[0].x - this.selectedStep >= 0){
-          this.coord[0].x = this.coord[0].x - Number(this.selectedStep);
-          this.coordinateX = this.coord[0].x + Number(this.app.currentConfigX.offset);
-        }
-        else{
-          this.coord[0].x = 0;
-          this.coordinateX = 0 + Number(this.app.currentConfigX.offset);
+        else{          
+          if(this.coord[0].x - this.selectedStep >= 0){
+            this.coord[0].x = this.coord[0].x - Number(this.selectedStep);
+            axis.coordinate = this.coord[0].x + Number(axis.conf.offset);
+          }
+          else{
+            this.coord[0].x = 0;
+            axis.coordinate = 0 + Number(axis.conf.offset);
+          }
         }
       }
     }
     else if (orientation === "Y" && this.selectedStep){
-      if(deplacement === ""){
-        if(Number(this.coordinateY) + Number(this.selectedStep) <= 14000){
-          this.coord[0].y = this.coord[0].y + Number(this.selectedStep);
-          this.coordinateY = this.coord[0].y + Number(this.app.currentConfigY.offset);
+      let axis = this.app.axis.find(entry => entry.name == orientation);
+      if (axis != undefined) {
+        if(deplacement === ""){
+          if(axis.coordinate != null && axis.coordinate + Number(this.selectedStep) <= axis.conf.maxlength){ ///Change 22 to the max amplitude in Z of the machine
+            this.coord[0].y = this.coord[0].y + Number(this.selectedStep);
+            axis.coordinate = this.coord[0].y + Number(axis.conf.offset);
+          }
+          else{
+            this.coord[0].y = axis.conf.maxlength-Number(axis.conf.offset);
+            axis.coordinate = axis.conf.maxlength;
+          }
         }
-        else{
-          this.coord[0].y = 14000-Number(this.app.currentConfigY.offset);
-          this.coordinateY = 14000;
-        }
-      }
-      else{
-        if(this.coord[0].y - this.selectedStep >= 0){
-          this.coord[0].y = this.coord[0].y - Number(this.selectedStep);
-          this.coordinateY = this.coord[0].y + Number(this.app.currentConfigY.offset);
-        }
-        else{
-          this.coord[0].y = 0;
-          this.coordinateY = 0 + Number(this.app.currentConfigY.offset);
+        else{          
+          if(this.coord[0].y - this.selectedStep >= 0){
+            this.coord[0].y = this.coord[0].y - Number(this.selectedStep);
+            axis.coordinate = this.coord[0].y + Number(axis.conf.offset);
+          }
+          else{
+            this.coord[0].y = 0;
+            axis.coordinate = 0 + Number(axis.conf.offset);
+          }
         }
       }
     }
     else if (orientation === "Z" && this.selectedStep){
-      if(deplacement === ""){
-        if(Number(this.coordinateZ) + Number(this.selectedStep) <= 14000){
-          this.coord[0].z = this.coord[0].z + Number(this.selectedStep);
-          this.coordinateZ = this.coord[0].z + Number(this.app.currentConfigZ.offset);
+      let axis = this.app.axis.find(entry => entry.name == orientation);
+      if (axis != undefined) {
+        if(deplacement === ""){
+          if(axis.coordinate != null && axis.coordinate + Number(this.selectedStep) <= axis.conf.maxlength){ ///Change 22 to the max amplitude in Z of the machine
+            this.coord[0].z = this.coord[0].z + Number(this.selectedStep);
+            axis.coordinate = this.coord[0].z + Number(axis.conf.offset);
+          }
+          else{
+            this.coord[0].z = axis.conf.maxlength-Number(axis.conf.offset);
+            axis.coordinate = axis.conf.maxlength;
+          }
         }
-        else{
-          this.coord[0].z = 14000-Number(this.app.currentConfigZ.offset);
-          this.coordinateZ = 14000;
-        }
-      }
-      else{
-        if(this.coord[0].z - this.selectedStep >= 0){
-          this.coord[0].z = this.coord[0].z - Number(this.selectedStep);
-          this.coordinateZ = this.coord[0].z + Number(this.app.currentConfigZ.offset);
-        }
-        else{
-          this.coord[0].z = 0;
-          this.coordinateZ = 0 + Number(this.app.currentConfigZ.offset);
+        else{          
+          if(this.coord[0].z - this.selectedStep >= 0){
+            this.coord[0].z = this.coord[0].z - Number(this.selectedStep);
+            axis.coordinate = this.coord[0].z + Number(axis.conf.offset);
+          }
+          else{
+            this.coord[0].z = 0;
+            axis.coordinate = 0 + Number(axis.conf.offset);
+          }
         }
       }
     }
@@ -445,7 +451,7 @@ export class DeplacementComponent implements OnChanges {
       if (x != undefined){
         if(x>=0 && this.coord[0].x != x){
           this.selectedStep = x;
-          this.onSelectDeplacementCoord("X");
+          this.onSelectDeplacementCoord("X", x);
         }
         else if (x<0){
           console.log("X cannot be negative");
@@ -454,7 +460,7 @@ export class DeplacementComponent implements OnChanges {
       if (y != undefined){
         if(y>=0 && this.coord[0].y != y){
           this.selectedStep = y;
-          this.onSelectDeplacementCoord("Y");
+          this.onSelectDeplacementCoord("Y", y);
         }
         else if (y<0){
           console.log("Z cannot be negative");
@@ -463,11 +469,22 @@ export class DeplacementComponent implements OnChanges {
       if (z != undefined){
         if(z>=0 && this.coord[0].z != z){
           this.selectedStep = z;
-          this.onSelectDeplacementCoord("Z");
+          this.onSelectDeplacementCoord("Z",z);
         }
         else if (z<0){
           console.log("Z cannot be negative");
         }
       }
   } 
+
+
+  checkAndSelectCoordinates(coordinateX?: number, coordinateY?: number, coordinateZ?: number) {
+    // Vérification et affectation des valeurs par défaut
+    coordinateX = typeof coordinateX !== 'undefined' ? coordinateX : 0;
+    coordinateY = typeof coordinateY !== 'undefined' ? coordinateY : 0;
+    coordinateZ = typeof coordinateZ !== 'undefined' ? coordinateZ : 0;
+  
+    // Appeler la fonction onSelectCoordinates avec les coordonnées mises à jour
+    this.onSelectCoordinates(coordinateX, coordinateY, coordinateZ);
+  }  
 }

@@ -57,7 +57,7 @@
       <i class="glyphicon glyphicon-remove"></i>
     </a>
     <div class = "current-config" *ngIf="!this.webSocketService.onCommand">
-      <app-default-conf class="elements" [currentconfigX]="inputConfigX" [currentconfigY]="inputConfigY" [currentconfigZ]="inputConfigZ" *ngIf=" router.url != '/receipe' && showConfigs===true"></app-default-conf>
+      <app-default-conf class="elements" [currentconfigX]="axis[0].conf" [currentconfigY]="axis[1].conf" [currentconfigZ]="axis[2].conf" *ngIf=" router.url != '/receipe' && showConfigs===true"></app-default-conf>
     </div>
   </aside>
 </content>

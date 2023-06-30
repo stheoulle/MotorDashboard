@@ -1,5 +1,5 @@
 <div class = "configurations">
-      <div class="current-confX" *ngIf="!currentconfigX.speed.includes('?') && app.Xsent">
+      <div class="current-confX" *ngIf="!currentconfigX.speed.includes('?') && app.axis[0].sent">
             <label for="config-name">Name : {{currentconfigX.name}}</label>
             <label for="speed">Speed : {{currentconfigX.speed}} </label> 
             <label for="mode">Mode : {{currentconfigX.mode}} </label> 
@@ -7,7 +7,7 @@
             <label for="config-steppermm">Step per mm : {{currentconfigX.step}}</label>
             <label for="config-offset">Offset : {{currentconfigX.offset}}</label>
       </div>
-      <div class="current-confY" *ngIf="!currentconfigY.speed.includes('?') && app.Ysent" >
+      <div class="current-confY" *ngIf="!currentconfigY.speed.includes('?') && app.axis[1].sent" >
             <label for="config-name">Name : {{currentconfigY.name}}</label>
             <label for="speed">Speed : {{currentconfigY.speed}} </label> 
             <label for="mode">Mode : {{currentconfigY.mode}} </label> 
@@ -15,7 +15,7 @@
             <label for="config-steppermm">Step per mm : {{currentconfigY.step}}</label>
             <label for="config-offset">Offset : {{currentconfigY.offset}}</label>
       </div>
-      <div class="current-confZ" *ngIf="!currentconfigZ.speed.includes('?') && app.Zsent" >
+      <div class="current-confZ" *ngIf="!currentconfigZ.speed.includes('?') && app.axis[2].sent" >
             <label for="config-name">Name : {{currentconfigZ.name}}</label>
             <label for="speed">Speed : {{currentconfigZ.speed}} </label> 
             <label for="mode">Mode : {{currentconfigZ.mode}} </label> 

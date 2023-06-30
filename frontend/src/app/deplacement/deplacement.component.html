@@ -1,21 +1,23 @@
 <div class = "panel">
     <div class = "deplacement-panel" *ngIf="this.ws.onCommand==false" > <!---->
-        <div class = "step"> <!--Selection of the step-->
-            Steps
-            <li *ngFor="let coords of coord" >
-                <a button type = "button" class="btn btn-dark " (click)="onSelect(200)">
-                    200
-                </a> 
-                <a button type = "button" class="btn btn-dark " (click)="onSelect(500)">
-                    500
-                </a>
-                <a button type = "button" class="btn btn-dark " (click)="onSelect(1000)">
-                    1000
-                </a>
-                <input [(ngModel)]="selectedStep" placeholder="..." class = "step-input">
-                -----
-            </li>
-        </div>  
+        <div class = "move-option">
+            <div class = "mm" *ngIf="mm"> <!--Selection of the step-->
+                mm
+                <li *ngFor="let coords of coord" >
+                    <a button type = "button" class="btn btn-dark " (click)="onSelect(0.1)">
+                        0.1
+                    </a> 
+                    <a button type = "button" class="btn btn-dark " (click)="onSelect(0.5)">
+                        0.5
+                    </a>
+                    <a button type = "button" class="btn btn-dark " (click)="onSelect(1)">
+                        1
+                    </a>
+                    <input [(ngModel)]="selectedStep" placeholder="..." class = "step-input">
+                </li>
+            </div> 
+        </div>
+         
         <div class="moveXYZ">   <!--Selection of the direction-->
             <div *ngIf= "this.ws.axisX" class = "Xpos">
                 X       
@@ -77,7 +79,7 @@
             </div>
         </div>
         <div class = "coordonnees">
-            <div class="after-home" *ngIf="this.app.home">
+            <div class="after-home-mm" *ngIf="this.app.home">
                 <div class = "speed">
                     Speed option
                     <select name="speed option" id="speed option" [(ngModel)]="listSpeedMode" placeholder="speedmode">
@@ -87,18 +89,18 @@
                 </div>
                 <div class="X" *ngIf="this.ws.axisX">
                     <p>X</p>
-                    <input [(ngModel)]="coordinateX" placeholder="coordinateX">
+                    <input [(ngModel)]="this.coordinateX" placeholder="coordinateX">
                 </div>
                 <div class="Y" *ngIf="this.ws.axisY">
                     <p>Y</p>
-                    <input [(ngModel)]="coordinateY" placeholder="coordinateY">
+                    <input [(ngModel)]="this.coordinateY" placeholder="coordinateY">
                 </div>
                 <div class="Z" *ngIf="this.ws.axisZ">
                     <p>Z</p>
-                    <input [(ngModel)]="coordinateZ" placeholder="coordinateZ">
+                    <input [(ngModel)]="this.coordinateZ" placeholder="coordinateZ">
                 </div>
                 <div class = "button-coord">
-                    <button class="btn btn-dark" (click)="onSelectCoordinates(coordinateX, coordinateY, coordinateZ)">
+                    <button class="btn btn-dark" (click)="checkAndSelectCoordinates(this.coordinateX, this.coordinateY, this.coordinateZ)">
                         <i class="glyphicon glyphicon-ok"></i>
                     </button>
                     <button class="btn btn-dark" (click)="onGetCoords()">

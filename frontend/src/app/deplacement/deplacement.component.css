@@ -51,26 +51,43 @@
     padding: 1rem;
     width: 100%;
   }
-  .step button.selected:hover {
-    background-color: black;
-    color: white;
-  }
 
-  .step{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    width: 30%;
-  }
 
-  .step li{
+
+  .step-input{
+    width: 100%;
+    margin-top: 5px;
+    padding: 5px;
+    text-align: center;
+  }
+  .mm li{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     width: 70%;
   }
+
+  .mm{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .mm-input{
+    width: 100%;
+    margin-top: 5px;
+    padding: 5px;
+    text-align: center;
+  }
+
+  .mm button.selected:hover {
+    background-color: black;
+    color: white;
+  }
+
 
   .coordonnees{
     display: flex;
@@ -113,12 +130,7 @@
     margin-bottom: 5%;
   }
 
-  .step-input{
-    width: 100%;
-    margin-top: 5px;
-    padding: 5px;
-    text-align: center;
-  }
+
 
   .coordonnees p{
     margin-top: 5%;
@@ -132,7 +144,7 @@
   }
 
   .moveXYZ {
-    width: 90%;
+    width: 80%;
     height: 175px; 
     position: relative;
   }
@@ -154,12 +166,12 @@
   }
 
   .home.show-configs {
-    left: 35.5%; /* Valeur lorsque showConfigs est true */
+    left: 36.5%; /* Valeur lorsque showConfigs est true */
     top: 37%;
   }
   
   .home.hide-config {
-    left: 37.5%; /* Valeur lorsque showConfigs est false */
+    left: 36%; /* Valeur lorsque showConfigs est false */
     top: 37%;
   }
   
@@ -243,7 +255,11 @@
     align-items: center;
   }
 
-  .after-home button{
+  .after-home-steps button{
+    margin-left: 10%;
+  }
+
+  .after-home-mm button{
     margin-left: 10%;
   }
 
@@ -257,4 +273,15 @@
   .button-coord{
     display: flex;
     flex-direction: row;
+  }
+
+  .move-option{
+    display: flex;
+    flex-direction: column;
+    width: 15%;
+  }
+
+  .move-option-button a{
+    justify-content: space-between;
+    width: 50%;
   }
