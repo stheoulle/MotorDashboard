@@ -36,3 +36,5 @@ Button to launch the recording of the commands sent. Once the recording is finis
 > sudo apt install python3
 > python3 main.py
 ```
+
+COde not working --> One property is initialized every time the screen is changed --> You have to disable it 
